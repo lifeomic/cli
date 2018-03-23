@@ -1,5 +1,7 @@
 # lifeomic-cli
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/lifeomic/lifeomic-cli.svg)](https://greenkeeper.io/)
+
 This project is a small CLI app that provides functionality around the LifeOmic
 API's.
 
