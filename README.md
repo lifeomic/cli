@@ -1,4 +1,4 @@
-# lifeomic-cli
+# cli
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/lifeomic/lifeomic-cli.svg)](https://greenkeeper.io/)
 
@@ -8,7 +8,7 @@ API's.
 ## Installation
 
 ```bash
-yarn global add @lifeomic/lifeomic-cli
+yarn global add @lifeomic/cli
 ```
 
 Run `lo setup` to configure the default environment and account you wish to use.
