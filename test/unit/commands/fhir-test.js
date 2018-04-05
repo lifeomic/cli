@@ -46,7 +46,7 @@ test.serial.cb('The "fhir" command should list fhir resources', t => {
 
   callback = () => {
     t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], 'account/dstu3/Patient?pageSize=9007199254740991');
+    t.is(getStub.getCall(0).args[1], 'account/dstu3/Patient?pageSize=1000');
     t.is(printSpy.callCount, 1);
     t.deepEqual(printSpy.getCall(0).args[0], []);
     t.end();
@@ -70,40 +70,31 @@ test.serial.cb('Limit should set the page size for the "fhir" command', t => {
   program.parse(['node', 'lo', 'fhir', '--limit', '10', 'Patient']);
 });
 
-test.serial.cb('The "fhir-ingest" command should create a fhir resource if no id is provided', t => {
-  const res = {headers: { location: '/account/dstu3/Patient/1234' }};
-  postStub.onFirstCall().returns(res);
+test.serial.cb('The "fhir-ingest" with command should update a fhir resource', t => {
+  const res = {data: {entry: [{location: '/account/dstu3/Patient/1234', status: '200'}]}};
+  postStub.returns(res);
 
-  const data = {resourceType: 'Patient'};
+  const data = [{resourceType: 'Patient', id: '1234'}];
   readStub.onFirstCall().returns(data);
 
   callback = () => {
     t.is(postStub.callCount, 1);
-    t.is(postStub.getCall(0).args[1], 'account/dstu3/Patient');
+    t.is(postStub.getCall(0).args[1], 'account/dstu3');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      resourceType: 'Bundle',
+      type: 'collection',
+      entry: [
+        {
+          resource:
+          {
+            resourceType: 'Patient',
+            id: '1234'
+          }
+        }
+      ]
+    });
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], {id: '1234', resourceType: 'Patient'});
-    t.end();
-  };
-
-  program.parse(['node', 'lo', 'fhir-ingest']);
-});
-
-test.serial.cb('The "fhir-ingest" command should use updateCreate for fhir resource if id is provided', t => {
-  const res = {headers: { location: '/account/dstu3/Patient/foo' }};
-  putStub.onFirstCall().returns(res);
-
-  const data = {
-    id: 'foo',
-    resourceType: 'Patient'
-  };
-  readStub.onFirstCall().returns(data);
-
-  callback = () => {
-    t.is(postStub.callCount, 0);
-    t.is(putStub.callCount, 1);
-    t.is(putStub.getCall(0).args[1], 'account/dstu3/Patient/foo');
-    t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], {id: 'foo', resourceType: 'Patient'});
+    t.deepEqual(printSpy.getCall(0).args[0], [{location: '/account/dstu3/Patient/1234', status: '200'}]);
     t.end();
   };
 
@@ -111,29 +102,38 @@ test.serial.cb('The "fhir-ingest" command should use updateCreate for fhir resou
 });
 
 test.serial.cb('The "fhir-ingest" with dataset command should update a fhir resource with dataset', t => {
-  const res = {headers: { location: '/account/dstu3/Patient/1234' }};
-  putStub.returns(res);
+  const res = {data: {entry: [{location: '/account/dstu3/Patient/1234', status: '200'}]}};
+  postStub.returns(res);
 
   const data = [{resourceType: 'Patient', id: '1234'}];
   readStub.onFirstCall().returns(data);
 
   callback = () => {
-    t.is(putStub.callCount, 1);
-    t.is(putStub.getCall(0).args[1], 'account/dstu3/Patient/1234');
-    t.deepEqual(putStub.getCall(0).args[2], {
-      resourceType: 'Patient',
-      id: '1234',
-      meta: {
-        tag: [
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], 'account/dstu3');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      resourceType: 'Bundle',
+      type: 'collection',
+      entry: [
+        {
+          resource:
           {
-            system: 'http://lifeomic.com/fhir/dataset',
-            code: 'abc'
+            resourceType: 'Patient',
+            id: '1234',
+            meta: {
+              tag: [
+                {
+                  system: 'http://lifeomic.com/fhir/dataset',
+                  code: 'abc'
+                }
+              ]
+            }
           }
-        ]
-      }
+        }
+      ]
     });
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], [{id: '1234', resourceType: 'Patient'}]);
+    t.deepEqual(printSpy.getCall(0).args[0], [{location: '/account/dstu3/Patient/1234', status: '200'}]);
     t.end();
   };
 
