@@ -129,7 +129,7 @@ test.serial.cb('The "policies-evaluate" command should evaluate the policy for t
   getStub.onFirstCall().returns(res);
   callback = () => {
     t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], '/v1/evaluatedPolicy');
+    t.is(getStub.getCall(0).args[1], '/v1/evaluated-policy');
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
     t.end();
@@ -143,7 +143,7 @@ test.serial.cb('The "policies-evaluate" with argument should evaluate the policy
   getStub.onFirstCall().returns(res);
   callback = () => {
     t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], '/v1/evaluatedPolicy?user=user.name');
+    t.is(getStub.getCall(0).args[1], '/v1/evaluated-policy?user=user.name');
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
     t.end();
