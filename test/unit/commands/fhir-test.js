@@ -42,11 +42,13 @@ test.afterEach.always(t => {
 
 test.serial.cb('The "fhir" command should list fhir resources', t => {
   const res = {data: { entry: [] }};
-  getStub.onFirstCall().returns(res);
+  postStub.onFirstCall().returns(res);
 
   callback = () => {
-    t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], 'account/dstu3/Patient?pageSize=1000');
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], 'account/dstu3/Patient/_search');
+    t.is(postStub.getCall(0).args[2], 'pageSize=1000');
+    t.deepEqual(postStub.getCall(0).args[3], {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
     t.is(printSpy.callCount, 1);
     t.deepEqual(printSpy.getCall(0).args[0], []);
     t.end();
@@ -57,11 +59,13 @@ test.serial.cb('The "fhir" command should list fhir resources', t => {
 
 test.serial.cb('Limit should set the page size for the "fhir" command', t => {
   const res = {data: { entry: [] }};
-  getStub.onFirstCall().returns(res);
+  postStub.onFirstCall().returns(res);
 
   callback = () => {
-    t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], 'account/dstu3/Patient?pageSize=10');
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], 'account/dstu3/Patient/_search');
+    t.is(postStub.getCall(0).args[2], 'pageSize=10');
+    t.deepEqual(postStub.getCall(0).args[3], {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
     t.is(printSpy.callCount, 1);
     t.deepEqual(printSpy.getCall(0).args[0], []);
     t.end();

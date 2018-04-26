@@ -23,10 +23,10 @@ const program = proxyquire('../../../lib/commands/ga4gh-read', {
 });
 
 test.always.afterEach(t => {
-  getStub.reset();
-  postStub.reset();
-  delStub.reset();
-  printSpy.reset();
+  getStub.resetHistory();
+  postStub.resetHistory();
+  delStub.resetHistory();
+  printSpy.resetHistory();
   callback = null;
 });
 

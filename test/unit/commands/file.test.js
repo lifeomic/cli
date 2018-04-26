@@ -33,12 +33,12 @@ const program = proxyquire('../../../lib/commands/file', {
 });
 
 test.afterEach.always(t => {
-  getStub.reset();
-  postStub.reset();
-  delStub.reset();
-  printSpy.reset();
-  uploadSpy.reset();
-  downloadSpy.reset();
+  getStub.resetHistory();
+  postStub.resetHistory();
+  delStub.resetHistory();
+  printSpy.resetHistory();
+  uploadSpy.resetHistory();
+  downloadSpy.resetHistory();
   callback = null;
 });
 
@@ -126,7 +126,6 @@ test.serial.cb('The "files-upload" should upload a file', t => {
     t.end();
   };
 
-  console.log(process.cwd());
   program.parse(['node', 'lo', 'files-upload', `${__dirname}/data/file1.txt`, 'dataset']);
 });
 
@@ -161,7 +160,6 @@ test.serial.cb('The "files-upload" should upload a directory of files', t => {
     t.end();
   };
 
-  console.log(process.cwd());
   program.parse(['node', 'lo', 'files-upload', `${__dirname}/data`, 'dataset']);
 });
 
@@ -176,21 +174,21 @@ test.serial.cb('The "files-upload" should recursively upload a directory of file
       return;
     }
     t.is(postStub.callCount, 3);
-    t.deepEqual(postStub.getCall(0).args[2], {
+    postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
       overwrite: undefined
-    });
-    t.deepEqual(postStub.getCall(1).args[2], {
+    }));
+    postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file2.txt`,
       datasetId: 'dataset',
       overwrite: undefined
-    });
-    t.deepEqual(postStub.getCall(2).args[2], {
+    }));
+    postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/dir/file3.txt`,
       datasetId: 'dataset',
       overwrite: undefined
-    });
+    }));
 
     t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
     t.is(uploadSpy.getCall(0).args[1], `${__dirname}/data/file1.txt`);
@@ -206,6 +204,5 @@ test.serial.cb('The "files-upload" should recursively upload a directory of file
     t.end();
   };
 
-  console.log(process.cwd());
   program.parse(['node', 'lo', 'files-upload', `${__dirname}/data`, 'dataset', '--recursive']);
 });

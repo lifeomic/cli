@@ -25,11 +25,11 @@ const program = proxyquire('../../../lib/commands/group', {
 });
 
 test.afterEach(t => {
-  getStub.reset();
-  postStub.reset();
-  delStub.reset();
-  putStub.reset();
-  printSpy.reset();
+  getStub.resetHistory();
+  postStub.resetHistory();
+  delStub.resetHistory();
+  putStub.resetHistory();
+  printSpy.resetHistory();
   callback = null;
 });
 
