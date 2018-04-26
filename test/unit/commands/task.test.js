@@ -23,10 +23,10 @@ const program = proxyquire('../../../lib/commands/task', {
 });
 
 test.afterEach.always(t => {
-  getStub.reset();
-  postStub.reset();
-  printSpy.reset();
-  readStub.reset();
+  getStub.resetHistory();
+  postStub.resetHistory();
+  printSpy.resetHistory();
+  readStub.resetHistory();
   callback = null;
 });
 
@@ -71,7 +71,6 @@ test.serial.cb('The "tasks-create" command should create a task', t => {
     t.end();
   };
 
-  console.log(process.cwd());
   program.parse(['node', 'lo', 'tasks-create']);
 });
 
@@ -85,6 +84,5 @@ test.serial.cb('The "tasks-cancel" command should cancel a task', t => {
     t.end();
   };
 
-  console.log(process.cwd());
   program.parse(['node', 'lo', 'tasks-cancel', 'taskId']);
 });

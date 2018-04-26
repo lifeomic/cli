@@ -27,12 +27,12 @@ const program = proxyquire('../../../lib/commands/policy', {
 });
 
 test.afterEach.always(t => {
-  getStub.reset();
-  postStub.reset();
-  delStub.reset();
-  putStub.reset();
-  printSpy.reset();
-  readStub.reset();
+  getStub.resetHistory();
+  postStub.resetHistory();
+  delStub.resetHistory();
+  putStub.resetHistory();
+  printSpy.resetHistory();
+  readStub.resetHistory();
   callback = null;
 });
 

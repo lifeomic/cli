@@ -27,9 +27,9 @@ test.beforeEach((t) => {
 });
 
 test.afterEach.always(t => {
-  postStub.reset();
-  getStub.reset();
-  setSpy.reset();
+  postStub.resetHistory();
+  getStub.resetHistory();
+  setSpy.resetHistory();
 });
 
 test.serial(`tokenProvider should set the request Authorization header with a token from config`, async t => {
