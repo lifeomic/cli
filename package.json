@@ -51,7 +51,7 @@
     "eslint-plugin-security": "^1.4.0",
     "eslint-plugin-standard": "^3.0.1",
     "proxyquire": "^2.0.1",
-    "sinon": "^4.5.0"
+    "sinon": "^5.0.1"
   },
   "eslintConfig": {
     "extends": "semistandard"
