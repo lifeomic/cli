@@ -1,0 +1,22 @@
+{
+  "target": "variant",
+  "domain": "filter",
+  "where": {
+      "variant": {
+          "clinvarhg38": {
+              "clinical_significance": [
+                  {
+                      "operator": "eq",
+                      "value": "Pathogenic"
+                  }
+              ],
+              "gene_nam": [
+                  {
+                      "operator": "like",
+                      "value": "DRD"
+                  }
+              ]
+          }
+      }
+  }
+}
