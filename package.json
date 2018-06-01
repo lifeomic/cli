@@ -1,7 +1,7 @@
 {
   "name": "@lifeomic/cli",
   "version": "5.0.0",
-  "description": "CLI for interacting with the LifeOmic PMP API.",
+  "description": "CLI for interacting with the LifeOmic PHC API.",
   "main": "lo.js",
   "author": "LifeOmic <development@lifeomic.com>",
   "license": "MIT",
@@ -40,23 +40,16 @@
     "stoppable": "^1.0.5"
   },
   "devDependencies": {
+    "@lifeomic/eslint-plugin-node": "^1.1.1",
     "ava": "^0.25.0",
     "eslint": "^4.19.1",
-    "eslint-config-import": "^0.13.0",
-    "eslint-config-semistandard": "^12.0.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.10.0",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.7.0",
-    "eslint-plugin-security": "^1.4.0",
-    "eslint-plugin-standard": "^3.0.1",
     "proxyquire": "^2.0.1",
     "sinon": "^4.5.0"
   },
   "eslintConfig": {
-    "extends": "semistandard"
+    "extends": "plugin:@lifeomic/node/recommended"
   },
-  "eslintIgnore": [
-    "node_modules/"
-  ]
+  "publishConfig": {
+    "access": "public"
+  }
 }
