@@ -1,6 +1,7 @@
 # cli
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/lifeomic/lifeomic-cli.svg)](https://greenkeeper.io/)
+[![Build Status](https://travis-ci.org/lifeomic/cli.svg?branch=master)](https://travis-ci.org/lifeomic/cli)
 
 This project is a small CLI app that provides functionality around the LifeOmic
 API's.
