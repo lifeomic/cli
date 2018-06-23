@@ -42,7 +42,7 @@
   "devDependencies": {
     "@lifeomic/eslint-plugin-node": "^1.1.1",
     "ava": "^0.25.0",
-    "eslint": "^4.19.1",
+    "eslint": "^5.0.0",
     "proxyquire": "^2.0.1",
     "sinon": "^4.5.0"
   },
