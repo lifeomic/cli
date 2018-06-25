@@ -150,13 +150,8 @@ test.serial.cb('The "files-upload" should upload a directory of files', t => {
       overwrite: undefined
     });
 
-    t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
-    t.is(uploadSpy.getCall(0).args[1], `${__dirname}/data/file1.txt`);
-    t.is(uploadSpy.getCall(0).args[2], 7);
-
-    t.is(uploadSpy.getCall(1).args[0], 'https://host/upload');
-    t.is(uploadSpy.getCall(1).args[1], `${__dirname}/data/file2.txt`);
-    t.is(uploadSpy.getCall(1).args[2], 7);
+    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file1.txt`, 7));
+    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file2.txt`, 7));
     t.end();
   };
 
@@ -190,17 +185,10 @@ test.serial.cb('The "files-upload" should recursively upload a directory of file
       overwrite: undefined
     }));
 
-    t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
-    t.is(uploadSpy.getCall(0).args[1], `${__dirname}/data/file1.txt`);
-    t.is(uploadSpy.getCall(0).args[2], 7);
+    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file1.txt`, 7));
+    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file2.txt`, 7));
+    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/dir/file3.txt`, 7));
 
-    t.is(uploadSpy.getCall(1).args[0], 'https://host/upload');
-    t.is(uploadSpy.getCall(1).args[1], `${__dirname}/data/file2.txt`);
-    t.is(uploadSpy.getCall(1).args[2], 7);
-
-    t.is(uploadSpy.getCall(2).args[0], 'https://host/upload');
-    t.is(uploadSpy.getCall(2).args[1], `${__dirname}/data/dir/file3.txt`);
-    t.is(uploadSpy.getCall(2).args[2], 7);
     t.end();
   };
 
