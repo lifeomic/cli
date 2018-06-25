@@ -8,9 +8,19 @@ API's.
 
 ## Installation
 
+Install via `npm` or `yarn`:
+
+```bash
+npm install -g @lifeomic/cli
+```
+
 ```bash
 yarn global add @lifeomic/cli
 ```
+
+or you can download and install the binary from the [latest release](https://github.com/lifeomic/cli/releases).
+
+## Configuration
 
 Run `lo setup` to configure the default environment and account you wish to use.
 You can later override the default account using the `-a` option for commands.
