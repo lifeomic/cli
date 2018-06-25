@@ -9,11 +9,3 @@ notifications:
   email:
     on_success: never
     on_failure: always
-deploy:
-  provider: npm
-  email: $NPM_EMAL
-  api_key: $NPM_KEY
-  on:
-    tags: true
-    repo: lifeomic/cli
-    node: '8'
