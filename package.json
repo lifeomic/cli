@@ -15,7 +15,8 @@
     "prelint": "yarn",
     "lint": "eslint .",
     "pretest": "yarn lint",
-    "test": "ava --serial --verbose test/unit"
+    "test": "ava --serial --verbose test/unit",
+    "build": "./build.sh"
   },
   "dependencies": {
     "axios": "^0.18.0",
