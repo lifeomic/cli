@@ -20,7 +20,7 @@ deploy:
       - target/lo-linux-x86.zip
       - target/lo-macos-x64.zip
       - target/lo-windows-x64.zip
-      - target/lo-windows.x86.zip
+      - target/lo-windows-x86.zip
     on:
       repo: lifeomic/cli
       tags: true
