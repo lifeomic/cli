@@ -156,27 +156,13 @@ test.serial.cb('The "fhir-delete" command should delete a fhir resource', t => {
   program.parse(['node', 'lo', 'fhir-delete', 'Patient', '1234']);
 });
 
-test.serial.cb('The "fhir-delete-all" command should delete all fhir resource of a certain type in a single dataset', t => {
-  const res = {
-    data: {
-      entry: [
-        { resource: {resourceType: 'Patient', id: '1234'} },
-        { resource: {resourceType: 'Patient', id: '5678'} }
-      ]
-    }
-  };
-  getStub.onFirstCall().returns(res);
+test.serial.cb('The "fhir-search-delete" command should delete all fhir resource of a certain type matching a query and dataset', t => {
+  program.parse(['node', 'lo', 'fhir-search-delete', 'Patient', '--dataset', 'dataset-id', 'name=John']);
 
-  callback = () => {
-    t.is(delStub.callCount, 2);
-    t.is(delStub.getCall(0).args[1], 'account/dstu3/Patient/1234');
-    t.is(delStub.getCall(1).args[1], 'account/dstu3/Patient/5678');
-    t.is(printSpy.callCount, 1);
-    t.deepEqual(getStub.getCall(0).args[1], 'account/dstu3/Patient?_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7Cdataset-id&pageSize=10');
-    t.end();
-  };
-
-  program.parse(['node', 'lo', 'fhir-delete-all', 'dataset-id', 'Patient']);
+  t.is(delStub.callCount, 1);
+  t.is(delStub.getCall(0).args[1], 'account/dstu3/Patient?name=John&_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7Cdataset-id');
+  t.is(printSpy.callCount, 0);
+  t.end();
 });
 
 test.serial.cb('The "fhir-get" command should get a fhir resource', t => {
