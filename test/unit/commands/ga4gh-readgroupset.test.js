@@ -90,12 +90,13 @@ test.serial.cb('The "ga4gh-readgroupsets-create" should create a readgroupset', 
       name: 'name',
       sequenceType: 'dna',
       fileId: 'file',
-      patientId: 'patient'
+      patientId: 'patient',
+      referenceSetId: 'GRCh37'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
     t.end();
   };
 
-  program.parse(['node', 'lo', 'ga4gh-readgroupsets-create', 'dataset', '-n', 'name', '-f', 'file', '-p', 'patient']);
+  program.parse(['node', 'lo', 'ga4gh-readgroupsets-create', 'dataset', '-n', 'name', '-f', 'file', '-p', 'patient', '-r', 'GRCh37']);
 });
