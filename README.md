@@ -54,7 +54,7 @@ client, be sure to add `http://localhost:8787`.  Then run `lo setup` again and
 choose 'Y' to use a custom authentication client and provide the client ID and
 secret (if a private client was created).  When running `lo auth` again, a
 browser should open and be redirected to the identity provider being used for
-SOO.
+SSO.
 
 ## Usage
 
