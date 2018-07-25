@@ -3,12 +3,18 @@
 
 const chalk = require('chalk');
 const debug = require('debug')('lo');
+const yargs = require('yargs');
 
 try {
   // Needed because the cognito library tries to fetch the user-agent from the browser
   global.navigator = () => null;
 
-  require('./lib/cli').run();
+  // eslint-disable-next-line no-unused-expressions
+  yargs.commandDir('lib/cmds')
+    .scriptName('lo')
+    .demandCommand(1, 'You need at least one command before moving on')
+    .help()
+    .argv;
 } catch (err) {
   debug(`%j`, err);
   console.error(`\n  ${err.message}`);
@@ -30,7 +36,7 @@ process.on('unhandledRejection', function (reason, p) {
       console.log(chalk.red(JSON.stringify(reason.response.data, null, 2)));
     }
   } else {
-    console.error(chalk.red(reason));
+    console.error(chalk.red(reason.toString()));
   }
   process.exitCode = 1;
 });
