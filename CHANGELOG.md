@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 #### Added
 
-- Added `lo ga4gh-genomics.
+- Added `lo ga4gh-genomicsets-create`.
 
 ## [5.5.0] - 2018-07-25
 
