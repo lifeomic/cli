@@ -3,6 +3,7 @@
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
+const fs = require('fs');
 
 const getStub = sinon.stub();
 const postStub = sinon.stub();
@@ -10,7 +11,15 @@ const delStub = sinon.stub();
 const printSpy = sinon.spy();
 const downloadSpy = sinon.spy();
 const uploadSpy = sinon.spy();
+const deleteFileStub = sinon.stub();
 let callback;
+
+const fsStub = Object.assign({}, fs, {
+  unlinkSync: (filePath) => {
+    deleteFileStub(filePath);
+    callback();
+  }
+});
 
 const program = proxyquire('../../../lib/commands/file', {
   '../api': {
@@ -29,7 +38,8 @@ const program = proxyquire('../../../lib/commands/file', {
   '../print': (data, opts) => {
     printSpy(data, opts);
     callback();
-  }
+  },
+  'fs': fsStub
 });
 
 test.afterEach.always(t => {
@@ -70,7 +80,7 @@ test.serial.cb('The "files" command should list files for an account with option
   program.parse(['node', 'lo', 'files', 'dataset', '--page-size', '30', '--prefix', 'name', '--next-page-token', 'token']);
 });
 
-test.serial.cb('The "files-get" should get a file', t => {
+test.serial.cb('The "files-get" command should get a file', t => {
   const res = { data: {} };
   getStub.onFirstCall().returns(res);
   callback = () => {
@@ -84,7 +94,7 @@ test.serial.cb('The "files-get" should get a file', t => {
   program.parse(['node', 'lo', 'files-get', 'fileid']);
 });
 
-test.serial.cb('The "files-delete" should delete a file', t => {
+test.serial.cb('The "files-delete" command should delete a file', t => {
   const res = { data: {} };
   delStub.onFirstCall().returns(res);
   program.parse(['node', 'lo', 'files-delete', 'fileid']);
@@ -94,7 +104,7 @@ test.serial.cb('The "files-delete" should delete a file', t => {
   t.end();
 });
 
-test.serial.cb('The "files-download" should download a file', t => {
+test.serial.cb('The "files-download" command should download a file', t => {
   const res = { data: { name: 'filename' } };
   getStub.onFirstCall().returns(res);
   callback = () => {
@@ -109,7 +119,7 @@ test.serial.cb('The "files-download" should download a file', t => {
   program.parse(['node', 'lo', 'files-download', 'fileid', '/dir']);
 });
 
-test.serial.cb('The "files-upload" should upload a file', t => {
+test.serial.cb('The "files-upload" command should upload a file', t => {
   const res = { data: { uploadUrl: 'https://host/upload' } };
   postStub.onFirstCall().returns(res);
   callback = () => {
@@ -129,7 +139,29 @@ test.serial.cb('The "files-upload" should upload a file', t => {
   program.parse(['node', 'lo', 'files-upload', `${__dirname}/data/file1.txt`, 'dataset']);
 });
 
-test.serial.cb('The "files-upload" should upload a directory of files', t => {
+test.serial('The "files-upload" command should ignore already uploaded file error', t => {
+  const error = {
+    response: {
+      data: {
+        error: 'File with name foo already exists in dataset'
+      }
+    }
+  };
+  postStub.onFirstCall().throws(error);
+
+  program.parse(['node', 'lo', 'files-upload', `${__dirname}/data/file1.txt`, 'dataset']);
+
+  t.is(postStub.callCount, 1);
+  t.is(postStub.getCall(0).args[1], '/v1/files');
+  t.deepEqual(postStub.getCall(0).args[2], {
+    name: `${__dirname}/data/file1.txt`,
+    datasetId: 'dataset',
+    overwrite: undefined
+  });
+  t.is(uploadSpy.callCount, 0);
+});
+
+test.serial.cb('The "files-upload" command should upload a directory of files', t => {
   const res = { data: { uploadUrl: 'https://host/upload' } };
   postStub.onFirstCall().returns(res);
   postStub.onSecondCall().returns(res);
@@ -158,7 +190,7 @@ test.serial.cb('The "files-upload" should upload a directory of files', t => {
   program.parse(['node', 'lo', 'files-upload', `${__dirname}/data`, 'dataset']);
 });
 
-test.serial.cb('The "files-upload" should recursively upload a directory of files', t => {
+test.serial.cb('The "files-upload" command should recursively upload a directory of files', t => {
   const res = { data: { uploadUrl: 'https://host/upload' } };
   postStub.onFirstCall().returns(res);
   postStub.onSecondCall().returns(res);
@@ -193,4 +225,45 @@ test.serial.cb('The "files-upload" should recursively upload a directory of file
   };
 
   program.parse(['node', 'lo', 'files-upload', `${__dirname}/data`, 'dataset', '--recursive']);
+});
+
+test.serial.cb('The "files-upload" command should delete files after upload', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  postStub.onSecondCall().returns(res);
+  postStub.onThirdCall().returns(res);
+
+  callback = () => {
+    if (postStub.callCount !== 3 || deleteFileStub.callCount !== 3) {
+      return;
+    }
+    t.is(postStub.callCount, 3);
+    postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
+      name: `${__dirname}/data/file1.txt`,
+      datasetId: 'dataset',
+      overwrite: undefined
+    }));
+    postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
+      name: `${__dirname}/data/file2.txt`,
+      datasetId: 'dataset',
+      overwrite: undefined
+    }));
+    postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
+      name: `${__dirname}/data/dir/file3.txt`,
+      datasetId: 'dataset',
+      overwrite: undefined
+    }));
+
+    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file1.txt`, 7));
+    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file2.txt`, 7));
+    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/dir/file3.txt`, 7));
+
+    t.true(deleteFileStub.calledWith(`${__dirname}/data/file1.txt`));
+    t.true(deleteFileStub.calledWith(`${__dirname}/data/file2.txt`));
+    t.true(deleteFileStub.calledWith(`${__dirname}/data/dir/file3.txt`));
+
+    t.end();
+  };
+
+  program.parse(['node', 'lo', 'files-upload', `${__dirname}/data`, 'dataset', '--recursive', '--delete-after-upload']);
 });
