@@ -45,6 +45,14 @@ credentials for authentication. Note that for this option, you do not need to
 run `lo auth` as username and password credentials are not used for this
 credentials grant.
 
+### API Keys
+
+If you wish to use an API key, then you need to create an API key
+[here](https://apps.us.lifeomic.com/phc/account) or from `lo api-keys-create`.
+Be sure to capture the value of the API key when it is created as you will not
+be able to retrieve the value after the first attempt. Run `lo setup` and choose
+'Y' to use an API key and provide the API key value.
+
 ### SSO
 
 If you wish to use SSO, then you need to create a custom authentication client
