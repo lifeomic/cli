@@ -21,8 +21,10 @@ const CONFIG_FIXTURE = {
 };
 
 const _ORIGINAL_LIFEOMIC_ENVIRONMENT = process.env.LIFEOMIC_ENVIRONMENT;
+const originalConfig = config.all;
 test.after(t => {
   process.env.LIFEOMIC_ENVIRONMENT = _ORIGINAL_LIFEOMIC_ENVIRONMENT;
+  config.all = originalConfig;
 });
 
 test.beforeEach(t => {
