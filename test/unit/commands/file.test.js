@@ -54,14 +54,14 @@ const { program, filesUpload } = proxyquire('../../../lib/commands/file', {
 });
 
 test.afterEach.always(t => {
-  getStub.resetHistory();
-  postStub.resetHistory();
-  delStub.resetHistory();
+  getStub.reset();
+  postStub.reset();
+  delStub.reset();
   printSpy.resetHistory();
   uploadSpy.resetHistory();
   downloadSpy.resetHistory();
-  deleteFileStub.resetHistory();
-  sleepStub.resetHistory();
+  deleteFileStub.reset();
+  sleepStub.reset();
   callback = null;
   getShouldCallCallback = false;
 });
@@ -140,6 +140,7 @@ test.serial.cb('The "files-upload" command should upload a file', t => {
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], '/v1/files');
     t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
       overwrite: undefined
@@ -168,6 +169,7 @@ test.serial('The "files-upload" command should ignore already uploaded file erro
   t.is(postStub.callCount, 1);
   t.is(postStub.getCall(0).args[1], '/v1/files');
   t.deepEqual(postStub.getCall(0).args[2], {
+    id: undefined,
     name: `${__dirname}/data/file1.txt`,
     datasetId: 'dataset',
     overwrite: undefined
@@ -186,11 +188,13 @@ test.serial.cb('The "files-upload" command should upload a directory of files', 
     }
     t.is(postStub.callCount, 2);
     t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
       overwrite: undefined
     });
     t.deepEqual(postStub.getCall(1).args[2], {
+      id: undefined,
       name: `${__dirname}/data/file2.txt`,
       datasetId: 'dataset',
       overwrite: undefined
@@ -239,6 +243,27 @@ test.serial.cb('The "files-upload" command should recursively upload a directory
   };
 
   program.parse(['node', 'lo', 'files-upload', `${__dirname}/data`, 'dataset', '--recursive']);
+});
+
+test.serial.cb('The "files-upload" command should upload a file with client supplied id', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/files');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: '1234',
+      name: `${__dirname}/data/file1.txt`,
+      datasetId: 'dataset',
+      overwrite: undefined
+    });
+    t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
+    t.is(uploadSpy.getCall(0).args[1], `${__dirname}/data/file1.txt`);
+    t.is(uploadSpy.getCall(0).args[2], 7);
+    t.end();
+  };
+
+  program.parse(['node', 'lo', 'files-upload', `${__dirname}/data/file1.txt`, 'dataset', '--id', '1234']);
 });
 
 test.serial.cb('The "files-upload" command should delete files after (verified) upload', t => {

@@ -35,7 +35,7 @@ test.afterEach.always(t => {
   postStub.reset();
   delStub.reset();
   putStub.reset();
-  printSpy.reset();
+  printSpy.resetHistory();
   readStub.reset();
   callback = null;
 });
