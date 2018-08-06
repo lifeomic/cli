@@ -27,6 +27,7 @@ process.on('unhandledRejection', function (reason, p) {
     if (reason.response.status === 401) {
       console.log(`Security credentials do not exist or have expired.  Use 'lo auth' to obtain new credentials.`);
     } else {
+      console.log(chalk.red(`Request failed with status: ${reason.response.status}, body:`));
       console.log(chalk.red(JSON.stringify(reason.response.data, null, 2)));
     }
   } else {
