@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `api-keys` commands and the ability to use an API key for authentication
 
+- Added `--id` option to file-upload
+
 ## [5.8.0] - 2018-07-31
 
 #### Added
