@@ -5,21 +5,32 @@ const chalk = require('chalk');
 const debug = require('debug')('lo');
 const yargs = require('yargs');
 
-try {
-  // Needed because the cognito library tries to fetch the user-agent from the browser
-  global.navigator = () => null;
+// Needed because the cognito library tries to fetch the user-agent from the browser
+global.navigator = () => null;
 
-  // eslint-disable-next-line no-unused-expressions
-  yargs.commandDir('lib/cmds')
-    .scriptName('lo')
-    .demandCommand(1, 'You need at least one command before moving on')
-    .help()
-    .argv;
-} catch (err) {
-  debug(`%j`, err);
-  console.error(`\n  ${err.message}`);
+function handleError (msg, err) {
+  debug(`%j`, msg);
+  if (err.response) {
+    if (err.response.status === 401) {
+      console.log(`Security credentials do not exist or have expired.  Use 'lo auth' to obtain new credentials.`);
+    } else {
+      console.log(chalk.red(`Request failed with status: ${err.response.status}, body:`));
+      console.log(chalk.red(JSON.stringify(err.response.data, null, 2)));
+    }
+  } else {
+    console.error(chalk.red(msg));
+  }
   process.exitCode = 1;
 }
+
+// eslint-disable-next-line no-unused-expressions
+yargs
+  .fail(handleError)
+  .commandDir('lib/cmds')
+  .scriptName('lo')
+  .demandCommand(1, 'You need at least one command before moving on')
+  .help()
+  .argv;
 
 process.on('uncaughtException', function (err) {
   debug(`%j`, err);
@@ -28,16 +39,5 @@ process.on('uncaughtException', function (err) {
 });
 
 process.on('unhandledRejection', function (reason, p) {
-  debug(`%j`, reason);
-  if (reason.response) {
-    if (reason.response.status === 401) {
-      console.log(`Security credentials do not exist or have expired.  Use 'lo auth' to obtain new credentials.`);
-    } else {
-      console.log(chalk.red(`Request failed with status: ${reason.response.status}, body:`));
-      console.log(chalk.red(JSON.stringify(reason.response.data, null, 2)));
-    }
-  } else {
-    console.error(chalk.red(reason.toString()));
-  }
-  process.exitCode = 1;
+  handleError(reason.toString(), reason);
 });
