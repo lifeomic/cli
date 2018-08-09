@@ -10,7 +10,7 @@ global.navigator = () => null;
 
 function handleError (msg, err) {
   debug(`%j`, msg);
-  if (err.response) {
+  if (err && err.response) {
     if (err.response.status === 401) {
       console.log(`Security credentials do not exist or have expired.  Use 'lo auth' to obtain new credentials.`);
     } else {
