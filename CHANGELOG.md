@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [5.10.0] - 2018-08-08
+
+#### Changed
+
+- FHIR commands now request strict handling which makes the FHIR server
+  do strict validation on ingest and searches
+
+## [5.9.1] - 2018-08-06
+
+#### Fixed
+
+- Fixed `lo files-upload` to make it work better for larger files.
+
+## [5.8.0] - 2018-07-31
+
+## [5.9.0] - 2018-08-03
+
+#### Added
+
+- Added `api-keys` commands and the ability to use an API key for authentication
+
+- Added `--id` option to file-upload
+
+## [5.8.0] - 2018-07-31
+
+#### Added
+
+- Added `--delete-after-upload` option to `files-upload`
+
+### Changed
+
+- Updated `files-upload` to ignore "file already uploaded" errors instead of throwing
+
+## [5.7.0] - 2018-07-26
+
+#### Added
+
+- Added `lo ga4gh-genomicsets-create`.
+
+## [5.5.0] - 2018-07-25
+
+#### Added
+
+- Added option to use SSO when `lo auth` by specifying a custom auth client with `lo setup`.
+
 ## [5.4.0] - 2018-06-26
 
 #### Added
