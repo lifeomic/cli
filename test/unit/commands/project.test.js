@@ -4,23 +4,29 @@ const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
 
+const yargs = require('yargs');
 const getStub = sinon.stub();
 const postStub = sinon.stub();
 const delStub = sinon.stub();
 const printSpy = sinon.spy();
 let callback;
 
-const program = proxyquire('../../../lib/commands/project', {
-  '../api': {
+const mocks = {
+  '../../api': {
     get: getStub,
     post: postStub,
     del: delStub
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   }
-});
+};
+
+const get = proxyquire('../../../lib/cmds/projects_cmds/get', mocks);
+const del = proxyquire('../../../lib/cmds/projects_cmds/del', mocks);
+const list = proxyquire('../../../lib/cmds/projects_cmds/list', mocks);
+const create = proxyquire('../../../lib/cmds/projects_cmds/create', mocks);
 
 test.afterEach(t => {
   getStub.resetHistory();
@@ -41,7 +47,8 @@ test.cb('The "projects" command should list projects for an account', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'projects']);
+  yargs.command(list)
+    .parse('list');
 });
 
 test.cb('The "projects" command should list projects for an account with optional args', t => {
@@ -55,7 +62,8 @@ test.cb('The "projects" command should list projects for an account with optiona
     t.end();
   };
 
-  program.parse(['node', 'lo', 'projects', '--page-size', '30', '--prefix', 'name', '--next-page-token', 'token']);
+  yargs.command(list)
+    .parse('list --page-size 30 --prefix name --next-page-token token');
 });
 
 test.cb('The "projects-get" should get a project', t => {
@@ -69,7 +77,8 @@ test.cb('The "projects-get" should get a project', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'projects-get', 'projectid']);
+  yargs.command(get)
+    .parse('get projectid');
 });
 
 test.cb('The "projects-delete" should delete a project', t => {
@@ -79,11 +88,12 @@ test.cb('The "projects-delete" should delete a project', t => {
     t.is(delStub.callCount, 1);
     t.is(delStub.getCall(0).args[1], '/v1/projects/projectid');
     t.is(printSpy.callCount, 1);
-    t.is(printSpy.getCall(0).args[0], res.data);
+    t.deepEqual(printSpy.getCall(0).args[0], { id: 'projectid' });
     t.end();
   };
 
-  program.parse(['node', 'lo', 'projects-delete', 'projectid']);
+  yargs.command(del)
+    .parse('delete projectid');
 });
 
 test.cb('The "projects-create" should create a project', t => {
@@ -98,5 +108,6 @@ test.cb('The "projects-create" should create a project', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'projects-create', 'projectname']);
+  yargs.command(create)
+    .parse('create projectname');
 });

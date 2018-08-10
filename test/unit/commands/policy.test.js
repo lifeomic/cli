@@ -1,5 +1,6 @@
 'use strict';
 
+const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
@@ -12,19 +13,26 @@ const printSpy = sinon.spy();
 const readStub = sinon.stub();
 let callback;
 
-const program = proxyquire('../../../lib/commands/policy', {
-  '../api': {
+const mocks = {
+  '../../api': {
     get: getStub,
     post: postStub,
     del: delStub,
     put: putStub
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   },
-  '../read': async () => readStub()
-});
+  '../../read': async () => readStub()
+};
+
+const get = proxyquire('../../../lib/cmds/policies_cmds/get', mocks);
+const del = proxyquire('../../../lib/cmds/policies_cmds/del', mocks);
+const list = proxyquire('../../../lib/cmds/policies_cmds/list', mocks);
+const create = proxyquire('../../../lib/cmds/policies_cmds/create', mocks);
+const update = proxyquire('../../../lib/cmds/policies_cmds/update', mocks);
+const evaluate = proxyquire('../../../lib/cmds/policies_cmds/evaluate', mocks);
 
 test.afterEach.always(t => {
   getStub.resetHistory();
@@ -47,7 +55,8 @@ test.serial.cb('The "policies" command should list policies for an account', t =
     t.end();
   };
 
-  program.parse(['node', 'lo', 'policies']);
+  yargs.command(list)
+    .parse('list');
 });
 
 test.serial.cb('The "policies" command should list groups for an account with optional args', t => {
@@ -61,7 +70,8 @@ test.serial.cb('The "policies" command should list groups for an account with op
     t.end();
   };
 
-  program.parse(['node', 'lo', 'policies', '--page-size', '30', '--next-page-token', 'token']);
+  yargs.command(list)
+    .parse('list --page-size 30 --next-page-token token');
 });
 
 test.serial.cb('The "policies-get" command should get a policy', t => {
@@ -75,7 +85,8 @@ test.serial.cb('The "policies-get" command should get a policy', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'policies-get', 'My Policy']);
+  yargs.command(get)
+    .parse('get "My Policy"');
 });
 
 test.serial.cb('The "policies-create" command should create a policy', t => {
@@ -92,7 +103,8 @@ test.serial.cb('The "policies-create" command should create a policy', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'policies-create']);
+  yargs.command(create)
+    .parse('create');
 });
 
 test.serial.cb('The "policies-update" command should update a policies', t => {
@@ -109,7 +121,8 @@ test.serial.cb('The "policies-update" command should update a policies', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'policies-update', 'Old Name']);
+  yargs.command(update)
+    .parse('update "Old Name"');
 });
 
 test.serial.cb('The "policies-delete" command should remove a policy', t => {
@@ -121,7 +134,8 @@ test.serial.cb('The "policies-delete" command should remove a policy', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'policies-delete', 'My Policy']);
+  yargs.command(del)
+    .parse('delete "My Policy"');
 });
 
 test.serial.cb('The "policies-evaluate" command should evaluate the policy for the logged in user', t => {
@@ -135,7 +149,8 @@ test.serial.cb('The "policies-evaluate" command should evaluate the policy for t
     t.end();
   };
 
-  program.parse(['node', 'lo', 'policies-evaluate']);
+  yargs.command(evaluate)
+    .parse('evaluate');
 });
 
 test.serial.cb('The "policies-evaluate" with argument should evaluate the policy for the given user', t => {
@@ -149,5 +164,6 @@ test.serial.cb('The "policies-evaluate" with argument should evaluate the policy
     t.end();
   };
 
-  program.parse(['node', 'lo', 'policies-evaluate', 'user.name']);
+  yargs.command(evaluate)
+    .parse('evaluate user.name');
 });
