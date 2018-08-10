@@ -1,5 +1,6 @@
 'use strict';
 
+const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
@@ -25,8 +26,8 @@ const fsStub = Object.assign({}, fs, {
 const sleepStub = sinon.stub().resolves();
 let getShouldCallCallback = false;
 
-const { program, filesUpload } = proxyquire('../../../lib/commands/file', {
-  '../api': {
+const mocks = {
+  '../../api': {
     get: function (options, url) {
       const res = getStub(options, url);
       if (getShouldCallCallback) {
@@ -45,13 +46,19 @@ const { program, filesUpload } = proxyquire('../../../lib/commands/file', {
       callback();
     }
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   },
-  '../sleep': sleepStub,
+  '../../sleep': sleepStub,
   'fs': fsStub
-});
+};
+
+const get = proxyquire('../../../lib/cmds/files_cmds/get', mocks);
+const del = proxyquire('../../../lib/cmds/files_cmds/del', mocks);
+const list = proxyquire('../../../lib/cmds/files_cmds/list', mocks);
+const download = proxyquire('../../../lib/cmds/files_cmds/download', mocks);
+const upload = proxyquire('../../../lib/cmds/files_cmds/upload', mocks);
 
 test.afterEach.always(t => {
   getStub.reset();
@@ -71,13 +78,14 @@ test.serial.cb('The "files" command should list files for an account or dataset 
   getStub.onFirstCall().returns(res);
   callback = () => {
     t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], '/v1/files?pageSize=25&nextPageToken=&orderBy=name');
+    t.is(getStub.getCall(0).args[1], '/v1/files?datasetId=dataset&pageSize=25&nextPageToken=&orderBy=name');
     t.is(printSpy.callCount, 1);
     t.deepEqual(printSpy.getCall(0).args[0], { items: [] });
     t.end();
   };
 
-  program.parse(['node', 'lo', 'files']);
+  yargs.command(list)
+    .parse('list dataset');
 });
 
 test.serial.cb('The "files" command should list files for an account with optional args', t => {
@@ -85,13 +93,14 @@ test.serial.cb('The "files" command should list files for an account with option
   getStub.onFirstCall().returns(res);
   callback = () => {
     t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], '/v1/files?pageSize=30&nextPageToken=token&orderBy=name&datasetId=dataset&name=name');
+    t.is(getStub.getCall(0).args[1], '/v1/files?datasetId=dataset&pageSize=30&nextPageToken=token&orderBy=name&name=name');
     t.is(printSpy.callCount, 1);
     t.deepEqual(printSpy.getCall(0).args[0], { items: [] });
     t.end();
   };
 
-  program.parse(['node', 'lo', 'files', 'dataset', '--page-size', '30', '--prefix', 'name', '--next-page-token', 'token']);
+  yargs.command(list)
+    .parse('list dataset --page-size 30 --prefix name --next-page-token token');
 });
 
 test.serial.cb('The "files-get" command should get a file', t => {
@@ -105,13 +114,16 @@ test.serial.cb('The "files-get" command should get a file', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'files-get', 'fileid']);
+  yargs.command(get)
+    .parse('get fileid');
 });
 
 test.serial.cb('The "files-delete" command should delete a file', t => {
   const res = { data: {} };
   delStub.onFirstCall().returns(res);
-  program.parse(['node', 'lo', 'files-delete', 'fileid']);
+
+  yargs.command(del)
+    .parse('delete fileid');
 
   t.is(delStub.callCount, 1);
   t.is(delStub.getCall(0).args[1], '/v1/files/fileid');
@@ -130,7 +142,8 @@ test.serial.cb('The "files-download" command should download a file', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'files-download', 'fileid', '/dir']);
+  yargs.command(download)
+    .parse('download fileid /dir');
 });
 
 test.serial.cb('The "files-upload" command should upload a file', t => {
@@ -151,7 +164,8 @@ test.serial.cb('The "files-upload" command should upload a file', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'files-upload', `${__dirname}/data/file1.txt`, 'dataset']);
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data/file1.txt dataset`);
 });
 
 test.serial('The "files-upload" command should ignore already uploaded file error', t => {
@@ -164,7 +178,8 @@ test.serial('The "files-upload" command should ignore already uploaded file erro
   };
   postStub.onFirstCall().throws(error);
 
-  program.parse(['node', 'lo', 'files-upload', `${__dirname}/data/file1.txt`, 'dataset']);
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data/file1.txt dataset`);
 
   t.is(postStub.callCount, 1);
   t.is(postStub.getCall(0).args[1], '/v1/files');
@@ -205,7 +220,8 @@ test.serial.cb('The "files-upload" command should upload a directory of files', 
     t.end();
   };
 
-  program.parse(['node', 'lo', 'files-upload', `${__dirname}/data`, 'dataset']);
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data dataset`);
 });
 
 test.serial.cb('The "files-upload" command should recursively upload a directory of files', t => {
@@ -242,7 +258,8 @@ test.serial.cb('The "files-upload" command should recursively upload a directory
     t.end();
   };
 
-  program.parse(['node', 'lo', 'files-upload', `${__dirname}/data`, 'dataset', '--recursive']);
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data dataset --recursive`);
 });
 
 test.serial.cb('The "files-upload" command should upload a file with client supplied id', t => {
@@ -263,7 +280,8 @@ test.serial.cb('The "files-upload" command should upload a file with client supp
     t.end();
   };
 
-  program.parse(['node', 'lo', 'files-upload', `${__dirname}/data/file1.txt`, 'dataset', '--id', '1234']);
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data/file1.txt dataset --id 1234`);
 });
 
 test.serial.cb('The "files-upload" command should delete files after (verified) upload', t => {
@@ -334,7 +352,8 @@ test.serial.cb('The "files-upload" command should delete files after (verified) 
     t.end();
   };
 
-  program.parse(['node', 'lo', 'files-upload', `${__dirname}/data`, 'dataset', '--recursive', '--delete-after-upload']);
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data dataset --recursive --delete-after-upload`);
 });
 
 test.serial.cb('The "files-upload" command backoff verification retries', t => {
@@ -383,7 +402,8 @@ test.serial.cb('The "files-upload" command backoff verification retries', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'files-upload', `${__dirname}/data/file1.txt`, 'dataset', '--delete-after-upload']);
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data/file1.txt dataset --delete-after-upload`);
 });
 
 test.serial('The "files-upload" command will give up after so many verification retries', async t => {
@@ -397,7 +417,9 @@ test.serial('The "files-upload" command will give up after so many verification 
 
   callback = () => {};
 
-  const error = await t.throws(filesUpload(`${__dirname}/data/file1.txt`, 'dataset', {
+  const error = await t.throws(upload.handler({
+    file: `${__dirname}/data/file1.txt`,
+    datasetId: 'dataset',
     deleteAfterUpload: true
   }));
 
@@ -419,7 +441,9 @@ test.serial('The "files-upload" command will fail if verification fails', async 
 
   callback = () => {};
 
-  const error = await t.throws(filesUpload(`${__dirname}/data/file1.txt`, 'dataset', {
+  const error = await t.throws(upload.handler({
+    file: `${__dirname}/data/file1.txt`,
+    datasetId: 'dataset',
     deleteAfterUpload: true
   }));
 
