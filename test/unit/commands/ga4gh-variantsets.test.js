@@ -1,5 +1,6 @@
 'use strict';
 
+const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
@@ -10,17 +11,21 @@ const delStub = sinon.stub();
 const printSpy = sinon.spy();
 let callback;
 
-const program = proxyquire('../../../lib/commands/ga4gh-variantsets', {
-  '../ga4gh': {
+const mocks = {
+  '../../ga4gh': {
     get: getStub,
     post: postStub,
     del: delStub
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   }
-});
+};
+
+const get = proxyquire('../../../lib/cmds/genomics_cmds/get-variant-set', mocks);
+const del = proxyquire('../../../lib/cmds/genomics_cmds/delete-variant-set', mocks);
+const list = proxyquire('../../../lib/cmds/genomics_cmds/list-variant-sets', mocks);
 
 test.always.afterEach(t => {
   getStub.resetHistory();
@@ -48,7 +53,8 @@ test.serial.cb('The "ga4gh-variantsets" command should list variantsets for an a
     t.end();
   };
 
-  program.parse(['node', 'lo', 'ga4gh-variantsets', 'dataset']);
+  yargs.command(list)
+    .parse('list-variant-sets dataset');
 });
 
 test.serial.cb('The "ga4gh-variantsets-get" should get a variantset', t => {
@@ -62,7 +68,8 @@ test.serial.cb('The "ga4gh-variantsets-get" should get a variantset', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'ga4gh-variantsets-get', 'variantsetid']);
+  yargs.command(get)
+    .parse('get-variant-set variantsetid');
 });
 
 test.serial.cb('The "ga4gh-variantsets-delete" should delete a variantset', t => {
@@ -76,26 +83,6 @@ test.serial.cb('The "ga4gh-variantsets-delete" should delete a variantset', t =>
     t.end();
   };
 
-  program.parse(['node', 'lo', 'ga4gh-variantsets-delete', 'variantsetid']);
-});
-
-test.serial.cb('The "ga4gh-variantsets-create" should create a variantset', t => {
-  const res = { data: {} };
-  postStub.onFirstCall().returns(res);
-  callback = () => {
-    t.is(postStub.callCount, 1);
-    t.is(postStub.getCall(0).args[1], '/variantsets');
-    t.deepEqual(postStub.getCall(0).args[2], {
-      datasetId: 'dataset',
-      name: 'name',
-      fileId: 'file',
-      patientId: 'patient',
-      referenceSetId: 'GRCh37'
-    });
-    t.is(printSpy.callCount, 1);
-    t.is(printSpy.getCall(0).args[0], res.data);
-    t.end();
-  };
-
-  program.parse(['node', 'lo', 'ga4gh-variantsets-create', 'dataset', '-n', 'name', '-f', 'file', '-p', 'patient', '-r', 'GRCh37']);
+  yargs.command(del)
+    .parse('delete-variant-set variantsetid');
 });

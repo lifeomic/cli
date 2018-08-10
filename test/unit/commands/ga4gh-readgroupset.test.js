@@ -1,5 +1,6 @@
 'use strict';
 
+const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
@@ -10,22 +11,26 @@ const delStub = sinon.stub();
 const printSpy = sinon.spy();
 let callback;
 
-const program = proxyquire('../../../lib/commands/ga4gh-readgroupset', {
-  '../ga4gh': {
+const mocks = {
+  '../../ga4gh': {
     get: getStub,
     post: postStub,
     del: delStub
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   }
-});
+};
 
-test.always.afterEach(t => {
-  getStub.resetHistory();
-  postStub.resetHistory();
-  delStub.resetHistory();
+const get = proxyquire('../../../lib/cmds/genomics_cmds/get-readgroup-set', mocks);
+const del = proxyquire('../../../lib/cmds/genomics_cmds/delete-readgroup-set', mocks);
+const list = proxyquire('../../../lib/cmds/genomics_cmds/list-readgroup-sets', mocks);
+
+test.afterEach.always(t => {
+  getStub.reset();
+  postStub.reset();
+  delStub.reset();
   printSpy.resetHistory();
   callback = null;
 });
@@ -48,7 +53,8 @@ test.serial.cb('The "ga4gh-readgroupsets" command should list readgroupsets for 
     t.end();
   };
 
-  program.parse(['node', 'lo', 'ga4gh-readgroupsets', 'dataset']);
+  yargs.command(list)
+    .parse('list-readgroup-sets dataset');
 });
 
 test.serial.cb('The "ga4gh-readgroupsets-get" should get a readgroupset', t => {
@@ -62,7 +68,8 @@ test.serial.cb('The "ga4gh-readgroupsets-get" should get a readgroupset', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'ga4gh-readgroupsets-get', 'readgroupsetid']);
+  yargs.command(get)
+    .parse('get-readgroup-set readgroupsetid');
 });
 
 test.serial.cb('The "ga4gh-readgroupsets-delete" should delete a readgroupset', t => {
@@ -76,27 +83,6 @@ test.serial.cb('The "ga4gh-readgroupsets-delete" should delete a readgroupset', 
     t.end();
   };
 
-  program.parse(['node', 'lo', 'ga4gh-readgroupsets-delete', 'readgroupsetid']);
-});
-
-test.serial.cb('The "ga4gh-readgroupsets-create" should create a readgroupset', t => {
-  const res = { data: {} };
-  postStub.onFirstCall().returns(res);
-  callback = () => {
-    t.is(postStub.callCount, 1);
-    t.is(postStub.getCall(0).args[1], '/readgroupsets');
-    t.deepEqual(postStub.getCall(0).args[2], {
-      datasetId: 'dataset',
-      name: 'name',
-      sequenceType: 'dna',
-      fileId: 'file',
-      patientId: 'patient',
-      referenceSetId: 'GRCh37'
-    });
-    t.is(printSpy.callCount, 1);
-    t.is(printSpy.getCall(0).args[0], res.data);
-    t.end();
-  };
-
-  program.parse(['node', 'lo', 'ga4gh-readgroupsets-create', 'dataset', '-n', 'name', '-f', 'file', '-p', 'patient', '-r', 'GRCh37']);
+  yargs.command(del)
+    .parse('delete-readgroup-set readgroupsetid');
 });
