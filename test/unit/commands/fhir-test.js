@@ -181,7 +181,8 @@ test.serial.cb('The "fhir-get" command should get a fhir resource', t => {
 
   callback = () => {
     t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], 'account/dstu3/Patient/1234');
+    t.truthy(getStub.getCall(0).args[0]);
+    t.is(getStub.getCall(0).args[1], '/account/dstu3/Patient/1234');
     t.is(printSpy.callCount, 1);
     t.deepEqual(printSpy.getCall(0).args[0], {id: '1234', resourceType: 'Patient'});
     t.end();
