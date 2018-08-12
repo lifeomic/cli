@@ -45,7 +45,7 @@
     "eslint": "^4.19.1",
     "pkg": "^4.3.3",
     "proxyquire": "^2.0.1",
-    "sinon": "^4.5.0"
+    "sinon": "^5.0.1"
   },
   "eslintConfig": {
     "extends": "plugin:@lifeomic/node/recommended"
