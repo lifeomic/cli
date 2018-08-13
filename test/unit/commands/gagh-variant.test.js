@@ -1,5 +1,6 @@
 'use strict';
 
+const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
@@ -10,13 +11,13 @@ const delStub = sinon.stub();
 const printSpy = sinon.spy();
 let callback;
 
-const program = proxyquire('../../../lib/commands/ga4gh-variant', {
-  '../ga4gh': {
+const program = proxyquire('../../../lib/cmds/genomics_cmds/list-variants', {
+  '../../ga4gh': {
     get: getStub,
     post: postStub,
     del: delStub
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   }
@@ -43,7 +44,7 @@ test.serial.cb('The "ga4gh-variants" command should list reads for a variantset'
       start: 25,
       end: 35,
       referenceName: 'chrY',
-      pageSize: 5,
+      pageSize: 25,
       pageToken: undefined
     });
     t.is(printSpy.callCount, 1);
@@ -51,5 +52,6 @@ test.serial.cb('The "ga4gh-variants" command should list reads for a variantset'
     t.end();
   };
 
-  program.parse(['node', 'lo', 'ga4gh-variants', 'variantsetid', '--start', '25', '--end', '35', '--reference', 'chrY']);
+  yargs.command(program)
+    .parse('list-variants variantsetid --start 25 --end 35 --reference chrY');
 });

@@ -1,5 +1,6 @@
 'use strict';
 
+const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
@@ -8,11 +9,11 @@ const postStub = sinon.stub();
 const printSpy = sinon.spy();
 let callback;
 
-const program = proxyquire('../../../lib/commands/ga4gh-genomicset', {
-  '../ga4gh': {
+const program = proxyquire('../../../lib/cmds/genomics_cmds/create-genomic-set', {
+  '../../ga4gh': {
     post: postStub
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   }
@@ -43,5 +44,6 @@ test.serial.cb('The "ga4gh-genomicsets-create" should create a genomic set', t =
     t.end();
   };
 
-  program.parse(['node', 'lo', 'ga4gh-genomicsets-create', 'dataset', '-n', 'name', '-v', 'variantFile', '-b', 'bamFile', '-p', 'patient', '-r', 'GRCh37']);
+  yargs.command(program)
+    .parse('create-genomic-set dataset -n name -v variantFile -b bamFile -p patient -r  GRCh37');
 });

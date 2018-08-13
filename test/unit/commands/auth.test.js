@@ -1,18 +1,23 @@
 'use strict';
 
+const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
 
 const promptStub = sinon.stub();
 const setStub = sinon.stub();
+let callback;
 
-const program = proxyquire('../../../lib/commands/auth', {
+const program = proxyquire('../../../lib/cmds/auth', {
   'inquirer': {
     prompt: promptStub
   },
   '../config': {
-    set: setStub,
+    set: (key, value) => {
+      setStub(key, value);
+      callback();
+    },
     getEnvironment: () => 'env'
   }
 });
@@ -22,12 +27,16 @@ test.afterEach(t => {
   setStub.resetHistory();
 });
 
-test.serial('The "auth --set" command should update the current access token', async t => {
+test.serial.cb('The "auth --set" command should update the current access token', t => {
   promptStub.returns({
     token: 'token'
   });
 
-  await program.parse(['node', 'lo', 'auth', '--set']);
+  callback = () => {
+    t.true(setStub.calledWith('env.tokens.accessToken', 'token'));
+    t.end();
+  };
 
-  t.true(setStub.calledWith('env.tokens.accessToken', 'token'));
+  yargs.command(program)
+    .parse('auth --set');
 });

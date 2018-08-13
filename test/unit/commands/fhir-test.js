@@ -1,5 +1,6 @@
 'use strict';
 
+const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
@@ -13,23 +14,26 @@ const printSpy = sinon.spy();
 const stdinStub = sinon.stub();
 let callback;
 
-const program = proxyquire('../../../lib/commands/fhir', {
-  '../fhir': {
+const mocks = {
+  '../../fhir': {
     get: getStub,
     post: postStub,
     del: delStub,
-    put: putStub
+    put: putStub,
+    getAccount: () => 'account'
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   },
-  '../config': {
-    getEnvironment: () => 'dev',
-    get: () => 'account'
-  },
-  '../stdin': () => stdinStub()
-});
+  '../../stdin': () => stdinStub()
+};
+
+const get = proxyquire('../../../lib/cmds/fhir_cmds/get', mocks);
+const del = proxyquire('../../../lib/cmds/fhir_cmds/del', mocks);
+const list = proxyquire('../../../lib/cmds/fhir_cmds/list', mocks);
+const ingest = proxyquire('../../../lib/cmds/fhir_cmds/ingest', mocks);
+const searchDel = proxyquire('../../../lib/cmds/fhir_cmds/search-del', mocks);
 
 test.afterEach.always(t => {
   getStub.reset();
@@ -60,7 +64,8 @@ test.serial.cb('The "fhir" command should list fhir resources', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'fhir', 'Patient']);
+  yargs.command(list)
+    .parse('list Patient');
 });
 
 test.serial.cb('Limit should set the page size for the "fhir" command', t => {
@@ -77,7 +82,8 @@ test.serial.cb('Limit should set the page size for the "fhir" command', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'fhir', '--limit', '10', 'Patient']);
+  yargs.command(list)
+    .parse('list Patient --limit 10');
 });
 
 test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
@@ -109,8 +115,9 @@ test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'fhir-ingest']);
-  stdin.push(null); // end the stream
+  yargs.command(ingest)
+    .parse('ingest');
+  stdin.push(null);
 });
 
 test.serial.cb('The "fhir-ingest" with dataset command should update a fhir resource with dataset', t => {
@@ -150,8 +157,9 @@ test.serial.cb('The "fhir-ingest" with dataset command should update a fhir reso
     t.end();
   };
 
-  program.parse(['node', 'lo', 'fhir-ingest', '--dataset', 'abc']);
-  stdin.push(null); // end the stream
+  yargs.command(ingest)
+    .parse('ingest --dataset abc');
+  stdin.push(null);
 });
 
 test.serial.cb('The "fhir-delete" command should delete a fhir resource', t => {
@@ -163,11 +171,13 @@ test.serial.cb('The "fhir-delete" command should delete a fhir resource', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'fhir-delete', 'Patient', '1234']);
+  yargs.command(del)
+    .parse('delete Patient 1234');
 });
 
 test.serial.cb('The "fhir-search-delete" command should delete all fhir resource of a certain type matching a query and dataset', t => {
-  program.parse(['node', 'lo', 'fhir-search-delete', 'Patient', '--dataset', 'dataset-id', 'name=John']);
+  yargs.command(searchDel)
+    .parse('search-delete Patient --dataset dataset-id --query name=John');
 
   t.is(delStub.callCount, 1);
   t.is(delStub.getCall(0).args[1], 'account/dstu3/Patient?name=John&_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7Cdataset-id');
@@ -181,11 +191,13 @@ test.serial.cb('The "fhir-get" command should get a fhir resource', t => {
 
   callback = () => {
     t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], 'account/dstu3/Patient/1234');
+    t.truthy(getStub.getCall(0).args[0]);
+    t.is(getStub.getCall(0).args[1], '/account/dstu3/Patient/1234');
     t.is(printSpy.callCount, 1);
     t.deepEqual(printSpy.getCall(0).args[0], {id: '1234', resourceType: 'Patient'});
     t.end();
   };
 
-  program.parse(['node', 'lo', 'fhir-get', 'Patient', '1234']);
+  yargs.command(get)
+    .parse('get Patient 1234');
 });

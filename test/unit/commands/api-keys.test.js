@@ -2,35 +2,39 @@
 
 const sinon = require('sinon');
 const test = require('ava');
+const yargs = require('yargs');
 const proxyquire = require('proxyquire');
 
 const getStub = sinon.stub();
 const postStub = sinon.stub();
 const delStub = sinon.stub();
 const printSpy = sinon.spy();
-let callback;
 
-const program = proxyquire('../../../lib/commands/api-keys', {
-  '../api': {
+let callback = null;
+const mocks = {
+  '../../api': {
     get: getStub,
     post: postStub,
     del: delStub
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   }
-});
+};
+
+const create = proxyquire('../../../lib/cmds/api_keys_cmds/create', mocks);
+const del = proxyquire('../../../lib/cmds/api_keys_cmds/del', mocks);
+const list = proxyquire('../../../lib/cmds/api_keys_cmds/list', mocks);
 
 test.afterEach(t => {
   getStub.resetHistory();
   postStub.resetHistory();
   delStub.resetHistory();
   printSpy.resetHistory();
-  callback = null;
 });
 
-test.cb('The "api-keys" command should list api-keys for an account', t => {
+test.cb('The "api-keys list" command should list api-keys for an account', t => {
   const res = { data: { items: [] } };
   getStub.onFirstCall().returns(res);
   callback = () => {
@@ -41,10 +45,11 @@ test.cb('The "api-keys" command should list api-keys for an account', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'api-keys']);
+  yargs.command(list)
+    .parse('list');
 });
 
-test.cb('The "api-keys" command should list api-keys for an account with optional args', t => {
+test.cb('The "api-keys list" command should list api-keys for an account with optional args', t => {
   const res = { data: { items: [] } };
   getStub.onFirstCall().returns(res);
   callback = () => {
@@ -55,34 +60,37 @@ test.cb('The "api-keys" command should list api-keys for an account with optiona
     t.end();
   };
 
-  program.parse(['node', 'lo', 'api-keys', '--page-size', '30', '--next-page-token', 'token']);
+  yargs.command(list)
+    .parse('list --page-size 30 --next-page-token token');
 });
 
-test.cb('The "api-keys-delete" should delete an API key', t => {
+test.cb('The "api-keys delete" should delete an API key', t => {
   const res = { data: {} };
   delStub.onFirstCall().returns(res);
   callback = () => {
     t.is(delStub.callCount, 1);
     t.is(delStub.getCall(0).args[1], '/v1/api-keys/apiKeyId');
     t.is(printSpy.callCount, 1);
-    t.is(printSpy.getCall(0).args[0], res.data);
+    t.deepEqual(printSpy.getCall(0).args[0], {id: 'apiKeyId'});
     t.end();
   };
 
-  program.parse(['node', 'lo', 'api-keys-delete', 'apiKeyId']);
+  yargs.command(del)
+    .parse('delete apiKeyId');
 });
 
-test.cb('The "api-keys-create" should create an API key', t => {
+test.cb('The "api-keys create" should create an API key', t => {
   const res = { data: {} };
   postStub.onFirstCall().returns(res);
   callback = () => {
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], '/v1/api-keys');
-    t.deepEqual(postStub.getCall(0).args[2], { name: 'my key', expireInDays: 23 });
+    t.deepEqual(postStub.getCall(0).args[2], { name: 'mykey', expireInDays: 23 });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
     t.end();
   };
 
-  program.parse(['node', 'lo', 'api-keys-create', 'my key', '--expire-in-days', 23]);
+  yargs.command(create)
+    .parse('create mykey --expire-in-days 23');
 });

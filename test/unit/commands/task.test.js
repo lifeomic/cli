@@ -4,23 +4,29 @@ const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
 
+const yargs = require('yargs');
 const getStub = sinon.stub();
 const postStub = sinon.stub();
 const printSpy = sinon.spy();
 const readStub = sinon.stub();
 let callback;
 
-const program = proxyquire('../../../lib/commands/task', {
-  '../api': {
+const mocks = {
+  '../../api': {
     get: getStub,
     post: postStub
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   },
-  '../read': async () => readStub()
-});
+  '../../read': async () => readStub()
+};
+
+const get = proxyquire('../../../lib/cmds/tasks_cmds/get', mocks);
+const cancel = proxyquire('../../../lib/cmds/tasks_cmds/cancel', mocks);
+const list = proxyquire('../../../lib/cmds/tasks_cmds/list', mocks);
+const create = proxyquire('../../../lib/cmds/tasks_cmds/create', mocks);
 
 test.afterEach.always(t => {
   getStub.resetHistory();
@@ -41,7 +47,8 @@ test.serial.cb('The "tasks" command should list tasks for an account', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'tasks', '1']);
+  yargs.command(list)
+    .parse('list 1');
 });
 
 test.serial.cb('The "tasks-get" command should fetch a task', t => {
@@ -55,7 +62,8 @@ test.serial.cb('The "tasks-get" command should fetch a task', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'tasks-get', 'taskid']);
+  yargs.command(get)
+    .parse('get taskid');
 });
 
 test.serial.cb('The "tasks-create" command should create a task', t => {
@@ -71,7 +79,8 @@ test.serial.cb('The "tasks-create" command should create a task', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'tasks-create']);
+  yargs.command(create)
+    .parse('create');
 });
 
 test.serial.cb('The "tasks-cancel" command should cancel a task', t => {
@@ -84,5 +93,6 @@ test.serial.cb('The "tasks-cancel" command should cancel a task', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'tasks-cancel', 'taskId']);
+  yargs.command(cancel)
+    .parse('cancel taskId');
 });

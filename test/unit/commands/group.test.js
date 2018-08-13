@@ -1,5 +1,6 @@
 'use strict';
 
+const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
@@ -11,24 +12,32 @@ const putStub = sinon.stub();
 const printSpy = sinon.spy();
 let callback;
 
-const program = proxyquire('../../../lib/commands/group', {
-  '../api': {
+const mocks = {
+  '../../api': {
     get: getStub,
     post: postStub,
     del: delStub,
     put: putStub
   },
-  '../print': (data, opts) => {
+  '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   }
-});
+};
 
-test.afterEach(t => {
-  getStub.resetHistory();
-  postStub.resetHistory();
-  delStub.resetHistory();
-  putStub.resetHistory();
+const get = proxyquire('../../../lib/cmds/groups_cmds/get', mocks);
+const list = proxyquire('../../../lib/cmds/groups_cmds/list', mocks);
+const create = proxyquire('../../../lib/cmds/groups_cmds/create', mocks);
+const update = proxyquire('../../../lib/cmds/groups_cmds/update', mocks);
+const membersAdd = proxyquire('../../../lib/cmds/groups_cmds/members-add', mocks);
+const membersRemove = proxyquire('../../../lib/cmds/groups_cmds/members-remove', mocks);
+const members = proxyquire('../../../lib/cmds/groups_cmds/members', mocks);
+
+test.afterEach.always(t => {
+  getStub.reset();
+  postStub.reset();
+  delStub.reset();
+  putStub.reset();
   printSpy.resetHistory();
   callback = null;
 });
@@ -44,7 +53,8 @@ test.serial.cb('The "groups" command should list groups for an account', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'groups']);
+  yargs.command(list)
+    .parse('list');
 });
 
 test.serial.cb('The "groups" command should list groups for an account with optional args', t => {
@@ -58,7 +68,8 @@ test.serial.cb('The "groups" command should list groups for an account with opti
     t.end();
   };
 
-  program.parse(['node', 'lo', 'groups', '--page-size', '30', '--prefix', 'name', '--next-page-token', 'token']);
+  yargs.command(list)
+    .parse('list --page-size 30 --prefix name --next-page-token token');
 });
 
 test.serial.cb('The "groups-get" command should get a group', t => {
@@ -72,7 +83,8 @@ test.serial.cb('The "groups-get" command should get a group', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'groups-get', 'groupid']);
+  yargs.command(get)
+    .parse('get groupid');
 });
 
 test.serial.cb('The "groups-create" command should create a groups', t => {
@@ -81,13 +93,14 @@ test.serial.cb('The "groups-create" command should create a groups', t => {
   callback = () => {
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], '/v1/account/groups');
-    t.deepEqual(postStub.getCall(0).args[2], { name: 'groupname' });
+    t.deepEqual(postStub.getCall(0).args[2], { name: 'groupname', description: undefined });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
     t.end();
   };
 
-  program.parse(['node', 'lo', 'groups-create', 'groupname']);
+  yargs.command(create)
+    .parse('create groupname');
 });
 
 test.serial.cb('The "groups-update" command should update a groups', t => {
@@ -102,7 +115,8 @@ test.serial.cb('The "groups-update" command should update a groups', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'groups-update', 'groupid', 'groupname', 'groupdesc']);
+  yargs.command(update)
+    .parse('update groupid groupname -d groupdesc');
 });
 
 test.serial.cb('The "groups-members" command should list members for a group', t => {
@@ -116,7 +130,8 @@ test.serial.cb('The "groups-members" command should list members for a group', t
     t.end();
   };
 
-  program.parse(['node', 'lo', 'groups-members', 'groupid']);
+  yargs.command(members)
+    .parse('members groupid');
 });
 
 test.serial.cb('The "groups-members-remove" command should remove a user', t => {
@@ -130,7 +145,8 @@ test.serial.cb('The "groups-members-remove" command should remove a user', t => 
     t.end();
   };
 
-  program.parse(['node', 'lo', 'groups-members-remove', 'groupid', 'userid']);
+  yargs.command(membersRemove)
+    .parse('members-remove groupid userid');
 });
 
 test.serial.cb('The "groups-members-add" command should add a user', t => {
@@ -144,5 +160,6 @@ test.serial.cb('The "groups-members-add" command should add a user', t => {
     t.end();
   };
 
-  program.parse(['node', 'lo', 'groups-members-add', 'groupid', 'userid']);
+  yargs.command(membersAdd)
+    .parse('members-add groupid userid');
 });
