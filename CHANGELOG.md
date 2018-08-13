@@ -14,6 +14,9 @@ Versioning](http://semver.org/spec/v2.0.0.html).
   files-list` are now `lo files list`.  You can new view help like so: `lo
   --help`, `lo <command> --help`, `lo <command> <subcommand> --help`.
 
+- `fhir ingest' command supports json-lines and will stream and batch the
+  resources so it can support arbitrarily large ingests.
+
 ## [5.10.0] - 2018-08-08
 
 #### Changed
