@@ -1,6 +1,6 @@
 {
   "name": "@lifeomic/cli",
-  "version": "5.10.0",
+  "version": "6.0.0",
   "description": "CLI for interacting with the LifeOmic PHC API.",
   "main": "lo.js",
   "author": "LifeOmic <development@lifeomic.com>",
@@ -37,12 +37,14 @@
     "queue": "^4.4.2",
     "recursive-readdir": "^2.2.2",
     "stoppable": "^1.0.5",
-    "yargs": "^12.0.1"
+    "yargs": "^12.0.1",
+    "stream-json": "^1.1.1"
   },
   "devDependencies": {
     "@lifeomic/eslint-plugin-node": "^1.1.1",
     "ava": "^0.25.0",
     "eslint": "^4.19.1",
+    "memory-streams": "^0.1.3",
     "pkg": "^4.3.3",
     "proxyquire": "^2.0.1",
     "sinon": "^4.5.0"

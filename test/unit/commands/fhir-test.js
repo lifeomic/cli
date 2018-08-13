@@ -4,13 +4,14 @@ const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
+const streams = require('memory-streams');
 
 const getStub = sinon.stub();
 const postStub = sinon.stub();
 const delStub = sinon.stub();
 const putStub = sinon.stub();
 const printSpy = sinon.spy();
-const readStub = sinon.stub();
+const stdinStub = sinon.stub();
 let callback;
 
 const mocks = {
@@ -25,7 +26,7 @@ const mocks = {
     printSpy(data, opts);
     callback();
   },
-  '../../read': async () => readStub()
+  '../../stdin': () => stdinStub()
 };
 
 const get = proxyquire('../../../lib/cmds/fhir_cmds/get', mocks);
@@ -40,9 +41,14 @@ test.afterEach.always(t => {
   delStub.reset();
   putStub.reset();
   printSpy.resetHistory();
-  readStub.reset();
+  stdinStub.reset();
   callback = null;
 });
+
+function mockStdin (data) {
+  const result = new streams.ReadableStream(data);
+  return result;
+}
 
 test.serial.cb('The "fhir" command should list fhir resources', t => {
   const res = {data: { entry: [] }};
@@ -80,12 +86,13 @@ test.serial.cb('Limit should set the page size for the "fhir" command', t => {
     .parse('list Patient --limit 10');
 });
 
-test.serial.cb('The "fhir-ingest" with command should update a fhir resource', t => {
-  const res = {data: {entry: [{location: '/account/dstu3/Patient/1234', status: '200'}]}};
+test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
+  const res = {data: {entry: [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]}};
   postStub.returns(res);
 
   const data = [{resourceType: 'Patient', id: '1234'}];
-  readStub.onFirstCall().returns(data);
+  const stdin = mockStdin(JSON.stringify(data) + '\n');
+  stdinStub.returns(stdin);
 
   callback = () => {
     t.is(postStub.callCount, 1);
@@ -104,20 +111,22 @@ test.serial.cb('The "fhir-ingest" with command should update a fhir resource', t
       ]
     });
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], [{location: '/account/dstu3/Patient/1234', status: '200'}]);
+    t.deepEqual(printSpy.getCall(0).args[0], [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]);
     t.end();
   };
 
   yargs.command(ingest)
     .parse('ingest');
+  stdin.push(null);
 });
 
 test.serial.cb('The "fhir-ingest" with dataset command should update a fhir resource with dataset', t => {
-  const res = {data: {entry: [{location: '/account/dstu3/Patient/1234', status: '200'}]}};
+  const res = {data: {entry: [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]}};
   postStub.returns(res);
 
   const data = [{resourceType: 'Patient', id: '1234'}];
-  readStub.onFirstCall().returns(data);
+  const stdin = mockStdin(JSON.stringify(data) + '\n');
+  stdinStub.returns(stdin);
 
   callback = () => {
     t.is(postStub.callCount, 1);
@@ -144,12 +153,13 @@ test.serial.cb('The "fhir-ingest" with dataset command should update a fhir reso
       ]
     });
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], [{location: '/account/dstu3/Patient/1234', status: '200'}]);
+    t.deepEqual(printSpy.getCall(0).args[0], [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]);
     t.end();
   };
 
   yargs.command(ingest)
     .parse('ingest --dataset abc');
+  stdin.push(null);
 });
 
 test.serial.cb('The "fhir-delete" command should delete a fhir resource', t => {
