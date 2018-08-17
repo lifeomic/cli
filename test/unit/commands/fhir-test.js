@@ -4,7 +4,7 @@ const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
-const streams = require('memory-streams');
+const fs = require('fs');
 
 const getStub = sinon.stub();
 const postStub = sinon.stub();
@@ -44,11 +44,6 @@ test.afterEach.always(t => {
   stdinStub.reset();
   callback = null;
 });
-
-function mockStdin (data) {
-  const result = new streams.ReadableStream(data);
-  return result;
-}
 
 test.serial.cb('The "fhir" command should list fhir resources', t => {
   const res = {data: { entry: [] }};
@@ -90,8 +85,8 @@ test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
   const res = {data: {entry: [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]}};
   postStub.returns(res);
 
-  const data = [{resourceType: 'Patient', id: '1234'}];
-  const stdin = mockStdin(JSON.stringify(data) + '\n');
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  const stdin = fs.createReadStream(`${__dirname}/fhir/array.json`);
   stdinStub.returns(stdin);
 
   callback = () => {
@@ -117,15 +112,14 @@ test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
 
   yargs.command(ingest)
     .parse('ingest');
-  stdin.push(null);
 });
 
 test.serial.cb('The "fhir-ingest" with dataset command should update a fhir resource with dataset', t => {
   const res = {data: {entry: [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]}};
   postStub.returns(res);
 
-  const data = [{resourceType: 'Patient', id: '1234'}];
-  const stdin = mockStdin(JSON.stringify(data) + '\n');
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  const stdin = fs.createReadStream(`${__dirname}/fhir/object.json`);
   stdinStub.returns(stdin);
 
   callback = () => {
@@ -159,7 +153,6 @@ test.serial.cb('The "fhir-ingest" with dataset command should update a fhir reso
 
   yargs.command(ingest)
     .parse('ingest --dataset abc');
-  stdin.push(null);
 });
 
 test.serial.cb('The "fhir-delete" command should delete a fhir resource', t => {
