@@ -27,6 +27,7 @@ const get = proxyquire('../../../lib/cmds/tasks_cmds/get', mocks);
 const cancel = proxyquire('../../../lib/cmds/tasks_cmds/cancel', mocks);
 const list = proxyquire('../../../lib/cmds/tasks_cmds/list', mocks);
 const create = proxyquire('../../../lib/cmds/tasks_cmds/create', mocks);
+const createFoundationTask = proxyquire('../../../lib/cmds/tasks_cmds/create-foundation-task', mocks);
 
 test.afterEach.always(t => {
   getStub.resetHistory();
@@ -81,6 +82,27 @@ test.serial.cb('The "tasks-create" command should create a task', t => {
 
   yargs.command(create)
     .parse('create');
+});
+
+test.serial.cb('The "create-foundation-xml-import" command should create a foundation ingest task', t => {
+  const res = { data: {} };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/tasks/system/foundation-xml-import');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      xmlFileId: 'c8ef7300-1373-4e51-8eb9-ff333600f6a5',
+      datasetId: 'db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3',
+      reportFileName: 'SMP37669.pdf',
+      subjectId: '2a6dc73e-ed30-4387-94c1-0cd661da56d9'
+    });
+    t.is(printSpy.callCount, 1);
+    t.is(printSpy.getCall(0).args[0], res.data);
+    t.end();
+  };
+
+  yargs.command(createFoundationTask)
+    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r SMP37669.pdf -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9');
 });
 
 test.serial.cb('The "tasks-cancel" command should cancel a task', t => {
