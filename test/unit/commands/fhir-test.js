@@ -170,10 +170,10 @@ test.serial.cb('The "fhir-delete" command should delete a fhir resource', t => {
 
 test.serial.cb('The "fhir-search-delete" command should delete all fhir resource of a certain type matching a query and dataset', t => {
   yargs.command(searchDel)
-    .parse('search-delete Patient --dataset dataset-id --query name=John');
+    .parse('search-delete Patient project-id --query name=John');
 
   t.is(delStub.callCount, 1);
-  t.is(delStub.getCall(0).args[1], 'account/dstu3/Patient?name=John&_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7Cdataset-id');
+  t.is(delStub.getCall(0).args[1], 'account/dstu3/Patient?name=John&_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7Cproject-id');
   t.is(printSpy.callCount, 0);
   t.end();
 });
