@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic
 Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.2.0] - 2018-08-24
+
+#### Changed
+
+- Project id is now a required argument to the `lo fhir ingest` command.
+
 ## [6.1.3] - 2018-08-23
 
 #### Fixed
