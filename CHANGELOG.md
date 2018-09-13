@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic
 Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.4.0] - 2018-09-13
+
+#### Changed
+
+- `lo tasks create-foundation-xml-import` - removed report file name argument
+  and replaced with file id.
+
 ## [6.3.0] - 2018-08-24
 
 #### Added
@@ -28,15 +35,15 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 #### Fixed
 
-- Properly handle errors for `lo fhir ingest` by stopping the ingest at
-  the first error.
+- Properly handle errors for `lo fhir ingest` by stopping the ingest at the
+  first error.
 
 ## [6.1.1] - 2018-08-17
 
 #### Fixed
 
-- Prevent `lo fhir ingest` from doing parallel POST requests and causing
-  rate limiting and other issues.
+- Prevent `lo fhir ingest` from doing parallel POST requests and causing rate
+  limiting and other issues.
 
 ## [6.1.0] - 2018-08-17
 
