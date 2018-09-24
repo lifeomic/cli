@@ -115,10 +115,9 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
     t.deepEqual(postStub.getCall(0).args[2], {
       nantomicsVcfFileId: 'c8ef7300-1373-4e51-8eb9-ff333600f6a5',
       datasetId: 'db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3',
-      vcfFileName: 'converted.vcf',
+      outputFilePrefix: 'converted',
       subjectId: '2a6dc73e-ed30-4387-94c1-0cd661da56d9',
-      sequenceType: 'germline',
-      rgelFileName: 'foo.rgel'
+      sequenceType: 'germline'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -126,7 +125,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
   };
 
   yargs.command(createNantomicsTask)
-    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -n converted.vcf -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -r foo.rgel -e germline');
+    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline');
 });
 
 test.serial.cb('The "tasks-cancel" command should cancel a task', t => {
