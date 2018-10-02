@@ -59,3 +59,25 @@ test.serial.cb('The "insights-run-query" command should post a json query', t =>
   yargs.command(program)
     .parse('query 1 --sql "SELECT filter FROM gene"');
 });
+
+test.serial.cb('The "insights-run-query" command allows cohort to be used', t => {
+  const query = { wicked: 'analyticsQuery' };
+  const res = { data: { genes: ['A'], samples: ['X', 'Y', 'Z'] } };
+  postStub.onFirstCall().returns(res);
+  readStub.onFirstCall().returns(query);
+
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/analytics/dsl');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      cohort_id: '2',
+      query
+    });
+    t.is(printSpy.callCount, 1);
+    t.deepEqual(printSpy.getCall(0).args[0], res.data);
+    t.end();
+  };
+
+  yargs.command(program)
+    .parse('query 1 --cohortId 2');
+});
