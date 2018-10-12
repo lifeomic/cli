@@ -95,7 +95,8 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
       xmlFileId: 'c8ef7300-1373-4e51-8eb9-ff333600f6a5',
       datasetId: 'db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3',
       reportFileId: '1234',
-      subjectId: '2a6dc73e-ed30-4387-94c1-0cd661da56d9'
+      subjectId: '2a6dc73e-ed30-4387-94c1-0cd661da56d9',
+      sequenceName: 'test3'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -103,7 +104,7 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
   };
 
   yargs.command(createFoundationTask)
-    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9');
+    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3');
 });
 
 test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantomics ingest task', t => {
@@ -117,7 +118,8 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
       datasetId: 'db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3',
       outputFilePrefix: 'converted',
       subjectId: '2a6dc73e-ed30-4387-94c1-0cd661da56d9',
-      sequenceType: 'germline'
+      sequenceType: 'germline',
+      sequenceName: 'test4'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -125,7 +127,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
   };
 
   yargs.command(createNantomicsTask)
-    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline');
+    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4');
 });
 
 test.serial.cb('The "tasks-cancel" command should cancel a task', t => {
