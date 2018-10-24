@@ -14,6 +14,7 @@ const printSpy = sinon.spy();
 const downloadSpy = sinon.spy();
 const uploadSpy = sinon.spy();
 const deleteFileStub = sinon.stub();
+const getFileVerificationStreamStub = sinon.stub();
 let callback;
 
 const fsStub = Object.assign({}, fs, {
@@ -44,6 +45,13 @@ const mocks = {
     upload: function (url, file, size) {
       uploadSpy(url, file, size);
       callback();
+    },
+    getFileVerificationStream: async function (filePath, fileSize) {
+      getFileVerificationStreamStub(filePath, fileSize);
+      return {
+        data: 'data',
+        contentMD5: 'contentMD5'
+      };
     }
   },
   '../../print': (data, opts) => {
@@ -150,13 +158,16 @@ test.serial.cb('The "files-upload" command should upload a file', t => {
   const res = { data: { uploadUrl: 'https://host/upload' } };
   postStub.onFirstCall().returns(res);
   callback = () => {
+    t.is(getFileVerificationStreamStub.callCount, 1);
+    t.is(getFileVerificationStreamStub.getCall(0).args[1], 7);
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], '/v1/files');
     t.deepEqual(postStub.getCall(0).args[2], {
       id: undefined,
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     });
     t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
     t.is(uploadSpy.getCall(0).args[1], `${__dirname}/data/file1.txt`);
@@ -168,7 +179,7 @@ test.serial.cb('The "files-upload" command should upload a file', t => {
     .parse(`upload ${__dirname}/data/file1.txt dataset`);
 });
 
-test.serial('The "files-upload" command should ignore already uploaded file error', t => {
+test.serial.cb('The "files-upload" command should ignore already uploaded file error', t => {
   const error = {
     response: {
       data: {
@@ -177,19 +188,22 @@ test.serial('The "files-upload" command should ignore already uploaded file erro
     }
   };
   postStub.onFirstCall().throws(error);
-
   yargs.command(upload)
     .parse(`upload ${__dirname}/data/file1.txt dataset`);
 
-  t.is(postStub.callCount, 1);
-  t.is(postStub.getCall(0).args[1], '/v1/files');
-  t.deepEqual(postStub.getCall(0).args[2], {
-    id: undefined,
-    name: `${__dirname}/data/file1.txt`,
-    datasetId: 'dataset',
-    overwrite: undefined
+  process.nextTick(() => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/files');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `${__dirname}/data/file1.txt`,
+      datasetId: 'dataset',
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
+    });
+    t.is(uploadSpy.callCount, 0);
+    t.end();
   });
-  t.is(uploadSpy.callCount, 0);
 });
 
 test.serial.cb('The "files-upload" command should upload a directory of files', t => {
@@ -206,13 +220,15 @@ test.serial.cb('The "files-upload" command should upload a directory of files', 
       id: undefined,
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     });
     t.deepEqual(postStub.getCall(1).args[2], {
       id: undefined,
       name: `${__dirname}/data/file2.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     });
 
     t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file1.txt`, 7));
@@ -272,7 +288,8 @@ test.serial.cb('The "files-upload" command should upload a file with client supp
       id: '1234',
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     });
     t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
     t.is(uploadSpy.getCall(0).args[1], `${__dirname}/data/file1.txt`);
