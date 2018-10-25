@@ -12,6 +12,13 @@ Versioning](http://semver.org/spec/v2.0.0.html).
 
 - Added Content-MD5 checks for s3 file uploads
 
+#### Fixed
+
+- Renamed the `--dataset` option on `lo fhir ingest` to `--project`
+  to match the other `fhir` commands.
+
+- Added retries on `5xx` errors to the `fhir` commands.
+
 ## [6.9.0] - 2018-10-12
 
 #### Added
