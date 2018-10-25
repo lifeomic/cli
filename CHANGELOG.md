@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic
 Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [??] - 2018-1016
+
+#### Fixed
+
+- Renamed the `--dataset` option on `lo fhir ingest` to `--project`
+  to match the other `fhir` commands.
+
+- Added retries on `5xx` errors to the `fhir` commands.
+
 ## [6.9.0] - 2018-10-12
 
 #### Added

@@ -114,7 +114,7 @@ test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
     .parse('ingest');
 });
 
-test.serial.cb('The "fhir-ingest" with dataset command should update a fhir resource with dataset', t => {
+test.serial.cb('The "fhir-ingest" with project command should update a fhir resource with dataset', t => {
   const res = {data: {entry: [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]}};
   postStub.returns(res);
 
@@ -152,7 +152,7 @@ test.serial.cb('The "fhir-ingest" with dataset command should update a fhir reso
   };
 
   yargs.command(ingest)
-    .parse('ingest --dataset abc');
+    .parse('ingest --project abc');
 });
 
 test.serial.cb('The "fhir-delete" command should delete a fhir resource', t => {
