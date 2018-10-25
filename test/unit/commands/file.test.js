@@ -159,6 +159,7 @@ test.serial.cb('The "files-upload" command should upload a file', t => {
   postStub.onFirstCall().returns(res);
   callback = () => {
     t.is(getFileVerificationStreamStub.callCount, 1);
+    t.is(getFileVerificationStreamStub.getCall(0).args[0], `${__dirname}/data/file1.txt`);
     t.is(getFileVerificationStreamStub.getCall(0).args[1], 7);
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], '/v1/files');
@@ -170,8 +171,7 @@ test.serial.cb('The "files-upload" command should upload a file', t => {
       contentMD5: 'contentMD5'
     });
     t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
-    t.is(uploadSpy.getCall(0).args[1], `${__dirname}/data/file1.txt`);
-    t.is(uploadSpy.getCall(0).args[2], 7);
+    t.is(uploadSpy.getCall(0).args[1], 7);
     t.end();
   };
 
@@ -231,8 +231,8 @@ test.serial.cb('The "files-upload" command should upload a directory of files', 
       contentMD5: 'contentMD5'
     });
 
-    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file1.txt`, 7));
-    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file2.txt`, 7));
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
     t.end();
   };
 
@@ -254,22 +254,26 @@ test.serial.cb('The "files-upload" command should recursively upload a directory
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     }));
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file2.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     }));
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/dir/file3.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     }));
 
-    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file1.txt`, 7));
-    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file2.txt`, 7));
-    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/dir/file3.txt`, 7));
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file2.txt`, 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/dir/file3.txt`, 7));
 
     t.end();
   };
@@ -292,8 +296,9 @@ test.serial.cb('The "files-upload" command should upload a file with client supp
       contentMD5: 'contentMD5'
     });
     t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
-    t.is(uploadSpy.getCall(0).args[1], `${__dirname}/data/file1.txt`);
-    t.is(uploadSpy.getCall(0).args[2], 7);
+    t.is(uploadSpy.getCall(0).args[1], 7);
+    t.is(getFileVerificationStreamStub.getCall(0).args[0], `${__dirname}/data/file1.txt`);
+    t.is(getFileVerificationStreamStub.getCall(0).args[1], 7);
     t.end();
   };
 
@@ -328,22 +333,26 @@ test.serial.cb('The "files-upload" command should delete files after (verified) 
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     }));
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file2.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     }));
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/dir/file3.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     }));
 
-    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file1.txt`, 7));
-    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file2.txt`, 7));
-    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/dir/file3.txt`, 7));
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file2.txt`, 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/dir/file3.txt`, 7));
 
     t.is(deleteFileStub.callCount, 3);
     t.true(deleteFileStub.calledWith(`${__dirname}/data/file1.txt`));
@@ -397,10 +406,12 @@ test.serial.cb('The "files-upload" command backoff verification retries', t => {
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined
+      overwrite: undefined,
+      contentMD5: 'contentMD5'
     }));
 
-    t.true(uploadSpy.calledWith('https://host/upload', `${__dirname}/data/file1.txt`, 7));
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
 
     t.is(deleteFileStub.callCount, 1);
     t.true(deleteFileStub.calledWith(`${__dirname}/data/file1.txt`));
