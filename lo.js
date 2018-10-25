@@ -17,8 +17,10 @@ function handleError (msg, err) {
       console.log(chalk.red(`Request failed with status: ${err.response.status}, body:`));
       console.log(chalk.red(JSON.stringify(err.response.data, null, 2)));
     }
-  } else {
+  } else if (msg) {
     console.error(chalk.red(msg));
+  } else {
+    console.error(chalk.red(err));
   }
   process.exitCode = 1;
 }
