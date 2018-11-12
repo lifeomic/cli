@@ -77,6 +77,7 @@ test.afterEach.always(t => {
   downloadSpy.resetHistory();
   deleteFileStub.reset();
   sleepStub.reset();
+  getFileVerificationStreamStub.reset();
   callback = null;
   getShouldCallCallback = false;
 });
@@ -167,7 +168,7 @@ test.serial.cb('The "files-upload" command should upload a file', t => {
       id: undefined,
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     });
     t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
@@ -198,12 +199,37 @@ test.serial.cb('The "files-upload" command should ignore already uploaded file e
       id: undefined,
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     });
     t.is(uploadSpy.callCount, 0);
     t.end();
   });
+});
+
+test.serial.cb('The "files-upload" command should overwrite an already uploaded file if forced', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(getFileVerificationStreamStub.callCount, 1);
+    t.is(getFileVerificationStreamStub.getCall(0).args[0], `${__dirname}/data/file1.txt`);
+    t.is(getFileVerificationStreamStub.getCall(0).args[1], 7);
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/files');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `${__dirname}/data/file1.txt`,
+      datasetId: 'dataset',
+      overwrite: true, // Ask API to overwrite
+      contentMD5: 'contentMD5'
+    });
+    t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
+    t.is(uploadSpy.getCall(0).args[1], 7);
+    t.end();
+  };
+
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data/file1.txt dataset --force`);
 });
 
 test.serial.cb('The "files-upload" command should upload a directory of files', t => {
@@ -220,14 +246,14 @@ test.serial.cb('The "files-upload" command should upload a directory of files', 
       id: undefined,
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     });
     t.deepEqual(postStub.getCall(1).args[2], {
       id: undefined,
       name: `${__dirname}/data/file2.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     });
 
@@ -254,19 +280,19 @@ test.serial.cb('The "files-upload" command should recursively upload a directory
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     }));
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file2.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     }));
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/dir/file3.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     }));
 
@@ -292,7 +318,7 @@ test.serial.cb('The "files-upload" command should upload a file with client supp
       id: '1234',
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     });
     t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
@@ -333,19 +359,19 @@ test.serial.cb('The "files-upload" command should delete files after (verified) 
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     }));
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file2.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     }));
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/dir/file3.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     }));
 
@@ -406,7 +432,7 @@ test.serial.cb('The "files-upload" command backoff verification retries', t => {
     postStub.calledWith(sinon.match.any, sinon.match.any, sinon.match({
       name: `${__dirname}/data/file1.txt`,
       datasetId: 'dataset',
-      overwrite: undefined,
+      overwrite: false,
       contentMD5: 'contentMD5'
     }));
 
