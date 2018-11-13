@@ -38,7 +38,9 @@ test.serial.cb('The "ga4gh-genomicsets-create" should create a genomic set', t =
       readsFileId: 'bamFile',
       patientId: 'patient',
       referenceSetId: 'GRCh37',
-      sequenceType: 'germline'
+      sequenceType: 'germline',
+      testType: 'test1',
+      performerId: 'performer1'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -46,5 +48,5 @@ test.serial.cb('The "ga4gh-genomicsets-create" should create a genomic set', t =
   };
 
   yargs.command(program)
-    .parse('create-genomic-set dataset -n name -v variantFile -b bamFile -p patient -r  GRCh37 -t germline');
+    .parse('create-genomic-set dataset -n name -v variantFile -b bamFile -p patient -r  GRCh37 -t germline --test-type test1 --performer-id performer1');
 });
