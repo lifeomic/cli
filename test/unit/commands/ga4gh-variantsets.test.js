@@ -46,7 +46,8 @@ test.serial.cb('The "ga4gh-variantsets" command should list variantsets for an a
         'dataset'
       ],
       pageSize: 25,
-      pageToken: undefined
+      pageToken: undefined,
+      status: 'INDEXING'
     });
     t.is(printSpy.callCount, 1);
     t.true(printSpy.calledWith({ variantSets: [] }));
@@ -54,7 +55,7 @@ test.serial.cb('The "ga4gh-variantsets" command should list variantsets for an a
   };
 
   yargs.command(list)
-    .parse('list-variant-sets dataset');
+    .parse('list-variant-sets dataset --status INDEXING');
 });
 
 test.serial.cb('The "ga4gh-variantsets-get" should get a variantset', t => {
