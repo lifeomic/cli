@@ -5,6 +5,7 @@ const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
 const fs = require('fs');
+const path = require('path');
 const querystring = require('querystring');
 
 const getStub = sinon.stub();
@@ -14,6 +15,7 @@ const printSpy = sinon.spy();
 const downloadSpy = sinon.spy();
 const uploadSpy = sinon.spy();
 const deleteFileStub = sinon.stub();
+const copyFileStub = sinon.stub();
 const getFileVerificationStreamStub = sinon.stub();
 let callback;
 
@@ -21,8 +23,16 @@ const fsStub = Object.assign({}, fs, {
   unlinkSync: (filePath) => {
     deleteFileStub(filePath);
     callback();
+  },
+  copyFileSync: (source, dest) => {
+    copyFileStub(source, dest);
+    callback();
   }
 });
+
+const mkdirp = {
+  sync: sinon.stub()
+};
 
 const sleepStub = sinon.stub().resolves();
 let getShouldCallCallback = false;
@@ -59,7 +69,8 @@ const mocks = {
     callback();
   },
   '../../sleep': sleepStub,
-  'fs': fsStub
+  'fs': fsStub,
+  'mkdirp': mkdirp
 };
 
 const get = proxyquire('../../../lib/cmds/files_cmds/get', mocks);
@@ -503,4 +514,67 @@ test.serial('The "files-upload" command will fail if verification fails', async 
 
   t.is(deleteFileStub.callCount, 0);
   t.true(error.message.indexOf('Detected file size mismatch') > -1);
+});
+
+test.serial.cb('The "files-upload" command should move files after (verified) upload', t => {
+  postStub.resolves({
+    data: {
+      uploadUrl: 'https://host/upload'
+    }
+  });
+  getStub.resolves({
+    data: {
+      items: [{
+        size: 7
+      }]
+    }
+  });
+
+  getShouldCallCallback = true;
+
+  callback = () => {
+    if (getStub.callCount !== 3 ||
+      postStub.callCount !== 3 ||
+      copyFileStub.callCount !== 3 ||
+      deleteFileStub.callCount !== 3) {
+      return;
+    }
+    t.is(postStub.callCount, 3);
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+
+    t.is(copyFileStub.callCount, 3);
+    t.true(copyFileStub.calledWith(`${__dirname}/data/file1.txt`));
+    t.true(copyFileStub.calledWith(`${__dirname}/data/file2.txt`));
+    t.true(copyFileStub.calledWith(`${__dirname}/data/dir/file3.txt`));
+
+    t.is(mkdirp.sync.callCount, 3);
+    t.true(mkdirp.sync.calledWith(path.join('unit-test/archive/2020-01-01', __dirname, 'data')));
+    t.true(mkdirp.sync.calledWith(path.join('unit-test/archive/2020-01-01', __dirname, 'data/dir')));
+
+    t.is(deleteFileStub.callCount, 3);
+    t.true(deleteFileStub.calledWith(`${__dirname}/data/file1.txt`));
+    t.true(deleteFileStub.calledWith(`${__dirname}/data/file2.txt`));
+    t.true(deleteFileStub.calledWith(`${__dirname}/data/dir/file3.txt`));
+
+    t.true(getStub.calledWith(sinon.match.any, `/v1/files?${querystring.stringify({
+      datasetId: 'dataset',
+      name: `${__dirname}/data/file1.txt`,
+      pageSize: 1
+    })}`));
+    t.true(getStub.calledWith(sinon.match.any, `/v1/files?${querystring.stringify({
+      datasetId: 'dataset',
+      name: `${__dirname}/data/file2.txt`,
+      pageSize: 1
+    })}`));
+    t.true(getStub.calledWith(sinon.match.any, `/v1/files?${querystring.stringify({
+      datasetId: 'dataset',
+      name: `${__dirname}/data/dir/file3.txt`,
+      pageSize: 1
+    })}`));
+
+    t.end();
+  };
+
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data dataset --recursive --move-after-upload="./unit-test/archive//2020-01-01"`);
 });
