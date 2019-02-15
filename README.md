@@ -8,7 +8,7 @@ This [command line interface][CLI] provides functionality offered by
 [LifeOmic](https://lifeomic.com)'s Precision Health Cloud APIs inside an
 interactive terminal or in a scripted environment.
 
-![CLI Demo](https://raw.githubusercontent.com/lifeomic/cli/master/cli-demo.svg)
+![CLI Demo](https://raw.githubusercontent.com/lifeomic/cli/master/cli-demo.svg?sanitize=true)
 
 ## Installation
 
