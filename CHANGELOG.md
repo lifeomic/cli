@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic
 Versioning](http://semver.org/spec/v2.0.0.html).
 
+ ## [6.14.0] - 2018-02-20
+
+ #### Added
+
+ - Added `--indexed-date` option to `genomics create-genomic-set`,
+ `create-foundation-xml-import`, and `create-nantomics-vcf-import`
+ - Added
+ `files ls` command for browsing files within a project with folder support
+
 ## [6.13.0] - 2018-12-21
 
 #### Added
