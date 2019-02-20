@@ -78,6 +78,7 @@ const del = proxyquire('../../../lib/cmds/files_cmds/del', mocks);
 const list = proxyquire('../../../lib/cmds/files_cmds/list', mocks);
 const download = proxyquire('../../../lib/cmds/files_cmds/download', mocks);
 const upload = proxyquire('../../../lib/cmds/files_cmds/upload', mocks);
+const ls = proxyquire('../../../lib/cmds/files_cmds/ls', mocks);
 
 test.afterEach.always(t => {
   getStub.reset();
@@ -91,6 +92,21 @@ test.afterEach.always(t => {
   getFileVerificationStreamStub.reset();
   callback = null;
   getShouldCallCallback = false;
+});
+
+test.serial.cb('The "files ls" command should list files for an account or dataset ID', t => {
+  const res = { data: { items: [] } };
+  getStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(getStub.callCount, 1);
+    t.is(getStub.getCall(0).args[1], '/v1/projects/dataset/files?pageSize=25&nextPageToken=');
+    t.is(printSpy.callCount, 1);
+    t.deepEqual(printSpy.getCall(0).args[0], { items: [] });
+    t.end();
+  };
+
+  yargs.command(ls)
+    .parse('ls dataset -p false');
 });
 
 test.serial.cb('The "files" command should list files for an account or dataset ID', t => {
