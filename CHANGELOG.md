@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic
 Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.15.3] - 2018-03-27
+
+#### Fixed
+
+- Improved the usability of `lo setup` and `lo auth` by improving some of
+  the prompts and available choices to make things more obvious.
+
 ## [6.15.2] - 2018-03-22
 
 #### Fixed
