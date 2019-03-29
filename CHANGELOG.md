@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic
 Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [6.15.5] - 2018-03-29
+
+#### Fixed
+
+- Fixed issue with uploading very large files with `lo files upload`.
+
 ## [6.15.4] - 2018-03-28
 
 #### Fixed
