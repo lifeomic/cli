@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic
 Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.0.0] - 2018-04-09
+
+#### Changed
+
+- Replaced the `page-size` and `next-page-token` options with a `limit` option for the `lo files ls` command.
+
+- Replaced the YAML printer library with one that can handle larger lists
+
+#### Added
+
+- Added a `limit` option to the following commands which allows them to fetch as many pages needed to hit the limit:
+  `lo files list`, `lo genomics list-variant-sets`, `lo genomics list-readgroup-sets`, and `list-rna-quantification-sets`
+
 ## [6.15.5] - 2018-03-29
 
 #### Fixed
