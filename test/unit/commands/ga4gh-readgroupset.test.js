@@ -9,13 +9,15 @@ const getStub = sinon.stub();
 const postStub = sinon.stub();
 const delStub = sinon.stub();
 const printSpy = sinon.spy();
+const listStub = sinon.stub();
 let callback;
 
 const mocks = {
   '../../ga4gh': {
     get: getStub,
     post: postStub,
-    del: delStub
+    del: delStub,
+    list: listStub
   },
   '../../print': (data, opts) => {
     printSpy(data, opts);
@@ -38,6 +40,7 @@ test.afterEach.always(t => {
 test.serial.cb('The "ga4gh-readgroupsets" command should list readgroupsets for an account', t => {
   const res = { data: { readGroupSets: [] } };
   postStub.onFirstCall().returns(res);
+  listStub.onFirstCall().returns(res);
   callback = () => {
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], '/readgroupsets/search');
@@ -55,6 +58,22 @@ test.serial.cb('The "ga4gh-readgroupsets" command should list readgroupsets for 
 
   yargs.command(list)
     .parse('list-readgroup-sets dataset');
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/readgroupsets/search');
+    t.deepEqual(listStub.getCall(0).args[2], {
+      datasetIds: [
+        'dataset'
+      ]
+    });
+    t.is(printSpy.callCount, 1);
+    t.true(printSpy.calledWith({ readGroupSets: [] }));
+    t.end();
+  };
+
+  yargs.command(list)
+    .parse('list-readgroup-sets dataset -l 1000');
 });
 
 test.serial.cb('The "ga4gh-readgroupsets-get" should get a readgroupset', t => {
