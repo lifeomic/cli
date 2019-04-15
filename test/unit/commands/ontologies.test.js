@@ -11,7 +11,7 @@ const proxyquire = require('proxyquire');
 let callback;
 
 const stubs = {
-  put: sinon.stub(),
+  patch: sinon.stub(),
   stdin: sinon.stub()
 };
 
@@ -21,7 +21,7 @@ const spies = {
 
 const mocks = {
   '../../api': {
-    put: stubs.put
+    patch: stubs.patch
   },
   '../../print': (data, opts) => {
     spies.print(data, opts);
@@ -45,13 +45,13 @@ test.serial.cb('import', t => {
 
   const data = 'Created';
   const res = { data: data };
-  stubs.put.onFirstCall().returns(res);
+  stubs.patch.onFirstCall().returns(res);
 
   const project = '9ce94182-f9b6-4043-99c7-420c77c965aa';
   callback = () => {
-    // Assert that 'PUT' is issued once for each record
-    t.is(1, stubs.put.callCount);
-    t.is(`/v1/terminology/projects/${project}/relationships/`, stubs.put.getCall(0).args[1]);
+    // Assert that 'patch' is issued once for each record
+    t.is(1, stubs.patch.callCount);
+    t.is(`/v1/terminology/projects/${project}/relationships/`, stubs.patch.getCall(0).args[1]);
 
     // Assert print is invoked once with the HTTP response data
     t.is(1, spies.print.callCount);
