@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic
 Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.1.1] - 2018-04-18
+
+#### Fixed
+
+- Fixed issue with importing JSON array type objects with `lo ontologies import`.
+
 ## [7.1.0] - 2018-04-16
 
 #### Added
