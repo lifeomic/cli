@@ -12,7 +12,7 @@
     "lo": "./lo.js"
   },
   "scripts": {
-    "prelint": "yarn",
+    "prelint": "yarn --network-timeout 1000000",
     "lint": "eslint .",
     "pretest": "yarn lint",
     "test": "ava --serial --verbose test/unit",
