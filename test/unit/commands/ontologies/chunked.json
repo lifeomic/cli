@@ -1,0 +1,32 @@
+[
+  {
+    "equivalence": "subsumes",
+    "source": {
+      "type": "coding", 
+      "code":"code",
+      "display":"display",
+      "system":"system"
+    },
+    "target": {
+      "type": "coding",
+      "code":"code",
+      "display":"display",
+      "system":"system"
+    }
+  },
+  {
+    "equivalence": "subsumes",
+    "source": {
+      "type": "coding", 
+      "code":"code",
+      "display":"display",
+      "system":"system"
+    },
+    "target": {
+      "type": "coding",
+      "code":"code",
+      "display":"display",
+      "system":"system"
+    }
+  }
+]
