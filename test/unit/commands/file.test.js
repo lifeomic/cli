@@ -16,6 +16,7 @@ const downloadSpy = sinon.spy();
 const uploadSpy = sinon.spy();
 const deleteFileStub = sinon.stub();
 const copyFileStub = sinon.stub();
+const listStub = sinon.stub();
 const getFileVerificationStreamStub = sinon.stub();
 let callback;
 
@@ -45,6 +46,9 @@ const mocks = {
         callback();
       }
       return res;
+    },
+    list: function (options, url) {
+      return listStub(options, url);
     },
     post: postStub,
     del: delStub,
@@ -78,8 +82,10 @@ const del = proxyquire('../../../lib/cmds/files_cmds/del', mocks);
 const list = proxyquire('../../../lib/cmds/files_cmds/list', mocks);
 const download = proxyquire('../../../lib/cmds/files_cmds/download', mocks);
 const upload = proxyquire('../../../lib/cmds/files_cmds/upload', mocks);
+const ls = proxyquire('../../../lib/cmds/files_cmds/ls', mocks);
 
 test.afterEach.always(t => {
+  listStub.reset();
   getStub.reset();
   postStub.reset();
   delStub.reset();
@@ -93,9 +99,25 @@ test.afterEach.always(t => {
   getShouldCallCallback = false;
 });
 
+test.serial.cb('The "files ls" command should list files for an account or dataset ID', t => {
+  const res = { data: { items: [] } };
+  listStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/v1/projects/dataset/files?pageSize=1000');
+    t.is(printSpy.callCount, 1);
+    t.deepEqual(printSpy.getCall(0).args[0], { items: [] });
+    t.end();
+  };
+
+  yargs.command(ls)
+    .parse('ls dataset -p false');
+});
+
 test.serial.cb('The "files" command should list files for an account or dataset ID', t => {
   const res = { data: { items: [] } };
   getStub.onFirstCall().returns(res);
+  listStub.onFirstCall().returns(res);
   callback = () => {
     t.is(getStub.callCount, 1);
     t.is(getStub.getCall(0).args[1], '/v1/files?datasetId=dataset&pageSize=25&nextPageToken=&orderBy=name');
@@ -106,6 +128,17 @@ test.serial.cb('The "files" command should list files for an account or dataset 
 
   yargs.command(list)
     .parse('list dataset');
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/v1/files?datasetId=dataset&pageSize=1000&nextPageToken=&orderBy=name');
+    t.is(printSpy.callCount, 1);
+    t.deepEqual(printSpy.getCall(0).args[0], { items: [] });
+    t.end();
+  };
+
+  yargs.command(list)
+    .parse('list dataset -l 1000');
 });
 
 test.serial.cb('The "files" command should list files for an account with optional args', t => {

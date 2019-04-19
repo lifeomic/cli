@@ -1,10 +1,14 @@
-# cli
+# CLI
 
-[![Build
-Status](https://travis-ci.org/lifeomic/cli.svg?branch=master)](https://travis-ci.org/lifeomic/cli)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/lifeomic/cli.svg?branch=master)](https://travis-ci.org/lifeomic/cli)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lifeomic/cli)
 
-This project is a small CLI app that provides functionality around the LifeOmic
-API's.
+This [command line interface][CLI] provides functionality offered by
+[LifeOmic](https://lifeomic.com)'s Precision Health Cloud APIs inside an
+interactive terminal or in a scripted environment.
+
+![CLI Demo](https://raw.githubusercontent.com/lifeomic/cli/master/cli-demo.svg?sanitize=true)
 
 ## Installation
 
@@ -12,9 +16,7 @@ Install via `npm` or `yarn`:
 
 ```bash
 npm install -g @lifeomic/cli
-```
 
-```bash
 yarn global add @lifeomic/cli
 ```
 
@@ -25,7 +27,6 @@ release](https://github.com/lifeomic/cli/releases).
 
 Run `lo setup` to configure the default environment and account you wish to use.
 You can later override the default account using the `-a` option for commands.
-
 
 ## Authentication
 
@@ -68,14 +69,48 @@ SSO.
 lo <command> [options]
 ```
 
-View available commands:
+`lo` offers many commands and those can be displayed by using the `-h / --help`
+command line option.  For example:
 
 ```bash
-lo --help
+❯ lo --help
+
+  Usage: lo <command> [options]
+
+  Options:
+
+    -V, --version  output the version number
+    -h, --help     output usage information
+
+  Commands:
+
+    accounts [options]                 List accounts
+    accounts-get [options] <account>   Fetch an account
+    ...
+    </abbreviated>
 ```
 
-Get help for a command:
+Get help for a specific command:
 
 ```bash
-lo <command> --help
+❯ lo <command> --help
+
+❯ lo tasks --help
+
+  Usage: tasks [options] <datasetId>
+
+  List tasks
+
+  Options:
+
+    -a, --account <account>            Override the default LifeOmic account
+    --json                             Print output as JSON
+    --prefix <prefix>                  Filter tasks where the name begins with a prefix
+    --state <state>                    Filter tasks by state
+    --view <view>                      Specify MINIMAL to just get task state
+    --page-size <pageSize>             Number of items to return (default: 25)
+    --next-page-token <nextPageToken>  Next page token
+    -h, --help                         output usage information
 ```
+
+[cli]: https://en.wikipedia.org/wiki/Command-line_interface "Command-line interface"

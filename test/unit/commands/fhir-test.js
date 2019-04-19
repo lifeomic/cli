@@ -52,7 +52,7 @@ test.serial.cb('The "fhir" command should list fhir resources', t => {
   callback = () => {
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], 'account/dstu3/Patient/_search');
-    t.is(postStub.getCall(0).args[2], 'pageSize=1000');
+    t.is(postStub.getCall(0).args[2], '_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7CprojectId&pageSize=1000');
     t.deepEqual(postStub.getCall(0).args[3], {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
     t.is(printSpy.callCount, 1);
     t.deepEqual(printSpy.getCall(0).args[0], []);
@@ -60,7 +60,25 @@ test.serial.cb('The "fhir" command should list fhir resources', t => {
   };
 
   yargs.command(list)
-    .parse('list Patient');
+    .parse('list Patient --project projectId');
+});
+
+test.serial.cb('The "fhir" command should list fhir resources with a query expression', t => {
+  const res = {data: { entry: [] }};
+  postStub.onFirstCall().returns(res);
+
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], 'account/dstu3/Patient/_search');
+    t.is(postStub.getCall(0).args[2], '_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Ftag%7Cvalue&_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7CprojectId&pageSize=1000');
+    t.deepEqual(postStub.getCall(0).args[3], {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
+    t.is(printSpy.callCount, 1);
+    t.deepEqual(printSpy.getCall(0).args[0], []);
+    t.end();
+  };
+
+  yargs.command(list)
+    .parse('list Patient --project projectId --query "_tag=http://lifeomic.com/fhir/tag|value"');
 });
 
 test.serial.cb('Limit should set the page size for the "fhir" command', t => {
