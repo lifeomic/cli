@@ -13,6 +13,7 @@ pids
 .env
 
 .vscode
+.idea
 
 build/
 work/
