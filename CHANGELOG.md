@@ -6,6 +6,74 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic
 Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [7.1.2] - 2018-04-19
+
+#### Fixed
+
+- Fixed issue with batching over JSON array type objects with `lo ontologies import`.
+
+## [7.1.1] - 2018-04-18
+
+#### Fixed
+
+- Fixed issue with importing JSON array type objects with `lo ontologies import`.
+
+## [7.1.0] - 2018-04-16
+
+#### Added
+
+- Added `ontologies import` command for uploading ontologies to a project.
+
+## [7.0.0] - 2018-04-09
+
+#### Changed
+
+- Replaced the `page-size` and `next-page-token` options with a `limit` option for the `lo files ls` command.
+
+- Replaced the YAML printer library with one that can handle larger lists
+
+#### Added
+
+- Added a `limit` option to the following commands which allows them to fetch as many pages needed to hit the limit:
+  `lo files list`, `lo genomics list-variant-sets`, `lo genomics list-readgroup-sets`, and `list-rna-quantification-sets`
+
+## [6.15.5] - 2018-03-29
+
+#### Fixed
+
+- Fixed issue with uploading very large files with `lo files upload`.
+
+## [6.15.4] - 2018-03-28
+
+#### Fixed
+
+- Added more error checking and request retries around `lo files upload`.
+
+## [6.15.3] - 2018-03-27
+
+#### Fixed
+
+- Improved the usability of `lo setup` and `lo auth` by improving some of
+  the prompts and available choices to make things more obvious.
+
+## [6.15.2] - 2018-03-22
+
+#### Fixed
+
+- Add retries for requests issued with `lo files upload`
+
+## [6.15.1] - 2018-03-14
+
+#### Fixed
+
+- `lo fhir list` will now properly handle tag queries using `--query`
+
+## [6.15.0] - 2018-02-28
+
+#### Added
+
+- `lo fhir ingest` will now retry HTTP 429 (too many requests) errors
+
 ## [6.14.0] - 2018-02-20
 
 #### Added
