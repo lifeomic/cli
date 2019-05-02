@@ -99,7 +99,8 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
       sequenceName: 'test3',
       testType: 'test1',
       performerId: 'performer1',
-      indexedDate: '1999-01-01 12:00'
+      indexedDate: '1999-01-01 12:00',
+      indexType: 'all'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -107,7 +108,7 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
   };
 
   yargs.command(createFoundationTask)
-    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00"');
+    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --index-type all');
 });
 
 test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantomics ingest task', t => {
