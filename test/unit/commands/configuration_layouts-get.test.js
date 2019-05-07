@@ -28,7 +28,7 @@ test.cb('The "Configuration_layouts" command should list layouts in a project\'s
     t.is(getStub.callCount, 1);
     t.is(getStub.getCall(0).args[1], '/configuration/layouts?project=111112222&type=patient&format=json');
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], res.data );
+    t.deepEqual(printSpy.getCall(0).args[0], res.data);
     t.end();
   };
 
