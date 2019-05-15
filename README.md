@@ -1,14 +1,64 @@
 # CLI
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://travis-ci.org/lifeomic/cli.svg?branch=master)](https://travis-ci.org/lifeomic/cli)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lifeomic/cli)
-
 This [command line interface][CLI] provides functionality offered by
 [LifeOmic](https://lifeomic.com)'s Precision Health Cloud APIs inside an
 interactive terminal or in a scripted environment.
 
 ![CLI Demo](https://raw.githubusercontent.com/lifeomic/cli/master/cli-demo.svg?sanitize=true)
+
+
+## Table of Contents
+
+1. [Project Status](#project-status)
+1. [Getting Started](#getting-started)
+    1. [Dependencies](#dependencies)
+    1. [Installation](#installation)
+    1. [Configuration](#configuration)
+    1. [Authentication](#authentication)
+        1. [API Keys](#api-keys)
+        1. [SSO](#sso)
+    1. [Usage](#usage)
+1. [Release Process](#release-process)
+    1. [Versioning](#versioning)
+1. [How to Get Help](#how-to-get-help)
+1. [Contributing](#contributing)
+1. [License](#license)
+1. [Authors](#authors)
+1. [Acknowledgements](#acknowledgements)
+
+
+# Project Status
+
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/lifeomic/cli.svg?branch=master)](https://travis-ci.org/lifeomic/cli)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lifeomic/cli)
+
+**[Back to top](#table-of-contents)**
+
+
+# Getting Started
+
+## Dependencies
+
+* [node](https://nodejs.org) version >= 7.6.0
+
+## Getting the Source
+
+This project is [hosted on GitHub](https://github.com/lifeomic/cli). You can clone this project directly using this command:
+
+```
+git clone git@github.com:lifeomic/cli.git
+```
+
+## Running Tests
+
+Run tests with `npm` or `yarn`:
+
+```bash
+npm test
+
+yarn test
+```
 
 ## Installation
 
@@ -114,3 +164,47 @@ Get help for a specific command:
 ```
 
 [cli]: https://en.wikipedia.org/wiki/Command-line_interface "Command-line interface"
+
+**[Back to top](#table-of-contents)**
+
+
+# Release Process
+
+[Releases](https://github.com/lifeomic/cli/releases) are generally created with each merged PR. Packages for each release are published to [npm](https://www.npmjs.com/package/@lifeomic/cli). See [CHANGELOG.md](CHANGELOG.md) for release notes.
+
+## Versioning
+
+This project uses [Semantic Versioning](http://semver.org/).
+
+**[Back to top](#table-of-contents)**
+
+
+# Contributing
+
+We encourage public contributions! Please review [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of conduct and development process.
+
+**[Back to top](#table-of-contents)**
+
+
+# License
+
+This project is licensed under the MIT License - see [LICENSE.md](LICENSE.md) file for details.
+
+
+# Authors
+
+See the list of [contributors](https://github.com/lifeomic/cli/contributors) who participate in this project.
+
+**[Back to top](#table-of-contents)**
+
+
+# Acknowledgments
+
+This project is built with the following:
+
+* [axios](https://github.com/axios/axios) - Promise based HTTP client for the browser and node.js
+* [yargs](https://github.com/yargs/yargs) - CLI argument parser
+* [configstore](https://github.com/yeoman/configstore) - Easily load and persist config without having to think about where and how
+* [ava](https://github.com/avajs/ava) - Testing framework
+
+**[Back to top](#table-of-contents)**
