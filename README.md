@@ -199,7 +199,7 @@ See the list of [contributors](https://github.com/lifeomic/cli/contributors) who
 **[Back to top](#table-of-contents)**
 
 
-# Acknowledgments
+# Acknowledgements
 
 This project is built with the following:
 
