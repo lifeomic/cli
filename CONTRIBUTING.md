@@ -28,5 +28,5 @@ We're always looking for more opinions on discussions in the issue tracker. It's
 - Lint and test before submitting the pull request by running `$ npm test`.
 - Use a clear and descriptive title for the pull request and commits.
 - Write a convincing description of why we should land your pull request. It's your job to convince us. Answer "why" it's needed and provide use-cases.
-- Break up large changes into multiple pull reuests.  Smaller changes are easier to review and more likely to get merged faster.
+- Break up large changes into multiple pull requests.  Smaller changes are easier to review and more likely to get merged faster.
 - You might be asked to do changes to your pull request. There's never a need to open another pull request. [Just update the existing one.](https://github.com/RichardLitt/knowledge/blob/master/github/amending-a-commit-guide.md)
