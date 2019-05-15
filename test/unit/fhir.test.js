@@ -8,6 +8,9 @@ const fhir = proxyquire('../../lib/fhir', {
   './config': {
     getEnvironment () { return 'test'; },
     get () { return 'dummy'; }
+  },
+  './proxy': {
+    configureProxy: () => { return false; }
   }
 });
 
