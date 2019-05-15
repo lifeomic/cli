@@ -20,7 +20,6 @@ interactive terminal or in a scripted environment.
     1. [Usage](#usage)
 1. [Release Process](#release-process)
     1. [Versioning](#versioning)
-1. [How to Get Help](#how-to-get-help)
 1. [Contributing](#contributing)
 1. [License](#license)
 1. [Authors](#authors)
