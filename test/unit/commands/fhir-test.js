@@ -46,7 +46,6 @@ test.afterEach.always(t => {
 });
 
 test.serial.cb('The "fhir" command should list fhir resources', t => {
-  // const res = {data: { entry: [{ 'resource_type': 'Patient', 'id': 'ABCD-1234' }] }};
   const res = {data: { entry: [] }};
   postStub.onFirstCall().returns(res);
 
