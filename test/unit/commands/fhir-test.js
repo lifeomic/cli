@@ -22,6 +22,9 @@ const mocks = {
     put: putStub,
     getAccount: () => 'account'
   },
+  '../../proxy': {
+    configureProxy: () => { return false; }
+  },
   '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
@@ -46,7 +49,7 @@ test.afterEach.always(t => {
 });
 
 test.serial.cb('The "fhir" command should list fhir resources', t => {
-  const res = {data: { entry: [] }};
+  const res = {data: { entry: [{ 'resource': { 'resourceType': 'Patient', 'id': 'ABC1234' } }] }};
   postStub.onFirstCall().returns(res);
 
   callback = () => {
@@ -55,17 +58,16 @@ test.serial.cb('The "fhir" command should list fhir resources', t => {
     t.is(postStub.getCall(0).args[2], '_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7CprojectId&pageSize=1000');
     t.deepEqual(postStub.getCall(0).args[3], {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], []);
+    t.deepEqual(printSpy.getCall(0).args[0], {'resourceType': 'Patient', 'id': 'ABC1234'} );
     t.end();
   };
 
   yargs.command(list)
     .parse('list Patient --project projectId');
-  t.end();
 });
 
 test.serial.cb('The "fhir" command should list fhir resources with a query expression', t => {
-  const res = {data: { entry: [] }};
+  const res = {data: { entry: [{ 'resource': { 'resourceType': 'Patient', 'id': 'ABC1234' } }] }};
   postStub.onFirstCall().returns(res);
 
   callback = () => {
@@ -74,17 +76,16 @@ test.serial.cb('The "fhir" command should list fhir resources with a query expre
     t.is(postStub.getCall(0).args[2], '_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Ftag%7Cvalue&_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7CprojectId&pageSize=1000');
     t.deepEqual(postStub.getCall(0).args[3], {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], []);
+    t.deepEqual(printSpy.getCall(0).args[0], {'resourceType': 'Patient', 'id': 'ABC1234'} );
     t.end();
   };
 
   yargs.command(list)
     .parse('list Patient --project projectId --query "_tag=http://lifeomic.com/fhir/tag|value"');
-  t.end();
 });
 
 test.serial.cb('Limit should set the page size for the "fhir" command', t => {
-  const res = {data: { entry: [] }};
+  const res = {data: { entry: [{ 'resource': { 'resourceType': 'Patient', 'id': 'ABC1234' } }] }};
   postStub.onFirstCall().returns(res);
 
   callback = () => {
@@ -93,13 +94,12 @@ test.serial.cb('Limit should set the page size for the "fhir" command', t => {
     t.is(postStub.getCall(0).args[2], 'pageSize=10');
     t.deepEqual(postStub.getCall(0).args[3], {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], []);
+    t.deepEqual(printSpy.getCall(0).args[0], {'resourceType': 'Patient', 'id': 'ABC1234'} );
     t.end();
   };
 
   yargs.command(list)
     .parse('list Patient --limit 10');
-  t.end();
 });
 
 test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
