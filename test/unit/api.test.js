@@ -27,9 +27,6 @@ const api = proxyquire(
       getEnvironment () { return 'test'; },
       get () { return 'dummy'; }
     },
-    './proxy': {
-      configureProxy: () => { return false; }
-    },
     'axios': axiosStub,
     'axios-retry': sinon.spy()
   });

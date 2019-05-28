@@ -22,9 +22,6 @@ const mocks = {
     put: putStub,
     getAccount: () => 'account'
   },
-  '../../proxy': {
-    configureProxy: () => { return false; }
-  },
   '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
