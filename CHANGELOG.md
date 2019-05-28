@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `lo files download` now provides recrusive download support to allow one to download many files from a project. ([#85](https://github.com/lifeomic/cli/pull/85)
+- `lo files download` now provides recrusive download support to allow one to download many files from a project. ([#85](https://github.com/lifeomic/cli/pull/85))
 
 
 ## [7.2.1] - 2018-05-22
