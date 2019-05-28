@@ -1,0 +1,6 @@
+[2019-02-20 19:18:21,432] INFO [__main__.main:1046] Converting XML to FHIR with args: {"xml_file": "/tmp/SMP60684.xml", "out_file": "/tmp/output.json", "subject_id": "45fdb72e-2059-45aa-8e61-d31ad9156058", "genes": "/opt/app/refGene.hg19.txt", "file_url": "https://api.dev.lifeomic.com/v1/files/2d1ac137-91ea-4246-81f9-3e9e08ad5d1f", "vcf_out_file": "/tmp/foundation.vcf", "pdf_out_file": "/tmp/report.pdf", "fasta": "/tmp/reference/GRCh37.fa.gz", "project_id": "db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3"}
+[2019-02-20 19:18:21,432] INFO [__main__.unzip:33] Unzipping /tmp/reference/GRCh37.fa.gz to /tmp/reference/GRCh37.fa
+[2019-02-20 19:18:54,638] INFO [__main__.unzip:38] Unzipping completed
+[2019-02-20 19:23:46,955] INFO [__main__.process:1017] Created 22 FHIR resources
+[2019-02-20 19:23:46,980] INFO [__main__.main:1058] Saved FHIR resources to /tmp/output.json
+[2019-02-20 19:23:46,983] INFO [__main__.main:1064] Saved PDF report to /tmp/report.pdf

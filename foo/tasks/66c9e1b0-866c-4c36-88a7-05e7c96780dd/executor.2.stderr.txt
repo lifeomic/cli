@@ -1,0 +1,3 @@
+[2019-05-16 18:53:23,536] INFO [__main__.main:112] Extracting copy numbers from XML and into CNV with args: {"xml_file": "/tmp/SMP60684.xml", "out_file": "/tmp/output.cnv"}
+[2019-05-16 18:53:23,568] INFO [__main__.extract_copy_numbers:64] Extracting copy numbers from xml
+[2019-05-16 18:53:23,570] INFO [__main__.write_copy_numbers_to_cnv:90] Saving copy numbers to cnv file

@@ -1,0 +1,42 @@
+[2019-05-11T20:15:00.221Z]  INFO: task-service-container/6 on ip-10-51-76-102: Task running on arn:aws:ecs:us-east-1:623119755067:container-instance/ab93d217-6d28-4eb9-b0bc-40b3bf705533 in cluster arn:aws:ecs:us-east-1:623119755067:cluster/task-service-v3-7k23nbyl7o1kf1f6_Batch_183d8bc1-e24f-3bc8-ad3e-b48b4ccfe131
+[2019-05-11T20:15:00.256Z]  INFO: task-service-container/6 on ip-10-51-76-102: Container instance has 2048 vCPU and 7945 MB
+[2019-05-11T20:15:00.256Z]  INFO: task-service-container/6 on ip-10-51-76-102: Task usage (cpuUsage=0.5, memUsage=0.12586532410320955, usageFactor=0.31293266205160475)
+[2019-05-11T20:15:00.257Z]  INFO: task-service-container/6 on ip-10-51-76-102: dd if=/dev/zero of=/tmp/2fdaa4b0-8877-4db2-9b2f-dd2fa7d2d3f4-fs/disk-quota.ext3 count=1189144
+[2019-05-11T20:15:03.376Z]  INFO: task-service-container/6 on ip-10-51-76-102: mkfs.ext3 /tmp/2fdaa4b0-8877-4db2-9b2f-dd2fa7d2d3f4-fs/disk-quota.ext3
+[2019-05-11T20:15:13.176Z]  INFO: task-service-container/6 on ip-10-51-76-102: mount /tmp/2fdaa4b0-8877-4db2-9b2f-dd2fa7d2d3f4-fs/disk-quota.ext3 /tmp/2fdaa4b0-8877-4db2-9b2f-dd2fa7d2d3f4
+[2019-05-11T20:15:13.326Z]  INFO: task-service-container/6 on ip-10-51-76-102: Creating output directory /tmp/2fdaa4b0-8877-4db2-9b2f-dd2fa7d2d3f4/out (account=lifeomic, id=60d1af38-8a2b-4161-9521-5090a7ce4cc7)
+[2019-05-11T20:15:13.327Z]  INFO: task-service-container/6 on ip-10-51-76-102: Task has 86400 seconds to complete
+[2019-05-11T20:15:13.334Z]  INFO: task-service-container/6 on ip-10-51-76-102: Pulling image busybox (account=lifeomic, id=60d1af38-8a2b-4161-9521-5090a7ce4cc7)
+[2019-05-11T20:16:07.158Z]  INFO: task-service-container/6 on ip-10-51-76-102: Creating container for image busybox (account=lifeomic, id=60d1af38-8a2b-4161-9521-5090a7ce4cc7, Image=busybox, AttachStdin=false, AttachStdout=true, AttachStderr=true, Tty=false, OpenStdin=false, StdinOnce=false, NetworkDisabled=true, WorkingDir=/tmp)
+  Env: [
+    "LO_USER=Google_112277633572082602793",
+    "LO_ACCOUNT=lifeomic",
+    "LO_PROJECT=db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3"
+  ]
+  --
+  Cmd: [
+    "echo",
+    "hello world"
+  ]
+  --
+  HostConfig: {
+    "Binds": [
+      "/tmp/2fdaa4b0-8877-4db2-9b2f-dd2fa7d2d3f4/out:/out"
+    ],
+    "Ulimits": [
+      {
+        "Name": "nofile",
+        "Soft": 1024000,
+        "Hard": 1024000
+      }
+    ],
+    "StorageOpt": {
+      "size": "28164M"
+    }
+  }
+[2019-05-11T20:16:08.400Z]  INFO: task-service-container/6 on ip-10-51-76-102: Running container for image busybox (account=lifeomic, id=60d1af38-8a2b-4161-9521-5090a7ce4cc7)
+[2019-05-11T20:16:08.797Z]  INFO: task-service-container/6 on ip-10-51-76-102: Container for image busybox finished with code 0 (account=lifeomic, id=60d1af38-8a2b-4161-9521-5090a7ce4cc7)
+[2019-05-11T20:16:08.797Z]  INFO: task-service-container/6 on ip-10-51-76-102: 86344.53 seconds left for task execution (account=lifeomic, id=60d1af38-8a2b-4161-9521-5090a7ce4cc7)
+[2019-05-11T20:16:08.798Z]  INFO: task-service-container/6 on ip-10-51-76-102: Uploading executor log /tmp/2fdaa4b0-8877-4db2-9b2f-dd2fa7d2d3f4/out/stdout.txt (account=lifeomic, id=60d1af38-8a2b-4161-9521-5090a7ce4cc7)
+[2019-05-11T20:16:09.080Z]  INFO: task-service-container/6 on ip-10-51-76-102: Uploading output /tmp/2fdaa4b0-8877-4db2-9b2f-dd2fa7d2d3f4/out (account=lifeomic, id=60d1af38-8a2b-4161-9521-5090a7ce4cc7)
+[2019-05-11T20:16:09.388Z]  INFO: task-service-container/6 on ip-10-51-76-102: Uploading execution log /tmp/task-service-container.53eb4f30-e493-495b-90dd-bf520635abb8.log (account=lifeomic, id=60d1af38-8a2b-4161-9521-5090a7ce4cc7)
