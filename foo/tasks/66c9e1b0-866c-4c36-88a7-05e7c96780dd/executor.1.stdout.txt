@@ -1,7 +1,0 @@
-Args: ['/opt/app/src/run.py', 'vt-combo', '-r', '/tmp/reference/GRCh37.fa.gz', '-i', '/tmp/foundation.vcf', '-o', '/tmp/foundation.nrm.vcf']
-[execCall] mkdir /tmp/kopis-task-vtools_cf0161fb49ae46e0
-[execCmd] mkdir -p /tmp/kopis-task-vtools_cf0161fb49ae46e0; cp -f /tmp/foundation.vcf /tmp/kopis-task-vtools_cf0161fb49ae46e0
-[execCmd] mkdir -p /tmp/kopis-task-vtools_cf0161fb49ae46e0/ref; cp -f /tmp/reference/GRCh37.fa.gz /tmp/kopis-task-vtools_cf0161fb49ae46e0/ref
-[execCmd] /opt/app/src/testVcf.sh /tmp/kopis-task-vtools_cf0161fb49ae46e0/foundation.vcf
-[execCmd] vt decompose /tmp/kopis-task-vtools_cf0161fb49ae46e0/foundation.vcf | /opt/app/src/convertChrName.sh "num" - | vt normalize -n -r /tmp/kopis-task-vtools_cf0161fb49ae46e0/ref/GRCh37.fa.gz - | /opt/app/src/convertChrName.sh "chr" -  | awk '{if ($1~/^#/) print $0; else { print $0| "sort -s -t \"	\" -k1V,1 -k2n,2 -k4,5"}}' | vt uniq -  > /tmp/kopis-task-vtools_cf0161fb49ae46e0/out-foundation.vcf
-[execCmd] cp -f /tmp/kopis-task-vtools_cf0161fb49ae46e0/out-foundation.vcf /tmp/foundation.nrm.vcf
