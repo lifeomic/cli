@@ -207,6 +207,35 @@ test.serial.cb('The "files-download" command should download a file', t => {
     .parse('download fileid /dir');
 });
 
+test.serial.cb('The "files-download" command should download a set of files from a project', t => {
+  listStub.onFirstCall().returns({
+    data: {
+      items: [
+        {
+          id: '1',
+          name: 'foo.txt'
+        }
+      ]
+    }
+  });
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/v1/files?datasetId=projectId&pageSize=1000&name=prefix');
+
+    t.is(downloadSpy.callCount, 1);
+    t.is(downloadSpy.getCall(0).args[1], '/v1/files/1?include=downloadUrl');
+    t.is(downloadSpy.getCall(0).args[2], '/dir/foo.txt');
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(download)
+    .parse('download projectId/prefix /dir -r');
+});
+
 test.serial.cb('The "files-upload" command should upload a file', t => {
   const res = { data: { uploadUrl: 'https://host/upload' } };
   postStub.onFirstCall().returns(res);
