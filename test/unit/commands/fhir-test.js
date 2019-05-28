@@ -46,6 +46,7 @@ test.afterEach.always(t => {
 });
 
 test.serial.cb('The "fhir" command should list fhir resources', t => {
+  // const res = {data: { entry: [{ 'resource_type': 'Patient', 'id': 'ABCD-1234' }] }};
   const res = {data: { entry: [] }};
   postStub.onFirstCall().returns(res);
 
@@ -61,6 +62,7 @@ test.serial.cb('The "fhir" command should list fhir resources', t => {
 
   yargs.command(list)
     .parse('list Patient --project projectId');
+  t.end();
 });
 
 test.serial.cb('The "fhir" command should list fhir resources with a query expression', t => {
@@ -79,6 +81,7 @@ test.serial.cb('The "fhir" command should list fhir resources with a query expre
 
   yargs.command(list)
     .parse('list Patient --project projectId --query "_tag=http://lifeomic.com/fhir/tag|value"');
+  t.end();
 });
 
 test.serial.cb('Limit should set the page size for the "fhir" command', t => {
@@ -97,6 +100,7 @@ test.serial.cb('Limit should set the page size for the "fhir" command', t => {
 
   yargs.command(list)
     .parse('list Patient --limit 10');
+  t.end();
 });
 
 test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
