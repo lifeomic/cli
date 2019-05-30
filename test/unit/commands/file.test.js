@@ -272,7 +272,7 @@ test.serial.cb('The "files-mv" command should move a set of files from a project
   t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
 
   yargs.command(mv)
-    .parse('mv projectId/prefix /dir -r');
+    .parse('mv projectId/prefix /dir/ -r');
 });
 
 test.serial.cb('The "files-mv" command should move a file in a project', t => {
