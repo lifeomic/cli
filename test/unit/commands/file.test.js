@@ -10,6 +10,7 @@ const querystring = require('querystring');
 
 const getStub = sinon.stub();
 const postStub = sinon.stub();
+const patchStub = sinon.stub();
 const delStub = sinon.stub();
 const printSpy = sinon.spy();
 const downloadSpy = sinon.spy();
@@ -36,6 +37,10 @@ const mocks = {
     },
     list: function (options, url) {
       return listStub(options, url);
+    },
+    patch: (options, url, opts) => {
+      patchStub(options, url, opts);
+      callback();
     },
     post: postStub,
     del: delStub,
@@ -69,6 +74,7 @@ const list = proxyquire('../../../lib/cmds/files_cmds/list', mocks);
 const download = proxyquire('../../../lib/cmds/files_cmds/download', mocks);
 const upload = proxyquire('../../../lib/cmds/files_cmds/upload', mocks);
 const ls = proxyquire('../../../lib/cmds/files_cmds/ls', mocks);
+const mv = proxyquire('../../../lib/cmds/files_cmds/mv', mocks);
 
 test.beforeEach(t => {
   t.context.sandbox = sinon.createSandbox();
@@ -78,6 +84,7 @@ test.afterEach.always(t => {
   listStub.reset();
   getStub.reset();
   postStub.reset();
+  patchStub.reset();
   delStub.reset();
   printSpy.resetHistory();
   uploadSpy.resetHistory();
@@ -234,6 +241,57 @@ test.serial.cb('The "files-download" command should download a set of files from
 
   yargs.command(download)
     .parse('download projectId/prefix /dir -r');
+});
+
+test.serial.cb('The "files-mv" command should move a set of files from a project', t => {
+  patchStub.returns({});
+  listStub.onFirstCall().returns({
+    data: {
+      items: [
+        {
+          id: '1',
+          name: 'foo.txt'
+        }
+      ]
+    }
+  });
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/v1/files?datasetId=projectId&pageSize=1000&name=prefix');
+
+    t.is(patchStub.callCount, 1);
+    t.is(patchStub.getCall(0).args[1], '/v1/files/1');
+    t.deepEqual(patchStub.getCall(0).args[2], {
+      name: '/dir/foo.txt'
+    });
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(mv)
+    .parse('mv projectId/prefix /dir/ -r');
+});
+
+test.serial.cb('The "files-mv" command should move a file in a project', t => {
+  patchStub.returns({});
+
+  callback = () => {
+    t.is(patchStub.callCount, 1);
+    t.is(patchStub.getCall(0).args[1], '/v1/files/1234');
+    t.deepEqual(patchStub.getCall(0).args[2], {
+      name: '/dir/bar.txt'
+    });
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(mv)
+    .parse('mv 1234 /dir/bar.txt');
 });
 
 test.serial.cb('The "files-upload" command should upload a file', t => {
