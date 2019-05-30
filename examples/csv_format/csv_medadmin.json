@@ -1,0 +1,43 @@
+{
+	"header": true,
+	"fieldDelimiter": ",",
+	"valueDelimiter": "'",
+	"fieldMaps": [
+		{
+			"columnName": "id",
+			"jpath": "id"
+		},
+    {
+      "columnName": "medication_code",
+      "jpath": "medicationCodeableConcept.coding[0].code"
+    },
+    {
+      "columnName": "medication_display",
+      "jpath": "medicationCodeableConcept.coding[0].display"
+    },
+    {
+      "columnName": "medication_text",
+      "jpath": "medicationCodeableConcept.coding[0].text"
+    },
+    {
+      "columnName": "dose_text",
+      "jpath": "dosage.text"
+    },
+    {
+      "columnName": "dose",
+      "jpath": "dosage.dose.value"
+    },
+    {
+      "columnName": "dose_unit",
+      "jpath": "dosage.dose.unit"
+    },
+    {
+      "columnName": "subject",
+      "jpath": "subject.reference"
+    },
+    {
+      "columnName": "date",
+      "jpath": "effectiveDateTime"
+    }
+  ]
+}

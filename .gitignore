@@ -33,3 +33,5 @@ deploy/.npmrc
 deploy/yarn.lock
 deploy/terraform/run.zip
 run.zip
+
+package-lock.json

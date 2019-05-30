@@ -5,12 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [7.3.0] - 2018-05-22
+## [7.5.0] - 2018-05-31
 
 ### Added
 
 - `lo tasks create-foundation-xml-import` now provides for structural variant ingestion by means of a new value for the `index-type` flag, `fnv`
 - `lo tasks create-nantomics-vcf-import` now provides for structural variant ingestion by means of an optional new flag `upload-type` which allows selection of either short variant file or structural variant file
+
+## [7.4.0] - 2018-05-29
+
+### Added
+
+- Added `lo layouts` commands that allow one to manage subject viewer layouts.  ([#80](https://github.com/lifeomic/cli/pull/80) from [@taylordeatri](https://github.com/taylordeatri))
+- Added `--jsonLine` global option to use JSON Line format.  ([#80](https://github.com/lifeomic/cli/pull/80) from [@taylordeatri](https://github.com/taylordeatri))
+- Added `--csv` option to `lo fhir list` command to output resources as CSV.  ([#80](https://github.com/lifeomic/cli/pull/80) from [@taylordeatri](https://github.com/taylordeatri))
+
+
+### Fixed
+
+- Upgraded Axios version to fix issue with proxy support when using `https_proxy` environment variable.  ([#80](https://github.com/lifeomic/cli/pull/80) from [@taylordeatri](https://github.com/taylordeatri))
+
+
+## [7.3.0] - 2018-05-28
+
+### Added
+
+- `lo files download` now provides recrusive download support to allow one to download many files from a project. ([#85](https://github.com/lifeomic/cli/pull/85))
+
+
+## [7.2.1] - 2018-05-22
+
+### Fixed
+
+- `lo files upload` now properly formats the file names when operating on a Windows OS. ([#83](https://github.com/lifeomic/cli/pull/83))
 
 ## [7.2.0] - 2018-05-10
 

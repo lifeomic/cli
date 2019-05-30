@@ -1,0 +1,15 @@
+{
+	"header": true,
+	"fieldDelimiter": ",",
+	"valueDelimiter": "'",
+	"fieldMaps": [
+		{
+			"columnName": "id",
+			"jpath": "id"
+		},
+		{
+			"columnName": "dob",
+			"jpath": "birthDate"	
+		}
+	]
+}
