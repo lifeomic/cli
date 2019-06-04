@@ -26,18 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `--jsonLine` global option to use JSON Line format.  ([#80](https://github.com/lifeomic/cli/pull/80) from [@taylordeatri](https://github.com/taylordeatri))
 - Added `--csv` option to `lo fhir list` command to output resources as CSV.  ([#80](https://github.com/lifeomic/cli/pull/80) from [@taylordeatri](https://github.com/taylordeatri))
 
-
 ### Fixed
 
 - Upgraded Axios version to fix issue with proxy support when using `https_proxy` environment variable.  ([#80](https://github.com/lifeomic/cli/pull/80) from [@taylordeatri](https://github.com/taylordeatri))
-
 
 ## [7.3.0] - 2018-05-28
 
 ### Added
 
 - `lo files download` now provides recrusive download support to allow one to download many files from a project. ([#85](https://github.com/lifeomic/cli/pull/85))
-
 
 ## [7.2.1] - 2018-05-22
 
@@ -459,6 +456,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replaced the `defaults` command with a `setup` command
 
+[7.6.0]: https://github.com/lifeomic/cli/compare/v7.5.0...v7.6.0
+[7.5.0]: https://github.com/lifeomic/cli/compare/v7.4.0...v7.5.0
+[7.4.0]: https://github.com/lifeomic/cli/compare/v7.3.0...v7.4.0
+[7.3.0]: https://github.com/lifeomic/cli/compare/v7.2.1...v7.3.0
 [7.2.1]: https://github.com/lifeomic/cli/compare/v7.2.0...v7.2.1
 [7.2.0]: https://github.com/lifeomic/cli/compare/v7.1.3...v7.2.0
 [7.1.3]: https://github.com/lifeomic/cli/compare/v7.1.2...v7.1.3
