@@ -468,6 +468,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replaced the `defaults` command with a `setup` command
 
+[8.0.1]: https://github.com/lifeomic/cli/compare/v8.0.0...v8.0.1
 [8.0.0]: https://github.com/lifeomic/cli/compare/v7.6.0...v8.0.0
 [7.6.0]: https://github.com/lifeomic/cli/compare/v7.5.0...v7.6.0
 [7.5.0]: https://github.com/lifeomic/cli/compare/v7.4.0...v7.5.0
