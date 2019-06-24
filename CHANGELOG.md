@@ -5,17 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [8.0.2] - 2018-06-24
+
+### Fixed
+
+- `lo auth` will only listen on local interfaces. ([#92](https://github.com/lifeomic/cli/pull/92))
+
 ## [8.0.1] - 2018-06-23
 
 ### Fixed
 
-- `lo fhir list <type> --json` will once again produce valid JSON (i.e. an array of objects)
+- `lo fhir list <type> --json` will once again produce valid JSON (i.e. an array of objects) ([#89](https://github.com/lifeomic/cli/pull/89))
 
 ## [8.0.0] - 2019-06-18
 
 ### Changed
 
-- `lo genomics create-genomic-set` has new required parameters. ([#88](https://github.com/lifeomic/cli/pull/86))
+- `lo genomics create-genomic-set` has new required parameters. ([#88](https://github.com/lifeomic/cli/pull/88))
 
 ## [7.6.0] - 2019-05-30
 
