@@ -10,26 +10,14 @@ const querystring = require('querystring');
 
 const getStub = sinon.stub();
 const postStub = sinon.stub();
+const patchStub = sinon.stub();
 const delStub = sinon.stub();
 const printSpy = sinon.spy();
 const downloadSpy = sinon.spy();
 const uploadSpy = sinon.spy();
-const deleteFileStub = sinon.stub();
-const copyFileStub = sinon.stub();
 const listStub = sinon.stub();
 const getFileVerificationStreamStub = sinon.stub();
 let callback;
-
-const fsStub = Object.assign({}, fs, {
-  unlinkSync: (filePath) => {
-    deleteFileStub(filePath);
-    callback();
-  },
-  copyFileSync: (source, dest) => {
-    copyFileStub(source, dest);
-    callback();
-  }
-});
 
 const mkdirp = {
   sync: sinon.stub()
@@ -49,6 +37,10 @@ const mocks = {
     },
     list: function (options, url) {
       return listStub(options, url);
+    },
+    patch: (options, url, opts) => {
+      patchStub(options, url, opts);
+      callback();
     },
     post: postStub,
     del: delStub,
@@ -73,7 +65,6 @@ const mocks = {
     callback();
   },
   '../../sleep': sleepStub,
-  'fs': fsStub,
   'mkdirp': mkdirp
 };
 
@@ -83,20 +74,26 @@ const list = proxyquire('../../../lib/cmds/files_cmds/list', mocks);
 const download = proxyquire('../../../lib/cmds/files_cmds/download', mocks);
 const upload = proxyquire('../../../lib/cmds/files_cmds/upload', mocks);
 const ls = proxyquire('../../../lib/cmds/files_cmds/ls', mocks);
+const mv = proxyquire('../../../lib/cmds/files_cmds/mv', mocks);
+
+test.beforeEach(t => {
+  t.context.sandbox = sinon.createSandbox();
+});
 
 test.afterEach.always(t => {
   listStub.reset();
   getStub.reset();
   postStub.reset();
+  patchStub.reset();
   delStub.reset();
   printSpy.resetHistory();
   uploadSpy.resetHistory();
   downloadSpy.resetHistory();
-  deleteFileStub.reset();
   sleepStub.reset();
   getFileVerificationStreamStub.reset();
   callback = null;
   getShouldCallCallback = false;
+  t.context.sandbox.restore();
 });
 
 test.serial.cb('The "files ls" command should list files for an account or dataset ID', t => {
@@ -109,6 +106,9 @@ test.serial.cb('The "files ls" command should list files for an account or datas
     t.deepEqual(printSpy.getCall(0).args[0], { items: [] });
     t.end();
   };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
 
   yargs.command(ls)
     .parse('ls dataset -p false');
@@ -125,6 +125,9 @@ test.serial.cb('The "files" command should list files for an account or dataset 
     t.deepEqual(printSpy.getCall(0).args[0], { items: [] });
     t.end();
   };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
 
   yargs.command(list)
     .parse('list dataset');
@@ -152,6 +155,9 @@ test.serial.cb('The "files" command should list files for an account with option
     t.end();
   };
 
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
   yargs.command(list)
     .parse('list dataset --page-size 30 --prefix name --next-page-token token');
 });
@@ -167,6 +173,9 @@ test.serial.cb('The "files-get" command should get a file', t => {
     t.end();
   };
 
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
   yargs.command(get)
     .parse('get fileid');
 });
@@ -174,6 +183,9 @@ test.serial.cb('The "files-get" command should get a file', t => {
 test.serial.cb('The "files-delete" command should delete a file', t => {
   const res = { data: {} };
   delStub.onFirstCall().returns(res);
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
 
   yargs.command(del)
     .parse('delete fileid');
@@ -195,8 +207,91 @@ test.serial.cb('The "files-download" command should download a file', t => {
     t.end();
   };
 
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
   yargs.command(download)
     .parse('download fileid /dir');
+});
+
+test.serial.cb('The "files-download" command should download a set of files from a project', t => {
+  listStub.onFirstCall().returns({
+    data: {
+      items: [
+        {
+          id: '1',
+          name: 'foo.txt'
+        }
+      ]
+    }
+  });
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/v1/files?datasetId=projectId&pageSize=1000&name=prefix');
+
+    t.is(downloadSpy.callCount, 1);
+    t.is(downloadSpy.getCall(0).args[1], '/v1/files/1?include=downloadUrl');
+    t.is(downloadSpy.getCall(0).args[2], '/dir/foo.txt');
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(download)
+    .parse('download projectId/prefix /dir -r');
+});
+
+test.serial.cb('The "files-mv" command should move a set of files from a project', t => {
+  patchStub.returns({});
+  listStub.onFirstCall().returns({
+    data: {
+      items: [
+        {
+          id: '1',
+          name: 'foo.txt'
+        }
+      ]
+    }
+  });
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/v1/files?datasetId=projectId&pageSize=1000&name=prefix');
+
+    t.is(patchStub.callCount, 1);
+    t.is(patchStub.getCall(0).args[1], '/v1/files/1');
+    t.deepEqual(patchStub.getCall(0).args[2], {
+      name: '/dir/foo.txt'
+    });
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(mv)
+    .parse('mv projectId/prefix /dir/ -r');
+});
+
+test.serial.cb('The "files-mv" command should move a file in a project', t => {
+  patchStub.returns({});
+
+  callback = () => {
+    t.is(patchStub.callCount, 1);
+    t.is(patchStub.getCall(0).args[1], '/v1/files/1234');
+    t.deepEqual(patchStub.getCall(0).args[2], {
+      name: '/dir/bar.txt'
+    });
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(mv)
+    .parse('mv 1234 /dir/bar.txt');
 });
 
 test.serial.cb('The "files-upload" command should upload a file', t => {
@@ -220,8 +315,49 @@ test.serial.cb('The "files-upload" command should upload a file', t => {
     t.end();
   };
 
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
   yargs.command(upload)
     .parse(`upload ${__dirname}/data/file1.txt dataset`);
+});
+
+test.serial.cb('The "files-upload" command should upload a file on windows', t => {
+  const fileName = 'folder\\file.txt';
+
+  t.context.sandbox.stub(fs, 'existsSync').withArgs(fileName).returns(true);
+  t.context.sandbox.stub(fs, 'statSync').withArgs(fileName).returns({
+    size: 42
+  });
+  t.context.sandbox.stub(fs, 'lstatSync').withArgs(fileName).returns({
+    isDirectory: () => false
+  });
+
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(getFileVerificationStreamStub.callCount, 1);
+    t.is(getFileVerificationStreamStub.getCall(0).args[0], fileName);
+    t.is(getFileVerificationStreamStub.getCall(0).args[1], 42);
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/files');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: 'folder/file.txt',
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+    t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
+    t.is(uploadSpy.getCall(0).args[1], 42);
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload ${fileName} dataset`);
 });
 
 test.serial.cb('The "files-upload" command should ignore already uploaded file error', t => {
@@ -272,6 +408,9 @@ test.serial.cb('The "files-upload" command should overwrite an already uploaded 
     t.end();
   };
 
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
   yargs.command(upload)
     .parse(`upload ${__dirname}/data/file1.txt dataset --force`);
 });
@@ -305,6 +444,9 @@ test.serial.cb('The "files-upload" command should upload a directory of files', 
     t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
     t.end();
   };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
 
   yargs.command(upload)
     .parse(`upload ${__dirname}/data dataset`);
@@ -348,6 +490,9 @@ test.serial.cb('The "files-upload" command should recursively upload a directory
     t.end();
   };
 
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
   yargs.command(upload)
     .parse(`upload ${__dirname}/data dataset --recursive`);
 });
@@ -371,6 +516,9 @@ test.serial.cb('The "files-upload" command should upload a file with client supp
     t.is(getFileVerificationStreamStub.getCall(0).args[1], 7);
     t.end();
   };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
 
   yargs.command(upload)
     .parse(`upload ${__dirname}/data/file1.txt dataset --id 1234`);
@@ -396,7 +544,7 @@ test.serial.cb('The "files-upload" command should delete files after (verified) 
   getShouldCallCallback = true;
 
   callback = () => {
-    if (getStub.callCount !== 3 || postStub.callCount !== 3 || deleteFileStub.callCount !== 3) {
+    if (getStub.callCount !== 3 || postStub.callCount !== 3 || t.context.deleteFileStub.callCount !== 3) {
       return;
     }
     t.is(postStub.callCount, 3);
@@ -424,10 +572,10 @@ test.serial.cb('The "files-upload" command should delete files after (verified) 
     t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file2.txt`, 7));
     t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/dir/file3.txt`, 7));
 
-    t.is(deleteFileStub.callCount, 3);
-    t.true(deleteFileStub.calledWith(`${__dirname}/data/file1.txt`));
-    t.true(deleteFileStub.calledWith(`${__dirname}/data/file2.txt`));
-    t.true(deleteFileStub.calledWith(`${__dirname}/data/dir/file3.txt`));
+    t.is(t.context.deleteFileStub.callCount, 3);
+    t.true(t.context.deleteFileStub.calledWith(`${__dirname}/data/file1.txt`));
+    t.true(t.context.deleteFileStub.calledWith(`${__dirname}/data/file2.txt`));
+    t.true(t.context.deleteFileStub.calledWith(`${__dirname}/data/dir/file3.txt`));
 
     t.true(getStub.calledWith(sinon.match.any, `/v1/files?${querystring.stringify({
       datasetId: 'dataset',
@@ -447,6 +595,9 @@ test.serial.cb('The "files-upload" command should delete files after (verified) 
 
     t.end();
   };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
 
   yargs.command(upload)
     .parse(`upload ${__dirname}/data dataset --recursive --delete-after-upload`);
@@ -469,7 +620,7 @@ test.serial.cb('The "files-upload" command backoff verification retries', t => {
   getShouldCallCallback = true;
 
   callback = () => {
-    if (deleteFileStub.callCount !== 1) {
+    if (t.context.deleteFileStub.callCount !== 1) {
       return;
     }
     t.is(postStub.callCount, 1);
@@ -483,8 +634,8 @@ test.serial.cb('The "files-upload" command backoff verification retries', t => {
     t.true(uploadSpy.calledWith('https://host/upload', 7));
     t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
 
-    t.is(deleteFileStub.callCount, 1);
-    t.true(deleteFileStub.calledWith(`${__dirname}/data/file1.txt`));
+    t.is(t.context.deleteFileStub.callCount, 1);
+    t.true(t.context.deleteFileStub.calledWith(`${__dirname}/data/file1.txt`));
 
     t.true(getStub.calledWith(sinon.match.any, `/v1/files?${querystring.stringify({
       datasetId: 'dataset',
@@ -499,6 +650,9 @@ test.serial.cb('The "files-upload" command backoff verification retries', t => {
 
     t.end();
   };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
 
   yargs.command(upload)
     .parse(`upload ${__dirname}/data/file1.txt dataset --delete-after-upload`);
@@ -515,6 +669,9 @@ test.serial('The "files-upload" command will give up after so many verification 
 
   callback = () => {};
 
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
   const error = await t.throws(upload.handler({
     file: `${__dirname}/data/file1.txt`,
     datasetId: 'dataset',
@@ -522,7 +679,7 @@ test.serial('The "files-upload" command will give up after so many verification 
   }));
 
   t.is(sleepStub.callCount, 5);
-  t.is(deleteFileStub.callCount, 0);
+  t.is(t.context.deleteFileStub.callCount, 0);
   t.is(error.message, `Could not verify uploaded file: ${`${__dirname}/data/file1.txt`}`);
 });
 
@@ -539,13 +696,16 @@ test.serial('The "files-upload" command will fail if verification fails', async 
 
   callback = () => {};
 
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
   const error = await t.throws(upload.handler({
     file: `${__dirname}/data/file1.txt`,
     datasetId: 'dataset',
     deleteAfterUpload: true
   }));
 
-  t.is(deleteFileStub.callCount, 0);
+  t.is(t.context.deleteFileStub.callCount, 0);
   t.true(error.message.indexOf('Detected file size mismatch') > -1);
 });
 
@@ -568,26 +728,26 @@ test.serial.cb('The "files-upload" command should move files after (verified) up
   callback = () => {
     if (getStub.callCount !== 3 ||
       postStub.callCount !== 3 ||
-      copyFileStub.callCount !== 3 ||
-      deleteFileStub.callCount !== 3) {
+      t.context.copyFileStub.callCount !== 3 ||
+      t.context.deleteFileStub.callCount !== 3) {
       return;
     }
     t.is(postStub.callCount, 3);
     t.true(uploadSpy.calledWith('https://host/upload', 7));
 
-    t.is(copyFileStub.callCount, 3);
-    t.true(copyFileStub.calledWith(`${__dirname}/data/file1.txt`));
-    t.true(copyFileStub.calledWith(`${__dirname}/data/file2.txt`));
-    t.true(copyFileStub.calledWith(`${__dirname}/data/dir/file3.txt`));
+    t.is(t.context.copyFileStub.callCount, 3);
+    t.true(t.context.copyFileStub.calledWith(`${__dirname}/data/file1.txt`));
+    t.true(t.context.copyFileStub.calledWith(`${__dirname}/data/file2.txt`));
+    t.true(t.context.copyFileStub.calledWith(`${__dirname}/data/dir/file3.txt`));
 
     t.is(mkdirp.sync.callCount, 3);
     t.true(mkdirp.sync.calledWith(path.join('unit-test/archive/2020-01-01', __dirname, 'data')));
     t.true(mkdirp.sync.calledWith(path.join('unit-test/archive/2020-01-01', __dirname, 'data/dir')));
 
-    t.is(deleteFileStub.callCount, 3);
-    t.true(deleteFileStub.calledWith(`${__dirname}/data/file1.txt`));
-    t.true(deleteFileStub.calledWith(`${__dirname}/data/file2.txt`));
-    t.true(deleteFileStub.calledWith(`${__dirname}/data/dir/file3.txt`));
+    t.is(t.context.deleteFileStub.callCount, 3);
+    t.true(t.context.deleteFileStub.calledWith(`${__dirname}/data/file1.txt`));
+    t.true(t.context.deleteFileStub.calledWith(`${__dirname}/data/file2.txt`));
+    t.true(t.context.deleteFileStub.calledWith(`${__dirname}/data/dir/file3.txt`));
 
     t.true(getStub.calledWith(sinon.match.any, `/v1/files?${querystring.stringify({
       datasetId: 'dataset',
@@ -607,6 +767,9 @@ test.serial.cb('The "files-upload" command should move files after (verified) up
 
     t.end();
   };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
 
   yargs.command(upload)
     .parse(`upload ${__dirname}/data dataset --recursive --move-after-upload="./unit-test/archive//2020-01-01"`);

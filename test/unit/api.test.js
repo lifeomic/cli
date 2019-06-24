@@ -12,22 +12,24 @@ axiosStub.delete = sinon.stub().resolves();
 process.env.PART_BYTES_SIZE = 3;
 const MAX_PART_UPLOAD_ATTEMPTS = process.env.MAX_PART_UPLOAD_ATTEMPTS = 3;
 
-const api = proxyquire('../../lib/api', {
-  'cli-progress': {
-    Bar: class Bar {
-      start () {}
-      increment () {}
-      stop () {}
-    }
-  },
-  './interceptor/tokenProvider': requestConfig => requestConfig,
-  './config': {
-    getEnvironment () { return 'test'; },
-    get () { return 'dummy'; }
-  },
-  'axios': axiosStub,
-  'axios-retry': sinon.spy()
-});
+const api = proxyquire(
+  '../../lib/api',
+  {
+    'cli-progress': {
+      Bar: class Bar {
+        start () {}
+        increment () {}
+        stop () {}
+      }
+    },
+    './interceptor/tokenProvider': requestConfig => requestConfig,
+    './config': {
+      getEnvironment () { return 'test'; },
+      get () { return 'dummy'; }
+    },
+    'axios': axiosStub,
+    'axios-retry': sinon.spy()
+  });
 
 test.afterEach(() => {
   axiosStub.reset();
