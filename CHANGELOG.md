@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- `lo` will now now longer colorize YAML output when it is going to a pipe ([#93](https://github.com/lifeomic/cli/pull/93))
+- `lo` will now no longer colorize YAML output when it is going to a pipe ([#93](https://github.com/lifeomic/cli/pull/93))
 
 ## [8.0.2] - 2018-06-24
 
