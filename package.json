@@ -1,6 +1,6 @@
 {
   "name": "@lifeomic/cli",
-  "version": "8.0.2",
+  "version": "8.0.3",
   "description": "CLI for interacting with the LifeOmic PHC API.",
   "main": "lo.js",
   "author": "LifeOmic <development@lifeomic.com>",
@@ -35,7 +35,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "mkdirp": "^0.5.1",
-    "open": "^0.0.5",
+    "open": "^6.3.0",
     "prettyoutput": "^1.2.0",
     "queue": "^4.5.1",
     "recursive-readdir": "^2.2.2",
