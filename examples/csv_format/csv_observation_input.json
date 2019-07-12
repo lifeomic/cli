@@ -1,0 +1,57 @@
+{
+  "fieldMaps": [
+    {
+      "columnName": "id",
+      "jpath": "id"
+    },
+    {
+      "value": "Observation",
+      "jpath": "resourceType"
+    },
+    {
+      "columnName": "subject",
+      "jpath": "subject.reference"
+    },
+    {
+      "columnName": "date",
+      "jpath": "effectiveDateTime"
+    },
+    {
+      "value": "http://lifeomic.com/fhir/source",
+      "jpath": "meta.tag[0].system"
+    },
+    {
+      "value": "CLI CSV",
+      "jpath": "meta.tag[0].code"
+    },
+    {
+      "value": "final",
+      "jpath": "status"
+    },
+    {
+      "columnName": "code",
+      "jpath": "valueCodeableConcept.coding[0].code"
+    },
+    {
+      "columnName": "codeSystem",
+      "jpath": "valueCodeableConcept.coding[0].system"
+    },
+    {
+      "columnName": "codeDisplay",
+      "jpath": "valueCodeableConcept.coding[0].display"
+    },
+    {
+      "columnName": "value",
+      "isNumber": true,
+      "jpath": "valueQuantity.value"
+    },
+    {
+      "columnName": "valueUnitSystem",
+      "jpath": "valueQuantity.system"
+    },
+    {
+      "columnName": "valueUnit",
+      "jpath": "valueQuantity.unit"
+    }
+  ]
+}
