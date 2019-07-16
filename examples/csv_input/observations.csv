@@ -1,0 +1,2 @@
+id,subject,date,codeSystem,code,codeDisplay,valueUnitSystem,valueUnit,value
+"3abfdf2f-7af6-47ca-aebc-d28a8587efe2","34baff70-ff0d-433b-9f16-8196efd9e1cc","2019-07-12T16:10:28-04:00","http://loinc.org","1974-5","Bilirubin","http://unitsofmeasure.org/","mg/dL",0.8629134740075964

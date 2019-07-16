@@ -4886,6 +4886,20 @@ stream-chain@^2.1.0:
   resolved "https://registry.yarnpkg.com/stream-chain/-/stream-chain-2.1.0.tgz#a058a7104d7261a71bf7eb4c5f496f13dc665320"
   integrity sha512-PAUXdRGm0G8P0+/+JEd3O9kfmB9kwmr2nKIc5zhcsHn0KdBByD5PJ2po21iDzc+TZsOSEbU8j4JbAevJsZkLyQ==
 
+stream-csv-as-json@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/stream-csv-as-json/-/stream-csv-as-json-1.0.1.tgz#2531183b73676d2cf64fa3b8d3dbfe8f492040b2"
+  integrity sha512-nnfIA8Xbbo5H4jMUQKEiwf4jfzOkyYXzQiD5O3LwKt52iTrrDYqAP9/thQAUeUj6GoLkwZwbOq+3jd/TB+/SIw==
+  dependencies:
+    stream-json "^1.0.1"
+
+stream-json@^1.0.1:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/stream-json/-/stream-json-1.3.0.tgz#c7c0f40a808ce91181c15018fc3dbcd09bcd6cf8"
+  integrity sha512-3qLDv/xnwmleb5kssgmKbGPqcLou2tbFIgj3CM3fy5PxKaAmeCv103Zp4LKIALdE30zMHTJn09yVwxq773btaw==
+  dependencies:
+    stream-chain "^2.1.0"
+
 stream-json@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/stream-json/-/stream-json-1.2.1.tgz#7b58112358dca3496b3bb1fc9c2a3099a53b34f4"

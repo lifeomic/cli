@@ -173,6 +173,42 @@ test.serial.cb('The "fhir-ingest" with project command should update a fhir reso
     .parse('ingest --project abc');
 });
 
+test.serial.cb('The "fhir-ingest" command can accept CSV stdin given a CSV configuration', t => {
+  const res = {data: {entry: [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]}};
+  postStub.returns(res);
+
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
+  const stdin = fs.createReadStream(`${__dirname}/fhir/csvInput.csv`);
+  stdinStub.returns(stdin);
+
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], 'account/dstu3');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      resourceType: 'Bundle',
+      type: 'collection',
+      entry: [
+        {
+          resource:
+          {
+            resourceType: 'Patient',
+            id: '1234',
+            name: [{
+              family: 'LastName'
+            }]
+          }
+        }
+      ]
+    });
+    t.is(printSpy.callCount, 1);
+    t.deepEqual(printSpy.getCall(0).args[0], [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]);
+    t.end();
+  };
+
+  yargs.command(ingest)
+    .parse('ingest --csv ./test/unit/commands/fhir/csvFormat.json');
+});
+
 test.serial.cb('The "fhir-delete" command should delete a fhir resource', t => {
   callback = () => {
     t.is(delStub.callCount, 1);
