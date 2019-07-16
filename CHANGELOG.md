@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `lo genomics list-copy-number-sets` gets the copy number genomic sets for the provided data set id ([#97](https://github.com/lifeomic/cli/pull/97))
 - `lo genomics list-structural-variant-sets` gets the structural variant genomic set for the provided data set id ([#97](https://github.com/lifeomic/cli/pull/97))
 - `--use-existing-sequence` flag to `lo tasks create-foundation-xml-import` and `lo tasks create-nantomics-vcf-import`. This flag when used with any `--indext-type` besides `all` will attempt to add the currently ingest variant type to an existing sequence.  ([#96](https://github.com/lifeomic/cli/pull/96))
+- `lo fhir ingest` now allows for CSV content to be passed to stdin with a `--csv` flag which points to a configuration file. See `examples/csv_input/observations.csv` as an example of input, and `examples/csv_format/csv_observation_input.json` as an example of configuration.  ([#99](https://github.com/lifeomic/cli/pull/99))
 
 ## [8.0.3] - 2019-06-24
 
