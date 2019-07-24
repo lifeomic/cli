@@ -101,7 +101,7 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
       indexType: 'all',
-      useExistingSequence: false
+      reIngestFile: false
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -112,7 +112,7 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
     .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --index-type all');
 });
 
-test.serial.cb('The "create-foundation-xml-import" accepts use-existing-sequence as an optional boolean flag', t => {
+test.serial.cb('The "create-foundation-xml-import" accepts re-ingest-file as an optional boolean flag', t => {
   const res = { data: {} };
   postStub.onFirstCall().returns(res);
   callback = () => {
@@ -128,7 +128,7 @@ test.serial.cb('The "create-foundation-xml-import" accepts use-existing-sequence
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
       indexType: 'all',
-      useExistingSequence: true
+      reIngestFile: true
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -136,7 +136,7 @@ test.serial.cb('The "create-foundation-xml-import" accepts use-existing-sequence
   };
 
   yargs.command(createFoundationTask)
-    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --index-type all --use-existing-sequence');
+    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --index-type all --re-ingest-file');
 });
 
 test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantomics ingest task', t => {
@@ -156,7 +156,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
       uploadType: 'variant',
-      useExistingSequence: false
+      reIngestFile: false
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -167,7 +167,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
     .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant');
 });
 
-test.serial.cb('The "create-nantomics-vcf-import" command accepts use-existing-sequence as an optional boolean flag', t => {
+test.serial.cb('The "create-nantomics-vcf-import" command accepts re-ingest-file as an optional boolean flag', t => {
   const res = { data: {} };
   postStub.onFirstCall().returns(res);
   callback = () => {
@@ -184,7 +184,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command accepts use-existing-s
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
       uploadType: 'variant',
-      useExistingSequence: true
+      reIngestFile: true
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -192,7 +192,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command accepts use-existing-s
   };
 
   yargs.command(createNantomicsTask)
-    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant  --use-existing-sequence');
+    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant  --re-ingest-file');
 });
 
 test.serial.cb('The "tasks-cancel" command should cancel a task', t => {
