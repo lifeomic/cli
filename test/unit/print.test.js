@@ -20,7 +20,7 @@ test('non tty output (e.g. pipe) should suppress colorization so downstream text
 
   const data = {foo: 'bar'};
   print(data, {});
-  t.pass(sinon.assert.calledWithExactly(prettyoutput, data, {noColor: true}));
+  t.pass(sinon.assert.calledWithExactly(prettyoutput, data, {maxDepth: 100, noColor: true}));
 });
 
 test('tty output (e.g. terminal) should colorize', async t => {
@@ -28,5 +28,5 @@ test('tty output (e.g. terminal) should colorize', async t => {
 
   const data = {foo: 'bar'};
   print(data, {});
-  t.pass(sinon.assert.calledWithExactly(prettyoutput, data, {noColor: false}));
+  t.pass(sinon.assert.calledWithExactly(prettyoutput, data, {maxDepth: 100, noColor: false}));
 });
