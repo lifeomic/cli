@@ -21,6 +21,17 @@ const program = proxyquire('../../../lib/cmds/insights_cmds/query', {
   '../../read': async () => readStub()
 });
 
+const schedule = proxyquire('../../../lib/cmds/insights_cmds/schedule-job', {
+  '../../api': {
+    post: postStub
+  },
+  '../../print': (data, opts) => {
+    printSpy(data, opts);
+    callback();
+  },
+  '../../read': async () => readStub()
+});
+
 test.afterEach.always(t => {
   postStub.resetHistory();
   printSpy.resetHistory();
@@ -80,4 +91,24 @@ test.serial.cb('The "insights-run-query" command allows cohort to be used', t =>
 
   yargs.command(program)
     .parse('query 1 --cohortId 2');
+});
+
+test.serial.cb('The "schedule-job" command allows a job to be scheduled', t => {
+  postStub.onFirstCall().returns({});
+
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/analytics/jobs');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      type: 'gene',
+      action: 'aggregate',
+      datasetId: 'projectId',
+      setIds: ['set1', 'set2', 'set3']
+    });
+    t.is(printSpy.callCount, 1);
+    t.end();
+  };
+
+  yargs.command(schedule)
+    .parse('schedule-job -t gene -a aggregate -p projectId -s set1 set2 set3');
 });
