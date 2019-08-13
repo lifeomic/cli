@@ -54,10 +54,17 @@ const mocks = {
     },
     getFileVerificationStream: async function (filePath, fileSize) {
       getFileVerificationStreamStub(filePath, fileSize);
-      return {
-        data: 'data',
-        contentMD5: 'contentMD5'
-      };
+      if (fileSize) {
+        return {
+          data: 'data',
+          contentMD5: 'contentMD5'
+        };
+      } else {
+        return {
+          data: 'data',
+          contentMD5: null
+        };
+      }
     }
   },
   '../../print': (data, opts) => {
@@ -320,6 +327,57 @@ test.serial.cb('The "files-upload" command should upload a file', t => {
 
   yargs.command(upload)
     .parse(`upload ${__dirname}/data/file1.txt dataset`);
+});
+
+test.serial.cb('The "files-upload" command should upload an empty file', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(getFileVerificationStreamStub.callCount, 1);
+    t.is(getFileVerificationStreamStub.getCall(0).args[0], `${__dirname}/emptyTest/empty.txt`);
+    t.is(getFileVerificationStreamStub.getCall(0).args[1], 0);
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/files');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `${__dirname}/emptyTest/empty.txt`,
+      datasetId: 'dataset',
+      overwrite: false
+    });
+    t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
+    t.is(uploadSpy.getCall(0).args[1], 0);
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/emptyTest/empty.txt dataset`);
+});
+
+test.serial.cb('The "files-upload" command should ignore errors if requested', t => {
+  postStub.onFirstCall().throws({});
+  callback = () => {
+    t.is(getFileVerificationStreamStub.callCount, 1);
+    t.is(getFileVerificationStreamStub.getCall(0).args[0], `${__dirname}/emptyTest/empty.txt`);
+    t.is(getFileVerificationStreamStub.getCall(0).args[1], 0);
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/files');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `${__dirname}/emptyTest/empty.txt`,
+      datasetId: 'dataset',
+      overwrite: false
+    });
+    t.is(uploadSpy.callCount, 0);
+    t.end();
+  };
+
+  t.context.sandbox.stub(console, 'error').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload --ignore ${__dirname}/emptyTest/empty.txt dataset`);
 });
 
 test.serial.cb('The "files-upload" command should upload a file on windows', t => {
