@@ -108,3 +108,85 @@ test.serial.cb('The "delete-structural-variant-set" should delete a structural v
   yargs.command(del)
     .parse('delete-structural-variant-set fusionsetid');
 });
+
+test.serial.cb('The "list-structural-variant-sets" command should list structural variant sets for an account filtered by sequence', t => {
+  const res = { data: { fusionSets: [] } };
+  postStub.onFirstCall().returns(res);
+  listStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/fusionsets/search');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      datasetIds: [
+        'dataset'
+      ],
+      pageSize: 25,
+      pageToken: undefined,
+      sequenceId: 'sequenceId'
+    });
+    t.is(printSpy.callCount, 1);
+    t.true(printSpy.calledWith({ fusionSets: [] }));
+    t.end();
+  };
+
+  yargs.command(list)
+    .parse('list-structural-variant-sets dataset -q sequenceId');
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/fusionsets/search');
+    t.deepEqual(listStub.getCall(0).args[2], {
+      datasetIds: [
+        'dataset'
+      ],
+      sequenceId: 'sequenceId'
+    });
+    t.is(printSpy.callCount, 1);
+    t.true(printSpy.calledWith({ fusionSets: [] }));
+    t.end();
+  };
+
+  yargs.command(list)
+    .parse('list-structural-variant-sets dataset -q sequenceId -l 1000');
+});
+
+test.serial.cb('The "list-structural-variant-sets" command should list structural variant sets for an account filtered by patient', t => {
+  const res = { data: { fusionSets: [] } };
+  postStub.onFirstCall().returns(res);
+  listStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/fusionsets/search');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      datasetIds: [
+        'dataset'
+      ],
+      pageSize: 25,
+      pageToken: undefined,
+      patientId: 'patientId'
+    });
+    t.is(printSpy.callCount, 1);
+    t.true(printSpy.calledWith({ fusionSets: [] }));
+    t.end();
+  };
+
+  yargs.command(list)
+    .parse('list-structural-variant-sets dataset -p patientId');
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/fusionsets/search');
+    t.deepEqual(listStub.getCall(0).args[2], {
+      datasetIds: [
+        'dataset'
+      ],
+      patientId: 'patientId'
+    });
+    t.is(printSpy.callCount, 1);
+    t.true(printSpy.calledWith({ fusionSets: [] }));
+    t.end();
+  };
+
+  yargs.command(list)
+    .parse('list-structural-variant-sets dataset -p patientId -l 1000');
+});
