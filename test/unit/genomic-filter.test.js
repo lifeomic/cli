@@ -13,7 +13,8 @@ const genomicFilter = proxyquire(`../../lib/genomic-filter`, {
       return {};
     },
 
-    getEnvironment () { return 'test'; }
+    getEnvironment () { return 'test'; },
+    getAccount: () => 'lifeomic'
   }
 });
 
