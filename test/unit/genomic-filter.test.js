@@ -12,6 +12,10 @@ const genomicFilter = proxyquire(`../../lib/genomic-filter`, {
 
       return {};
     }
+  },
+  './interceptor/tokenProvider': requestConfig => requestConfig,
+  './config': {
+    getEnvironment () { return 'test'; }
   }
 });
 
