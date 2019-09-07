@@ -37,7 +37,7 @@ test.always.afterEach(t => {
 });
 
 test.serial.cb('The "ga4gh-rnaquantificationsets" command should list rna sets for an account', t => {
-  const res = { data: { rnaquantificationsets: [] } };
+  const res = { data: { rnaQuantificationSets: [] } };
   postStub.onFirstCall().returns(res);
   listStub.onFirstCall().returns(res);
   callback = () => {
@@ -52,7 +52,7 @@ test.serial.cb('The "ga4gh-rnaquantificationsets" command should list rna sets f
       status: 'INDEXING'
     });
     t.is(printSpy.callCount, 1);
-    t.true(printSpy.calledWith({ rnaquantificationsets: [] }));
+    t.true(printSpy.calledWith({ rnaQuantificationSets: [] }));
     t.end();
   };
 
@@ -69,7 +69,7 @@ test.serial.cb('The "ga4gh-rnaquantificationsets" command should list rna sets f
       status: 'INDEXING'
     });
     t.is(printSpy.callCount, 1);
-    t.true(printSpy.calledWith({ rnaquantificationsets: [] }));
+    t.true(printSpy.calledWith({ rnaQuantificationSets: [] }));
     t.end();
   };
 
@@ -78,7 +78,7 @@ test.serial.cb('The "ga4gh-rnaquantificationsets" command should list rna sets f
 });
 
 test.serial.cb('The "ga4gh-rnaquantificationsets" command should list rna sets for an account filtered by sequence', t => {
-  const res = { data: { rnaquantificationsets: [] } };
+  const res = { data: { rnaQuantificationSets: [] } };
   postStub.onFirstCall().returns(res);
   listStub.onFirstCall().returns(res);
   callback = () => {
@@ -110,7 +110,7 @@ test.serial.cb('The "ga4gh-rnaquantificationsets" command should list rna sets f
       sequenceId: 'sequenceId'
     });
     t.is(printSpy.callCount, 1);
-    t.true(printSpy.calledWith({ rnaquantificationsets: [] }));
+    t.true(printSpy.calledWith({ rnaQuantificationSets: [] }));
     t.end();
   };
 
@@ -119,7 +119,7 @@ test.serial.cb('The "ga4gh-rnaquantificationsets" command should list rna sets f
 });
 
 test.serial.cb('The "ga4gh-rnaquantificationsets" command should list rna sets for an account filtered by patient', t => {
-  const res = { data: { rnaquantificationsets: [] } };
+  const res = { data: { rnaQuantificationSets: [] } };
   postStub.onFirstCall().returns(res);
   listStub.onFirstCall().returns(res);
   callback = () => {
@@ -134,7 +134,7 @@ test.serial.cb('The "ga4gh-rnaquantificationsets" command should list rna sets f
       patientId: 'patientId'
     });
     t.is(printSpy.callCount, 1);
-    t.true(printSpy.calledWith({ rnaquantificationsets: [] }));
+    t.true(printSpy.calledWith({ rnaQuantificationSets: [] }));
     t.end();
   };
 
@@ -151,7 +151,7 @@ test.serial.cb('The "ga4gh-rnaquantificationsets" command should list rna sets f
       patientId: 'patientId'
     });
     t.is(printSpy.callCount, 1);
-    t.true(printSpy.calledWith({ rnaquantificationsets: [] }));
+    t.true(printSpy.calledWith({ rnaQuantificationSets: [] }));
     t.end();
   };
 
