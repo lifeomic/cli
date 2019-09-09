@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.2.0]  - 2019-09-09
+
+### Added
+
+- Added the same arguments to the following `genomics` commands: `list-copy-number-sets`, `list-readgroup-sets`, 
+`list-rna-quantification-sets`, `list-structural-variant-sets` and `list-variant-sets`
+  - `--missing-patient` returns sets that are missing patientIds
+  - `--missing-sequence` returns sets that are missing sequenceIds
+  - `--missing-samples` returns sets that are missing sample names
+  - `--missing-fhir-sequence` returns sets that have no associate FHIR Sequence resource
+  - `--only-ids` causes the return to be only a an array of ids, intended to help with scripting tasks 
+
 ## [9.1.0]  - 2019-09-06
 
 ### Added
@@ -532,6 +544,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replaced the `defaults` command with a `setup` command
 
+[9.2.0]: https://github.com/lifeomic/cli/compare/v9.1.0...v9.2.0
 [9.1.0]: https://github.com/lifeomic/cli/compare/v9.0.0...v9.1.0
 [9.0.0]: https://github.com/lifeomic/cli/compare/v8.3.1...v9.0.0
 [8.3.1]: https://github.com/lifeomic/cli/compare/v8.3.0...v8.3.1
