@@ -102,7 +102,8 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
       indexType: 'all',
-      reIngestFile: false
+      reIngestFile: false,
+      specimenSite: 'Colon'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -110,7 +111,7 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
   };
 
   yargs.command(createFoundationTask)
-    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --index-type all');
+    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --index-type all --specimen-site "Colon"');
 });
 
 test.serial.cb('The "create-foundation-xml-import" accepts re-ingest-file as an optional boolean flag', t => {
@@ -129,7 +130,8 @@ test.serial.cb('The "create-foundation-xml-import" accepts re-ingest-file as an 
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
       indexType: 'all',
-      reIngestFile: true
+      reIngestFile: true,
+      specimenSite: 'Colon'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -137,7 +139,7 @@ test.serial.cb('The "create-foundation-xml-import" accepts re-ingest-file as an 
   };
 
   yargs.command(createFoundationTask)
-    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --index-type all --re-ingest-file');
+    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --index-type all --re-ingest-file --specimen-site "Colon"');
 });
 
 test.serial.cb('The "create-ashion-import" command should create a ashion ingest task', t => {
@@ -152,7 +154,8 @@ test.serial.cb('The "create-ashion-import" command should create a ashion ingest
       subjectId: '2a6dc73e-ed30-4387-94c1-0cd661da56d9',
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
-      outputFilePrefix: 'prefix'
+      outputFilePrefix: 'prefix',
+      specimenSite: 'Colon'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -160,7 +163,7 @@ test.serial.cb('The "create-ashion-import" command should create a ashion ingest
   };
 
   yargs.command(createAshionTask)
-    .parse('create-ashion-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -f c8ef7300-1373-4e51-8eb9-ff333600f6a5 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 --performer-id performer1 --indexed-date "1999-01-01 12:00" --output-prefix prefix');
+    .parse('create-ashion-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -f c8ef7300-1373-4e51-8eb9-ff333600f6a5 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 --performer-id performer1 --indexed-date "1999-01-01 12:00" --output-prefix prefix --specimen-site "Colon"');
 });
 test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantomics ingest task', t => {
   const res = { data: {} };
@@ -179,7 +182,8 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
       uploadType: 'variant',
-      reIngestFile: false
+      reIngestFile: false,
+      specimenSite: 'Colon'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -187,7 +191,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
   };
 
   yargs.command(createNantomicsTask)
-    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant');
+    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant --specimen-site "Colon"');
 });
 
 test.serial.cb('The "create-nantomics-vcf-import" command accepts re-ingest-file as an optional boolean flag', t => {
@@ -207,7 +211,8 @@ test.serial.cb('The "create-nantomics-vcf-import" command accepts re-ingest-file
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
       uploadType: 'variant',
-      reIngestFile: true
+      reIngestFile: true,
+      specimenSite: 'Colon'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -215,7 +220,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command accepts re-ingest-file
   };
 
   yargs.command(createNantomicsTask)
-    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant  --re-ingest-file');
+    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant  --re-ingest-file --specimen-site "Colon"');
 });
 
 test.serial.cb('The "tasks-cancel" command should cancel a task', t => {
