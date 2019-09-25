@@ -5,17 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.3.0]  - 2019-09-25
+
+### Added
+
+- Added the `lo genomics list-tests` command to lists genomic tests for a subject
+- Addded the `lo genomics delete-test` command to delete a test for a subject
+
 ## [9.2.0]  - 2019-09-09
 
 ### Added
 
-- Added the same arguments to the following `genomics` commands: `list-copy-number-sets`, `list-readgroup-sets`, 
+- Added the same arguments to the following `genomics` commands: `list-copy-number-sets`, `list-readgroup-sets`,
 `list-rna-quantification-sets`, `list-structural-variant-sets` and `list-variant-sets`
   - `--missing-patient` returns sets that are missing patientIds
   - `--missing-sequence` returns sets that are missing sequenceIds
   - `--missing-samples` returns sets that are missing sample names
   - `--missing-fhir-sequence` returns sets that have no associate FHIR Sequence resource
-  - `--only-ids` causes the return to be only a an array of ids, intended to help with scripting tasks 
+  - `--only-ids` causes the return to be only a an array of ids, intended to help with scripting tasks
 
 ## [9.1.0]  - 2019-09-06
 
