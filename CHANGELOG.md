@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.5.0]  - 2019-10-03
+
+### Added
+
+- Added the following optional argument to the tasks `create-ashion-import`
+    - `--re-ingest-file` Allows an Ashion file to be re-ingested
+
 ## [9.4.0]  - 2019-09-26
 
 ### Added
@@ -561,6 +568,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[9.5.0]: https://github.com/lifeomic/cli/compare/v9.4.0...v9.5.0
 [9.4.0]: https://github.com/lifeomic/cli/compare/v9.3.0...v9.4.0
 [9.3.0]: https://github.com/lifeomic/cli/compare/v9.2.0...v9.3.0
 [9.2.0]: https://github.com/lifeomic/cli/compare/v9.1.0...v9.2.0
