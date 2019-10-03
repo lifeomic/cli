@@ -167,7 +167,8 @@ test.serial.cb('The "create-ashion-import" command should create a ashion ingest
       outputFilePrefix: 'prefix',
       bodySite: 'Colon',
       bodySiteSystem: 'http://a.fancy.system.com',
-      bodySiteDisplay: 'body site notation'
+      bodySiteDisplay: 'body site notation',
+      reIngestFile: true
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -178,7 +179,7 @@ test.serial.cb('The "create-ashion-import" command should create a ashion ingest
     .parse('create-ashion-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -f c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
       '-s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 --performer-id performer1 --indexed-date "1999-01-01 12:00" ' +
       '--output-prefix prefix --body-site "Colon" --body-site-system "http://a.fancy.system.com"  ' +
-      '--body-site-display "body site notation"');
+      '--body-site-display "body site notation" --re-ingest-file');
 });
 test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantomics ingest task', t => {
   const res = { data: {} };
