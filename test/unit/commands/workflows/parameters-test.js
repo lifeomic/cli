@@ -98,7 +98,6 @@ test.serial.cb('The "list-parameters" command should list parameters sets for an
     t.is(listStub.callCount, 1);
     t.is(listStub.getCall(0).args[1], '/workflows/parameters?datasetId=dataset');
     t.is(printSpy.callCount, 1);
-    console.log(printSpy.getCall(0).args[0]);
     t.is(printSpy.getCall(0).args[0], res);
     t.end();
   };

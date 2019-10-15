@@ -126,7 +126,6 @@ test.serial.cb('The "list-workflow" command should list workflows for an account
     t.is(listStub.callCount, 1);
     t.is(listStub.getCall(0).args[1], '/workflows?datasetId=dataset');
     t.is(printSpy.callCount, 1);
-    console.log(printSpy.getCall(0).args[0]);
     t.is(printSpy.getCall(0).args[0], res);
     t.end();
   };

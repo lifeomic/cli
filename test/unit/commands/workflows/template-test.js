@@ -98,7 +98,6 @@ test.serial.cb('The "list-template" command should list templates for an account
     t.is(listStub.callCount, 1);
     t.is(listStub.getCall(0).args[1], '/workflows/templates?datasetId=dataset');
     t.is(printSpy.callCount, 1);
-    console.log(printSpy.getCall(0).args[0]);
     t.is(printSpy.getCall(0).args[0], res);
     t.end();
   };
