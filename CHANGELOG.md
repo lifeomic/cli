@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.6.0]  - 2019-10-16
+
+### Added
+
+- Added the following commands which allow usage of the new workflow api which implements a subset of the [Common Workflow Language](https://www.commonwl.org) standard
+  - Handling of cwl json templates
+    - `lo workflows create-template` Add the CWL json template
+    - `lo workflows get-template` Returns a CWL json template
+    - `lo workflows list-templates` Returns all CWL json templates belonging to a project
+    - `lo workflows delete-template` Removes the CWL json template from a project
+  - Handling of cwl json parameters
+    - `lo workflows create-parameters` Add a CWL json parameter set
+    - `lo workflows get-parameters` Returns a CWL json parameter set
+    - `lo workflows list-parameters` Returns all CWL json parameter sets belonging to a project
+    - `lo workflows delete-parameters` Removes the CWL json parameter set from a project
+  - Handling of cwl json parameters
+    - `lo workflows build-workflow` Generates and starts a workflow with a combination of a template and parameter resources
+    - `lo workflows create-workflow` Allows a full CWL JSON template and parameter set to be read into the command directly
+    - `lo workflows get-workflow` Returns a workflow
+    - `lo workflows list-workflows` Returns all workflows belonging to a project
+    - `lo workflows delete-workflows` Removes the workflow from the project
+
 ## [9.5.0]  - 2019-10-03
 
 ### Added
@@ -568,6 +590,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[9.6.0]: https://github.com/lifeomic/cli/compare/v9.5.0...v9.6.0
 [9.5.0]: https://github.com/lifeomic/cli/compare/v9.4.0...v9.5.0
 [9.4.0]: https://github.com/lifeomic/cli/compare/v9.3.0...v9.4.0
 [9.3.0]: https://github.com/lifeomic/cli/compare/v9.2.0...v9.3.0
