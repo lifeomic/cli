@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.7.0]  - 2019-10-30
+
+### Added
+
+- Added the following commands to issue and fetch the data of queries against the analytics data lake.
+  - `lo data-lake query` Submits a query to the Lifeomic data-lake API
+  - `lo data-lake get-query` Fetch a single query execution
+  - `lo data-lake list-queries` List the query executions in the project
+
 ## [9.6.0]  - 2019-10-16
 
 ### Added
@@ -38,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added the following optional arguments to the tasks `create-ashion-import`, `create-foundation-xml-import`, 
+- Added the following optional arguments to the tasks `create-ashion-import`, `create-foundation-xml-import`,
 and `create-nantomics-vcf-import`
     - `--body-site` the code indicating the body site of the sample
     - `--body-site-system` the system from which the body site code is derived
