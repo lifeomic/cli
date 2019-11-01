@@ -28,9 +28,11 @@ interactive terminal or in a scripted environment.
 
 # Project Status
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://travis-ci.org/lifeomic/cli.svg?branch=master)](https://travis-ci.org/lifeomic/cli)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lifeomic/cli)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+![Travis (.org) branch](https://img.shields.io/travis/lifeomic/cli/master.svg?style=for-the-badge)
+![Downloads](https://img.shields.io/npm/dw/@lifeomic/cli?style=for-the-badge)
+![Version](https://img.shields.io/npm/v/@lifeomic/cli?style=for-the-badge)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](https://github.com/lifeomic/cli)
 
 **[Back to top](#table-of-contents)**
 
