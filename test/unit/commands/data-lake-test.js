@@ -82,7 +82,7 @@ test.serial.cb('The "data-lake-query" command should accept a query as an option
 
   callback = () => {
     t.is(postStub.callCount, 1);
-    t.is(postStub.getCall(0).args[1], '/v1/analytics/query');
+    t.is(postStub.getCall(0).args[1], '/v1/analytics/data-lake/query');
     t.deepEqual(postStub.getCall(0).args[2], {
       query: query,
       datasetId: datasetId,
@@ -105,7 +105,7 @@ test.serial.cb('The "data-lake-query" command should accept a query from stdin',
 
   callback = () => {
     t.is(postStub.callCount, 1);
-    t.is(postStub.getCall(0).args[1], '/v1/analytics/query');
+    t.is(postStub.getCall(0).args[1], '/v1/analytics/data-lake/query');
     t.deepEqual(postStub.getCall(0).args[2], {
       query: query,
       datasetId: datasetId,
@@ -124,7 +124,7 @@ test.serial.cb('The "data-lake-list-queries" command should accept page-size and
   const nextPageToken = uuid();
 
   listStub.onFirstCall().returns({});
-  const expectedPath = `/v1/analytics/query?datasetId=${datasetId}&pageSize=${pageSize}&nextPageToken=${nextPageToken}`;
+  const expectedPath = `/v1/analytics/data-lake/query?datasetId=${datasetId}&pageSize=${pageSize}&nextPageToken=${nextPageToken}`;
 
   callback = () => {
     t.is(listStub.callCount, 1);
@@ -140,7 +140,7 @@ test.serial.cb('The "data-lake-get-query" command should add query-id to path', 
   const queryId = uuid();
 
   getStub.onFirstCall().returns({});
-  const expectedPath = `/v1/analytics/query/${queryId}`;
+  const expectedPath = `/v1/analytics/data-lake/query/${queryId}`;
 
   callback = () => {
     t.is(getStub.callCount, 1);
