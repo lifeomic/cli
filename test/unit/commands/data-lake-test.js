@@ -156,7 +156,7 @@ test.serial.cb('The "data-lake-list-schemas" command should add dataset id to pa
   const datasetId = uuid();
 
   getStub.onFirstCall().returns({});
-  const expectedPath = `/v1/analytics/data-lake/schemas?datasetId=${datasetId}`;
+  const expectedPath = `/v1/analytics/data-lake/schema?datasetId=${datasetId}`;
 
   callback = () => {
     t.is(getStub.callCount, 1);
@@ -173,7 +173,7 @@ test.serial.cb('The "data-lake-get-schema" command should add dataset id and tab
   const tableName = uuid();
 
   getStub.onFirstCall().returns({});
-  const expectedPath = `/v1/analytics/data-lake/schemas/${tableName}?datasetId=${datasetId}`;
+  const expectedPath = `/v1/analytics/data-lake/schema/${tableName}?datasetId=${datasetId}`;
 
   callback = () => {
     t.is(getStub.callCount, 1);
