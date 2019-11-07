@@ -668,21 +668,21 @@ test.serial.cb('The "files-upload" command should upload a directory of files st
     t.is(postStub.callCount, 2);
     t.deepEqual(postStub.getCall(0).args[2], {
       id: undefined,
-      name: `file1.txt`,
+      name: `/file1.txt`,
       datasetId: 'dataset',
       overwrite: false,
       contentMD5: 'contentMD5'
     });
     t.deepEqual(postStub.getCall(1).args[2], {
       id: undefined,
-      name: `file2.txt`,
+      name: `/file2.txt`,
       datasetId: 'dataset',
       overwrite: false,
       contentMD5: 'contentMD5'
     });
 
     t.true(uploadSpy.calledWith('https://host/upload', 7));
-    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/file1.txt`, 7));
     t.end();
   };
 
