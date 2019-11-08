@@ -170,7 +170,7 @@ test.serial.cb('The "data-lake-list-schemas" command should add dataset id to pa
 
 test.serial.cb('The "data-lake-get-schema" command should add dataset id and table name to path', t => {
   const datasetId = uuid();
-  const tableName = uuid();
+  const tableName = 'condition';
 
   getStub.onFirstCall().returns({});
   const expectedPath = `/v1/analytics/data-lake/schema/${tableName}?datasetId=${datasetId}`;
