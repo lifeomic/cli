@@ -34,7 +34,27 @@ const listCmd = proxyquire('../../../lib/cmds/data_lake_cmds/list-queries', {
   }
 });
 
-const getCmd = proxyquire('../../../lib/cmds/data_lake_cmds/get-query', {
+const getQueryCmd = proxyquire('../../../lib/cmds/data_lake_cmds/get-query', {
+  '../../api': {
+    get: getStub
+  },
+  '../../print': (data, opts) => {
+    printSpy(data, opts);
+    callback();
+  }
+});
+
+const getSchemasCmd = proxyquire('../../../lib/cmds/data_lake_cmds/list-schemas', {
+  '../../api': {
+    get: getStub
+  },
+  '../../print': (data, opts) => {
+    printSpy(data, opts);
+    callback();
+  }
+});
+
+const getSchemaCmd = proxyquire('../../../lib/cmds/data_lake_cmds/get-schema', {
   '../../api': {
     get: getStub
   },
@@ -62,7 +82,7 @@ test.serial.cb('The "data-lake-query" command should accept a query as an option
 
   callback = () => {
     t.is(postStub.callCount, 1);
-    t.is(postStub.getCall(0).args[1], '/v1/analytics/query');
+    t.is(postStub.getCall(0).args[1], '/v1/analytics/data-lake/query');
     t.deepEqual(postStub.getCall(0).args[2], {
       query: query,
       datasetId: datasetId,
@@ -85,7 +105,7 @@ test.serial.cb('The "data-lake-query" command should accept a query from stdin',
 
   callback = () => {
     t.is(postStub.callCount, 1);
-    t.is(postStub.getCall(0).args[1], '/v1/analytics/query');
+    t.is(postStub.getCall(0).args[1], '/v1/analytics/data-lake/query');
     t.deepEqual(postStub.getCall(0).args[2], {
       query: query,
       datasetId: datasetId,
@@ -98,13 +118,13 @@ test.serial.cb('The "data-lake-query" command should accept a query from stdin',
   yargs.command(queryCmd).parse(`query ${datasetId} -o ${outputFileName}`);
 });
 
-test.serial.cb('The "data-lake-list-queries" should accept page-size and next-page-token', t => {
+test.serial.cb('The "data-lake-list-queries" command should accept page-size and next-page-token', t => {
   const datasetId = uuid();
   const pageSize = 30;
   const nextPageToken = uuid();
 
   listStub.onFirstCall().returns({});
-  const expectedPath = `/v1/analytics/query?datasetId=${datasetId}&pageSize=${pageSize}&nextPageToken=${nextPageToken}`;
+  const expectedPath = `/v1/analytics/data-lake/query?datasetId=${datasetId}&pageSize=${pageSize}&nextPageToken=${nextPageToken}`;
 
   callback = () => {
     t.is(listStub.callCount, 1);
@@ -116,11 +136,11 @@ test.serial.cb('The "data-lake-list-queries" should accept page-size and next-pa
   yargs.command(listCmd).parse(`list-queries ${datasetId} -n ${pageSize} -t ${nextPageToken}`);
 });
 
-test.serial.cb('The "data-lake-get-query" should add query-id to path', t => {
+test.serial.cb('The "data-lake-get-query" command should add query-id to path', t => {
   const queryId = uuid();
 
   getStub.onFirstCall().returns({});
-  const expectedPath = `/v1/analytics/query/${queryId}`;
+  const expectedPath = `/v1/analytics/data-lake/query/${queryId}`;
 
   callback = () => {
     t.is(getStub.callCount, 1);
@@ -129,5 +149,38 @@ test.serial.cb('The "data-lake-get-query" should add query-id to path', t => {
     t.end();
   };
 
-  yargs.command(getCmd).parse(`get-query ${queryId}`);
+  yargs.command(getQueryCmd).parse(`get-query ${queryId}`);
+});
+
+test.serial.cb('The "data-lake-list-schemas" command should add dataset id to path', t => {
+  const datasetId = uuid();
+
+  getStub.onFirstCall().returns({});
+  const expectedPath = `/v1/analytics/data-lake/schema?datasetId=${datasetId}`;
+
+  callback = () => {
+    t.is(getStub.callCount, 1);
+    t.is(getStub.getCall(0).args[1], expectedPath);
+    t.is(printSpy.callCount, 1);
+    t.end();
+  };
+
+  yargs.command(getSchemasCmd).parse(`list-schemas ${datasetId}`);
+});
+
+test.serial.cb('The "data-lake-get-schema" command should add dataset id and table name to path', t => {
+  const datasetId = uuid();
+  const tableName = 'condition';
+
+  getStub.onFirstCall().returns({});
+  const expectedPath = `/v1/analytics/data-lake/schema/${tableName}?datasetId=${datasetId}`;
+
+  callback = () => {
+    t.is(getStub.callCount, 1);
+    t.is(getStub.getCall(0).args[1], expectedPath);
+    t.is(printSpy.callCount, 1);
+    t.end();
+  };
+
+  yargs.command(getSchemaCmd).parse(`get-schema ${datasetId} -t ${tableName}`);
 });
