@@ -43,6 +43,7 @@
     "stream-chain": "^2.1.0",
     "stream-csv-as-json": "^1.0.1",
     "stream-json": "^1.2.1",
+    "uuid": "^3.3.2",
     "yargs": "^12.0.5"
   },
   "devDependencies": {

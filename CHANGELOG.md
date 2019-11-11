@@ -5,11 +5,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.8.0]  - 2019-11-06
+
+### Added
+
+- Added the following commands to fetch data lake table schemas.
+  - `lo data-lake get-schema` Fetch the schema of a single table
+  - `lo data-lake list-queries` Fetch the schema of each table
+
+### Updated
+
+- Updated the `query` commands to hit the new `/v1/analytics/data-lake/query` endpoint.
+
+## [9.7.0]  - 2019-10-30
+
+### Added
+
+- Added the following commands to issue and fetch the data of queries against the analytics data lake.
+  - `lo data-lake query` Submits a query to the Lifeomic data-lake API
+  - `lo data-lake get-query` Fetch a single query execution
+  - `lo data-lake list-queries` List the query executions in the project
+
+## [9.6.0]  - 2019-10-16
+
+### Added
+
+- Added the following commands which allow usage of the new workflow api which implements a subset of the [Common Workflow Language](https://www.commonwl.org) standard
+  - Handling of cwl json templates
+    - `lo workflows create-template` Add the CWL json template
+    - `lo workflows get-template` Returns a CWL json template
+    - `lo workflows list-templates` Returns all CWL json templates belonging to a project
+    - `lo workflows delete-template` Removes the CWL json template from a project
+  - Handling of cwl json parameters
+    - `lo workflows create-parameters` Add a CWL json parameter set
+    - `lo workflows get-parameters` Returns a CWL json parameter set
+    - `lo workflows list-parameters` Returns all CWL json parameter sets belonging to a project
+    - `lo workflows delete-parameters` Removes the CWL json parameter set from a project
+  - Handling of cwl json parameters
+    - `lo workflows build-workflow` Generates and starts a workflow with a combination of a template and parameter resources
+    - `lo workflows create-workflow` Allows a full CWL JSON template and parameter set to be read into the command directly
+    - `lo workflows get-workflow` Returns a workflow
+    - `lo workflows list-workflows` Returns all workflows belonging to a project
+    - `lo workflows delete-workflows` Removes the workflow from the project
+
+## [9.5.0]  - 2019-10-03
+
+### Added
+
+- Added the following optional argument to the tasks `create-ashion-import`
+    - `--re-ingest-file` Allows an Ashion file to be re-ingested
+
 ## [9.4.0]  - 2019-09-26
 
 ### Added
 
-- Added the following optional arguments to the tasks `create-ashion-import`, `create-foundation-xml-import`, 
+- Added the following optional arguments to the tasks `create-ashion-import`, `create-foundation-xml-import`,
 and `create-nantomics-vcf-import`
     - `--body-site` the code indicating the body site of the sample
     - `--body-site-system` the system from which the body site code is derived
@@ -561,6 +611,10 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[9.8.0]: https://github.com/lifeomic/cli/compare/v9.7.0...v9.8.0
+[9.7.0]: https://github.com/lifeomic/cli/compare/v9.6.0...v9.7.0
+[9.6.0]: https://github.com/lifeomic/cli/compare/v9.5.0...v9.6.0
+[9.5.0]: https://github.com/lifeomic/cli/compare/v9.4.0...v9.5.0
 [9.4.0]: https://github.com/lifeomic/cli/compare/v9.3.0...v9.4.0
 [9.3.0]: https://github.com/lifeomic/cli/compare/v9.2.0...v9.3.0
 [9.2.0]: https://github.com/lifeomic/cli/compare/v9.1.0...v9.2.0

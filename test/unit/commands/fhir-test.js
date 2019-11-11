@@ -15,6 +15,9 @@ const stdinStub = sinon.stub();
 let callback;
 
 const mocks = {
+  '../../api': {
+    post: postStub
+  },
   '../../fhir': {
     get: getStub,
     post: postStub,
@@ -34,6 +37,7 @@ const del = proxyquire('../../../lib/cmds/fhir_cmds/del', mocks);
 const list = proxyquire('../../../lib/cmds/fhir_cmds/list', mocks);
 const ingest = proxyquire('../../../lib/cmds/fhir_cmds/ingest', mocks);
 const searchDel = proxyquire('../../../lib/cmds/fhir_cmds/search-del', mocks);
+const sql = proxyquire('../../../lib/cmds/fhir_cmds/sql', mocks);
 
 test.afterEach.always(t => {
   getStub.reset();
@@ -46,16 +50,16 @@ test.afterEach.always(t => {
 });
 
 test.serial.cb('The "fhir" command should list fhir resources', t => {
-  const res = {data: { entry: [{ 'resource': { 'resourceType': 'Patient', 'id': 'ABC1234' } }] }};
+  const res = { data: { entry: [{ 'resource': { 'resourceType': 'Patient', 'id': 'ABC1234' } }] } };
   postStub.onFirstCall().returns(res);
 
   callback = () => {
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], 'account/dstu3/Patient/_search');
     t.is(postStub.getCall(0).args[2], '_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7CprojectId&pageSize=1000');
-    t.deepEqual(postStub.getCall(0).args[3], {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
+    t.deepEqual(postStub.getCall(0).args[3], { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], [{'resourceType': 'Patient', 'id': 'ABC1234'}]);
+    t.deepEqual(printSpy.getCall(0).args[0], [{ 'resourceType': 'Patient', 'id': 'ABC1234' }]);
     t.end();
   };
 
@@ -64,16 +68,16 @@ test.serial.cb('The "fhir" command should list fhir resources', t => {
 });
 
 test.serial.cb('The "fhir" command should list fhir resources with a query expression', t => {
-  const res = {data: { entry: [{ 'resource': { 'resourceType': 'Patient', 'id': 'ABC1234' } }] }};
+  const res = { data: { entry: [{ 'resource': { 'resourceType': 'Patient', 'id': 'ABC1234' } }] } };
   postStub.onFirstCall().returns(res);
 
   callback = () => {
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], 'account/dstu3/Patient/_search');
     t.is(postStub.getCall(0).args[2], '_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Ftag%7Cvalue&_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7CprojectId&pageSize=1000');
-    t.deepEqual(postStub.getCall(0).args[3], {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
+    t.deepEqual(postStub.getCall(0).args[3], { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], [{'resourceType': 'Patient', 'id': 'ABC1234'}]);
+    t.deepEqual(printSpy.getCall(0).args[0], [{ 'resourceType': 'Patient', 'id': 'ABC1234' }]);
     t.end();
   };
 
@@ -82,16 +86,16 @@ test.serial.cb('The "fhir" command should list fhir resources with a query expre
 });
 
 test.serial.cb('Limit should set the page size for the "fhir" command', t => {
-  const res = {data: { entry: [{ 'resource': { 'resourceType': 'Patient', 'id': 'ABC1234' } }] }};
+  const res = { data: { entry: [{ 'resource': { 'resourceType': 'Patient', 'id': 'ABC1234' } }] } };
   postStub.onFirstCall().returns(res);
 
   callback = () => {
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], 'account/dstu3/Patient/_search');
     t.is(postStub.getCall(0).args[2], 'pageSize=10');
-    t.deepEqual(postStub.getCall(0).args[3], {headers: {'Content-Type': 'application/x-www-form-urlencoded'}});
+    t.deepEqual(postStub.getCall(0).args[3], { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], [{'resourceType': 'Patient', 'id': 'ABC1234'}]);
+    t.deepEqual(printSpy.getCall(0).args[0], [{ 'resourceType': 'Patient', 'id': 'ABC1234' }]);
     t.end();
   };
 
@@ -100,7 +104,7 @@ test.serial.cb('Limit should set the page size for the "fhir" command', t => {
 });
 
 test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
-  const res = {data: {entry: [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]}};
+  const res = { data: { entry: [{ response: { location: '/account/dstu3/Patient/1234', status: '200' } }] } };
   postStub.returns(res);
 
   // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -124,7 +128,7 @@ test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
       ]
     });
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]);
+    t.deepEqual(printSpy.getCall(0).args[0], [{ response: { location: '/account/dstu3/Patient/1234', status: '200' } }]);
     t.end();
   };
 
@@ -133,7 +137,7 @@ test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
 });
 
 test.serial.cb('The "fhir-ingest" with project command should update a fhir resource with dataset', t => {
-  const res = {data: {entry: [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]}};
+  const res = { data: { entry: [{ response: { location: '/account/dstu3/Patient/1234', status: '200' } }] } };
   postStub.returns(res);
 
   // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -165,7 +169,7 @@ test.serial.cb('The "fhir-ingest" with project command should update a fhir reso
       ]
     });
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]);
+    t.deepEqual(printSpy.getCall(0).args[0], [{ response: { location: '/account/dstu3/Patient/1234', status: '200' } }]);
     t.end();
   };
 
@@ -174,7 +178,7 @@ test.serial.cb('The "fhir-ingest" with project command should update a fhir reso
 });
 
 test.serial.cb('The "fhir-ingest" command can accept CSV stdin given a CSV configuration', t => {
-  const res = {data: {entry: [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]}};
+  const res = { data: { entry: [{ response: { location: '/account/dstu3/Patient/1234', status: '200' } }] } };
   postStub.returns(res);
 
   // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -201,7 +205,7 @@ test.serial.cb('The "fhir-ingest" command can accept CSV stdin given a CSV confi
       ]
     });
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], [{response: {location: '/account/dstu3/Patient/1234', status: '200'}}]);
+    t.deepEqual(printSpy.getCall(0).args[0], [{ response: { location: '/account/dstu3/Patient/1234', status: '200' } }]);
     t.end();
   };
 
@@ -214,7 +218,7 @@ test.serial.cb('The "fhir-delete" command should delete a fhir resource', t => {
     t.is(delStub.callCount, 1);
     t.is(delStub.getCall(0).args[1], 'account/dstu3/Patient/1234');
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], {id: '1234', resourceType: 'Patient'});
+    t.deepEqual(printSpy.getCall(0).args[0], { id: '1234', resourceType: 'Patient' });
     t.end();
   };
 
@@ -233,7 +237,7 @@ test.serial.cb('The "fhir-search-delete" command should delete all fhir resource
 });
 
 test.serial.cb('The "fhir-get" command should get a fhir resource', t => {
-  const res = {data: {resourceType: 'Patient', id: '1234'}};
+  const res = { data: { resourceType: 'Patient', id: '1234' } };
   getStub.onFirstCall().returns(res);
 
   callback = () => {
@@ -241,10 +245,43 @@ test.serial.cb('The "fhir-get" command should get a fhir resource', t => {
     t.truthy(getStub.getCall(0).args[0]);
     t.is(getStub.getCall(0).args[1], '/account/dstu3/Patient/1234');
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], {id: '1234', resourceType: 'Patient'});
+    t.deepEqual(printSpy.getCall(0).args[0], { id: '1234', resourceType: 'Patient' });
     t.end();
   };
 
   yargs.command(get)
     .parse('get Patient 1234');
+});
+
+test.serial.cb('The "fhir-sql" command should get fhir resources', t => {
+  const res = {
+    data: {
+      hits: {
+        hits: [
+          {
+            _source: {
+              id: '1234',
+              account: 'account',
+              resourceType: 'Patient'
+            }
+          }
+        ]
+      }
+    }
+  };
+
+  postStub.onFirstCall().returns(res);
+
+  const project = '9ce94182-f9b6-4043-99c7-420c77c965aa';
+  const statement = 'SELECT * FROM patient';
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], `/v1/fhir-search/projects/${project}/`);
+    t.is(postStub.getCall(0).args[2], statement);
+    t.is(printSpy.callCount, 1);
+    t.deepEqual(printSpy.getCall(0).args[0], [{ id: '1234', resourceType: 'Patient' }]);
+    t.end();
+  };
+
+  yargs.command(sql).parse(`sql "${statement}" --project ${project}`);
 });
