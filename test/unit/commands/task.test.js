@@ -105,7 +105,8 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
       reIngestFile: false,
       bodySite: 'Colon',
       bodySiteSystem: 'http://a.fancy.system.com',
-      bodySiteDisplay: 'body site notation'
+      bodySiteDisplay: 'body site notation',
+      sendFailedTo: 'failed@user.com'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -116,7 +117,7 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
     .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
       '-r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 ' +
       '--indexed-date "1999-01-01 12:00" --index-type all --body-site "Colon" --body-site-system "http://a.fancy.system.com" ' +
-      '--body-site-display "body site notation"');
+      '--body-site-display "body site notation" --send-failed-to failed@user.com');
 });
 
 test.serial.cb('The "create-foundation-xml-import" accepts re-ingest-file as an optional boolean flag', t => {
@@ -138,7 +139,8 @@ test.serial.cb('The "create-foundation-xml-import" accepts re-ingest-file as an 
       reIngestFile: true,
       bodySite: 'Colon',
       bodySiteSystem: 'http://a.fancy.system.com',
-      bodySiteDisplay: 'body site notation'
+      bodySiteDisplay: 'body site notation',
+      sendFailedTo: undefined
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -168,7 +170,8 @@ test.serial.cb('The "create-ashion-import" command should create a ashion ingest
       bodySite: 'Colon',
       bodySiteSystem: 'http://a.fancy.system.com',
       bodySiteDisplay: 'body site notation',
-      reIngestFile: true
+      reIngestFile: true,
+      sendFailedTo: 'failed@user.com'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -179,8 +182,9 @@ test.serial.cb('The "create-ashion-import" command should create a ashion ingest
     .parse('create-ashion-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -f c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
       '-s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 --performer-id performer1 --indexed-date "1999-01-01 12:00" ' +
       '--output-prefix prefix --body-site "Colon" --body-site-system "http://a.fancy.system.com"  ' +
-      '--body-site-display "body site notation" --re-ingest-file');
+      '--body-site-display "body site notation" --re-ingest-file --send-failed-to failed@user.com');
 });
+
 test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantomics ingest task', t => {
   const res = { data: {} };
   postStub.onFirstCall().returns(res);
@@ -201,7 +205,8 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
       reIngestFile: false,
       bodySite: 'Colon',
       bodySiteSystem: 'http://a.fancy.system.com',
-      bodySiteDisplay: 'body site notation'
+      bodySiteDisplay: 'body site notation',
+      sendFailedTo: 'failed@user.com'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -212,7 +217,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
     .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
       '-p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 ' +
       '--performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant --body-site "Colon" ' +
-      '--body-site-system "http://a.fancy.system.com"  --body-site-display "body site notation"');
+      '--body-site-system "http://a.fancy.system.com"  --body-site-display "body site notation" --send-failed-to failed@user.com');
 });
 
 test.serial.cb('The "create-nantomics-vcf-import" command accepts re-ingest-file as an optional boolean flag', t => {
@@ -235,7 +240,8 @@ test.serial.cb('The "create-nantomics-vcf-import" command accepts re-ingest-file
       reIngestFile: true,
       bodySite: 'Colon',
       bodySiteSystem: 'http://a.fancy.system.com',
-      bodySiteDisplay: 'body site notation'
+      bodySiteDisplay: 'body site notation',
+      sendFailedTo: undefined
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
