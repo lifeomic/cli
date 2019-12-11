@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.12.0]  - 2019-12-09
+
+### Added
+
+- Added missing options to various `lo genomics create-` commands.
+
+## [9.11.0]  - 2019-12-04
+
+### Added
+
+- Added `--strip-path` and `--remote-path` to `files upload` command.
+
+## [9.10.0]  - 2019-12-04
+
+### Added
+
+- Added the `--send-failed-to` option to the `tasks create-ashion-import`, `tasks create-foundation-xml-import`, and `tasks create-nantomics-vcf-import` commands.
+
 ## [9.9.0]  - 2019-11-14
 
 ### Added
@@ -617,6 +635,9 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[9.12.0]: https://github.com/lifeomic/cli/compare/v9.11.0...v9.12.0
+[9.11.0]: https://github.com/lifeomic/cli/compare/v9.10.0...v9.11.0
+[9.10.0]: https://github.com/lifeomic/cli/compare/v9.9.0...v9.10.0
 [9.9.0]: https://github.com/lifeomic/cli/compare/v9.8.0...v9.9.0
 [9.8.0]: https://github.com/lifeomic/cli/compare/v9.7.0...v9.8.0
 [9.7.0]: https://github.com/lifeomic/cli/compare/v9.6.0...v9.7.0

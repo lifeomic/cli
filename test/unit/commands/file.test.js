@@ -582,6 +582,118 @@ test.serial.cb('The "files-upload" command should upload a file with client supp
     .parse(`upload ${__dirname}/data/file1.txt dataset --id 1234`);
 });
 
+test.serial.cb('The "files-upload" command should upload a directory of files to a remote path', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  postStub.onSecondCall().returns(res);
+
+  callback = () => {
+    if (postStub.callCount !== 2) {
+      return;
+    }
+    // NOTE - __dirname will have a leading / and the getRemoteFileName method avoids duplicating /
+    t.is(postStub.callCount, 2);
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `/foobar1${__dirname}/data/file1.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+    t.deepEqual(postStub.getCall(1).args[2], {
+      id: undefined,
+      name: `/foobar1${__dirname}/data/file2.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data dataset --remote-path /foobar1`);
+});
+
+test.serial.cb('The "files-upload" command should upload a directory of files to a remote path stripping local path', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  postStub.onSecondCall().returns(res);
+
+  callback = () => {
+    if (postStub.callCount !== 2) {
+      return;
+    }
+    t.is(postStub.callCount, 2);
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `/foobar1/file1.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+    t.deepEqual(postStub.getCall(1).args[2], {
+      id: undefined,
+      name: `/foobar1/file2.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data dataset --strip-path --remote-path /foobar1`);
+});
+
+test.serial.cb('The "files-upload" command should upload a directory of files stripping local path', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  postStub.onSecondCall().returns(res);
+
+  callback = () => {
+    if (postStub.callCount !== 2) {
+      return;
+    }
+    t.is(postStub.callCount, 2);
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `/file1.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+    t.deepEqual(postStub.getCall(1).args[2], {
+      id: undefined,
+      name: `/file2.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data dataset --strip-path `);
+});
+
 test.serial.cb('The "files-upload" command should delete files after (verified) upload', t => {
   const res = { data: { uploadUrl: 'https://host/upload' } };
   postStub.onFirstCall().returns(res);
