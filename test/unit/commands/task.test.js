@@ -100,7 +100,7 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
       sequenceName: 'test3',
       testType: 'test1',
       performerId: 'performer1',
-      indexedDate: '1999-01-01 12:00',
+      indexedDate: '1999-01-01T00:00:00.000Z',
       indexType: 'all',
       reIngestFile: false,
       bodySite: 'Colon',
@@ -115,7 +115,7 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
   yargs.command(createFoundationTask)
     .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
       '-r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 ' +
-      '--indexed-date "1999-01-01 12:00" --index-type all --body-site "Colon" --body-site-system "http://a.fancy.system.com" ' +
+      '--indexed-date "1999-01-01" --index-type all --body-site "Colon" --body-site-system "http://a.fancy.system.com" ' +
       '--body-site-display "body site notation"');
 });
 
@@ -133,7 +133,7 @@ test.serial.cb('The "create-foundation-xml-import" accepts re-ingest-file as an 
       sequenceName: 'test3',
       testType: 'test1',
       performerId: 'performer1',
-      indexedDate: '1999-01-01 12:00',
+      indexedDate: '1999-01-01T00:00:00.000Z',
       indexType: 'all',
       reIngestFile: true,
       bodySite: 'Colon',
@@ -148,7 +148,7 @@ test.serial.cb('The "create-foundation-xml-import" accepts re-ingest-file as an 
   yargs.command(createFoundationTask)
     .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
       '-r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 ' +
-      '--indexed-date "1999-01-01 12:00" --index-type all --re-ingest-file --body-site "Colon" ' +
+      '--indexed-date "1999-01-01" --index-type all --re-ingest-file --body-site "Colon" ' +
       '--body-site-system "http://a.fancy.system.com"  --body-site-display "body site notation"');
 });
 
@@ -163,7 +163,7 @@ test.serial.cb('The "create-ashion-import" command should create a ashion ingest
       datasetId: 'db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3',
       subjectId: '2a6dc73e-ed30-4387-94c1-0cd661da56d9',
       performerId: 'performer1',
-      indexedDate: '1999-01-01 12:00',
+      indexedDate: '1999-01-01T00:00:00.000Z',
       outputFilePrefix: 'prefix',
       bodySite: 'Colon',
       bodySiteSystem: 'http://a.fancy.system.com',
@@ -177,7 +177,7 @@ test.serial.cb('The "create-ashion-import" command should create a ashion ingest
 
   yargs.command(createAshionTask)
     .parse('create-ashion-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -f c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
-      '-s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 --performer-id performer1 --indexed-date "1999-01-01 12:00" ' +
+      '-s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 --performer-id performer1 --indexed-date "1999-01-01" ' +
       '--output-prefix prefix --body-site "Colon" --body-site-system "http://a.fancy.system.com"  ' +
       '--body-site-display "body site notation" --re-ingest-file');
 });
@@ -196,7 +196,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
       sequenceName: 'test4',
       testType: 'test1',
       performerId: 'performer1',
-      indexedDate: '1999-01-01 12:00',
+      indexedDate: '1999-01-01T00:00:00.000Z',
       uploadType: 'variant',
       reIngestFile: false,
       bodySite: 'Colon',
@@ -211,7 +211,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
   yargs.command(createNantomicsTask)
     .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
       '-p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 ' +
-      '--performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant --body-site "Colon" ' +
+      '--performer-id performer1 --indexed-date "1999-01-01" --upload-type variant --body-site "Colon" ' +
       '--body-site-system "http://a.fancy.system.com"  --body-site-display "body site notation"');
 });
 
@@ -230,7 +230,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command accepts re-ingest-file
       sequenceName: 'test4',
       testType: 'test1',
       performerId: 'performer1',
-      indexedDate: '1999-01-01 12:00',
+      indexedDate: '1999-01-01T00:00:00.000Z',
       uploadType: 'variant',
       reIngestFile: true,
       bodySite: 'Colon',
@@ -245,7 +245,7 @@ test.serial.cb('The "create-nantomics-vcf-import" command accepts re-ingest-file
   yargs.command(createNantomicsTask)
     .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
       '-p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 --performer-id performer1 ' +
-      '--indexed-date "1999-01-01 12:00" --upload-type variant  --re-ingest-file --body-site "Colon" ' +
+      '--indexed-date "1999-01-01" --upload-type variant  --re-ingest-file --body-site "Colon" ' +
       '--body-site-system "http://a.fancy.system.com" --body-site-display "body site notation"');
 });
 
