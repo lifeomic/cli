@@ -74,6 +74,10 @@ credentials for authentication. Note that for this option, you do not need to
 run `lo auth` as username and password credentials are not used for this
 credentials grant.
 
+You can also provide an API key or access and refresh tokens in
+the `PHC_ACCESS_TOKEN` and `PHC_REFRESH_TOKEN` environment variables. With these
+set, you can bypass using `lo auth`.
+
 #### API Keys
 
 If you wish to use an API key, then you need to create an API key
