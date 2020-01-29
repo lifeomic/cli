@@ -257,7 +257,7 @@ test.serial.cb('The "files-mv" command should move a set of files from a project
       items: [
         {
           id: '1',
-          name: 'foo.txt'
+          name: 'prefix/sub/foo.txt'
         }
       ]
     }
@@ -265,7 +265,7 @@ test.serial.cb('The "files-mv" command should move a set of files from a project
 
   callback = () => {
     t.is(listStub.callCount, 1);
-    t.is(listStub.getCall(0).args[1], '/v1/files?datasetId=projectId&pageSize=1000&name=prefix');
+    t.is(listStub.getCall(0).args[1], '/v1/files?datasetId=projectId&pageSize=1000&name=prefix%2Fsub');
 
     t.is(patchStub.callCount, 1);
     t.is(patchStub.getCall(0).args[1], '/v1/files/1');
@@ -279,7 +279,7 @@ test.serial.cb('The "files-mv" command should move a set of files from a project
   t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
 
   yargs.command(mv)
-    .parse('mv projectId/prefix /dir/ -r');
+    .parse('mv projectId/prefix/sub /dir/ -r');
 });
 
 test.serial.cb('The "files-mv" command should move a file in a project', t => {

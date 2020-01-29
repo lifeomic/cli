@@ -27,6 +27,8 @@ test.beforeEach((t) => {
 });
 
 test.afterEach.always(t => {
+  delete process.env.PHC_REFRESH_TOKEN;
+  delete process.env.PHC_ACCESS_TOKEN;
   postStub.resetHistory();
   getStub.resetHistory();
   setSpy.resetHistory();
@@ -41,6 +43,24 @@ test.serial(`tokenProvider should set the request Authorization header with a to
   }, 'secret');
   getStub.withArgs('dev.tokens.accessToken').returns(token);
   getStub.withArgs('dev.defaults').returns({});
+
+  const config = { headers: {} };
+  await tokenProvider(config);
+  t.is(config.headers.Authorization, `Bearer ${token}`);
+  t.false(postStub.called);
+  t.false(setSpy.called);
+});
+
+test.serial(`tokenProvider should set the request Authorization header with a token from the PHC_ACCESS_TOKEN env var if config is not present`, async t => {
+  const token = jwt.sign({
+    sub: '1234',
+    iss: 'cognito',
+    token_use: 'access',
+    exp: 2000
+  }, 'secret');
+  getStub.withArgs('dev.tokens.accessToken').returns(null);
+  getStub.withArgs('dev.defaults').returns({});
+  process.env.PHC_ACCESS_TOKEN = token;
 
   const config = { headers: {} };
   await tokenProvider(config);
@@ -101,6 +121,39 @@ test.serial(`tokenProvider should try to refresh an expired token only if a refr
   postStub.returns({ data: {
     access_token: 'newToken'
   }});
+
+  const config = { headers: {} };
+  await tokenProvider(config);
+  t.is(config.headers.Authorization, `Bearer newToken`);
+  t.true(postStub.calledWith(`dev`,
+    null,
+    {
+      grant_type: 'refresh_token',
+      client_id: 'clientId',
+      refresh_token: 'refreshToken'
+    }));
+  t.true(setSpy.calledWith(`dev.tokens.accessToken`, 'newToken'));
+});
+
+test.serial(`tokenProvider should try to refresh an expired token only if a refresh token is present with PHC_REFRESH_TOKEN`, async t => {
+  const token = jwt.sign({
+    sub: '1234',
+    iss: 'cognito',
+    token_use: 'access',
+    exp: 1000 // expiration time is 1100
+  }, 'secret');
+  getStub.withArgs('dev.tokens.accessToken').returns(null);
+  getStub.withArgs('dev.tokens.refreshToken').returns(null);
+  getStub.withArgs('dev.apiUrl').returns('https://api.com');
+  getStub.withArgs('dev.defaults').returns({});
+  getStub.withArgs('dev').returns({
+    clientId: 'clientId'
+  });
+  postStub.returns({ data: {
+    access_token: 'newToken'
+  }});
+  process.env.PHC_ACCESS_TOKEN = token;
+  process.env.PHC_REFRESH_TOKEN = 'refreshToken';
 
   const config = { headers: {} };
   await tokenProvider(config);
