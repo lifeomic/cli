@@ -1,6 +1,6 @@
 {
   "name": "@lifeomic/cli",
-  "version": "9.13.1",
+  "version": "9.14.0",
   "description": "CLI for interacting with the LifeOmic PHC API.",
   "main": "lo.js",
   "author": "LifeOmic <development@lifeomic.com>",
