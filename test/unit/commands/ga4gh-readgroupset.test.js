@@ -28,6 +28,7 @@ const mocks = {
 const get = proxyquire('../../../lib/cmds/genomics_cmds/get-readgroup-set', mocks);
 const del = proxyquire('../../../lib/cmds/genomics_cmds/delete-readgroup-set', mocks);
 const list = proxyquire('../../../lib/cmds/genomics_cmds/list-readgroup-sets', mocks);
+const create = proxyquire('../../../lib/cmds/genomics_cmds/create-readgroup-set', mocks);
 
 test.afterEach.always(t => {
   getStub.reset();
@@ -35,6 +36,34 @@ test.afterEach.always(t => {
   delStub.reset();
   printSpy.resetHistory();
   callback = null;
+});
+
+test.serial.cb('The "ga4gh-readgroupsets-create" should create a readgroup set', t => {
+  const res = { data: {} };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/readgroupsets');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      datasetId: 'dataset',
+      name: 'name',
+      fileId: 'bamFile',
+      patientId: 'patient',
+      referenceSetId: 'GRCh37',
+      sequenceType: 'germline',
+      testType: 'test1',
+      performerId: 'performer1',
+      indexedDate: '1999-01-01 12:00',
+      testId: undefined,
+      sequenceId: undefined
+    });
+    t.is(printSpy.callCount, 1);
+    t.is(printSpy.getCall(0).args[0], res.data);
+    t.end();
+  };
+
+  yargs.command(create)
+    .parse('create-readgroup-set dataset -n name -f bamFile -p patient -r  GRCh37 -t germline --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00"');
 });
 
 test.serial.cb('The "ga4gh-readgroupsets" command should list readgroupsets for an account', t => {
