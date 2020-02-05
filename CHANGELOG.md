@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [9.14.1]  - 2020-02-05
+
+### Added
+
+- Fixed a big in the `lo genomics list...` commands in which using the `-l` option was throwing an error
+- Updated help information in the `lo genomics list...` commands for `-l` and `-n` to be more descriptive on limits
+
 ## [9.14.0]  - 2020-02-05
 
 ### Added
@@ -653,6 +660,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[9.14.1]: https://github.com/lifeomic/cli/compare/v9.14.0...v9.14.1
 [9.14.0]: https://github.com/lifeomic/cli/compare/v9.13.1...v9.14.0
 [9.13.1]: https://github.com/lifeomic/cli/compare/v9.13.0...v9.13.1
 [9.13.0]: https://github.com/lifeomic/cli/compare/v9.12.0...v9.13.0
