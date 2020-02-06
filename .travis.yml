@@ -1,12 +1,5 @@
 language: node_js
 version: 1.0
-notifications:
-  email:
-    if: branch = master
-    recipients:
-      - phc-clinical-research@lifeomic.com
-    on_success: never # default: change
-    on_failure: always # default: always
 node_js:
 - '8'
 - '9'
@@ -34,7 +27,8 @@ deploy:
       repo: lifeomic/cli
       tags: true
       node: '8'
-  - provider: npm
+  - edge: true
+    provider: npm
     email: $NPM_EMAIL
     api_key: $NPM_KEY
     skip_cleanup: true
