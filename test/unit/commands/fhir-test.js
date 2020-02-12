@@ -38,6 +38,7 @@ const list = proxyquire('../../../lib/cmds/fhir_cmds/list', mocks);
 const ingest = proxyquire('../../../lib/cmds/fhir_cmds/ingest', mocks);
 const searchDel = proxyquire('../../../lib/cmds/fhir_cmds/search-del', mocks);
 const sql = proxyquire('../../../lib/cmds/fhir_cmds/sql', mocks);
+const me = proxyquire('../../../lib/cmds/fhir_cmds/me', mocks);
 
 test.afterEach.always(t => {
   getStub.reset();
@@ -251,6 +252,23 @@ test.serial.cb('The "fhir-get" command should get a fhir resource', t => {
 
   yargs.command(get)
     .parse('get Patient 1234');
+});
+
+test.serial.cb('The "fhir me" command should get a users\'s patient records', t => {
+  const res = { data: { entry: [{ 'resource': { 'resourceType': 'Patient', 'id': 'ABC1234' } }] } };
+  getStub.onFirstCall().returns(res);
+
+  callback = () => {
+    t.is(getStub.callCount, 1);
+    t.truthy(getStub.getCall(0).args[0]);
+    t.is(getStub.getCall(0).args[1], '/account/dstu3/$me');
+    t.is(printSpy.callCount, 1);
+    t.deepEqual(printSpy.getCall(0).args[0], res.data);
+    t.end();
+  };
+
+  yargs.command(me)
+    .parse('me');
 });
 
 test.serial.cb('The "fhir-sql" command should get fhir resources', t => {
