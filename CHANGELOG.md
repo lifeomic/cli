@@ -672,6 +672,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[9.14.3]: https://github.com/lifeomic/cli/compare/v9.14.2...v9.14.3
 [9.14.2]: https://github.com/lifeomic/cli/compare/v9.14.1...v9.14.2
 [9.14.1]: https://github.com/lifeomic/cli/compare/v9.14.0...v9.14.1
 [9.14.0]: https://github.com/lifeomic/cli/compare/v9.13.1...v9.14.0
