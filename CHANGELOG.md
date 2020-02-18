@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added storoage if ID token from `lo auth` command.
+- Added storage if ID token from `lo auth` command.
 
 ## [9.14.3]  - 2020-02-12
 
