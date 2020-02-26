@@ -1,9 +1,7 @@
 language: node_js
 version: 1.0
 node_js:
-- '8'
-- '9'
-- '10'
+- '12'
 script:
   - yarn test
   - yarn build
@@ -19,14 +17,15 @@ deploy:
       secure: KYMQMuUnUHY50XwLwg6Gt9hzFtuXPrT1bSl54r63YoZ1cIRIVFJSUMdwxbA5zWLtt9qzT6TwBj8/6LV+20vdMuN1LAXxO//cOqlJ36THreIGTa97AxBvxpi+yQWscCYWXJU2R8Jpc/cAORS26C4UzNolSqczYd5tuNxKjFRe9+GgqqOl5kXpjgQZXAwXYvnHYSS4DLtkFQw1KgLMeEUocp1owk8XzFkY4Cd9TmStgG80slVyFFFrNoseuPqPpAsmYfGGylGGkLhJ9IeoQWtBhOf8c9hhyic7zBlIyA+BJXIwrhVKBcsjGtMD2An36IeJ2uW25WT3Ok3cenD3JKvvIJoi3vORiOQBP1/vyemNPnysYwh8CeZmz3Rma4x5eN1DICgqBvCje2xw+5qAdqqQq+lClefdPQJwY2CQSEvh3JS6JTCyKDTkzQSyalbD20aT05/C8OGuZL24aXuvf/m1cyRJjKxKwdOR2OBh44xQwc7Oi5qN12lDlbnk7iniUzHa5fpcfglDwgiq1nPaDzyciIUv1mRwBAJMAeNr3DCS1IHZ3Ah0rsntZvYUgPMemsnib2UdZ8KvJfQjRDscQrNotCwClz1c2OkkqFrmeMSU2n/u4dJIA5nHAglqqGl3gkfM9VEEVcuHneHY8Tn6vTq+s9t4Y9NtmMtdyuSEhiVUQh4=
     file:
       - target/lo-linux-x64.zip
-      - target/lo-linux-x86.zip
       - target/lo-macos-x64.zip
       - target/lo-windows-x64.zip
-      - target/lo-windows-x86.zip
+      - target/life-export-linux-x64.zip
+      - target/life-export-macos-x64.zip
+      - target/life-export-windows-x64.zip
     on:
       repo: lifeomic/cli
       tags: true
-      node: '8'
+      node: '12'
   - edge: true
     provider: npm
     email: $NPM_EMAIL
@@ -35,4 +34,4 @@ deploy:
     on:
       tags: true
       repo: lifeomic/cli
-      node: '8'
+      node: '12'

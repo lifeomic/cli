@@ -38,7 +38,7 @@ interactive terminal or in a scripted environment.
 
 ### Dependencies
 
-* [node](https://nodejs.org) version >= 7.6.0
+* [node](https://nodejs.org) version >= 12.0.0
 
 ### Installation
 
