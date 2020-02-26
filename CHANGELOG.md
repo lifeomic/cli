@@ -5,74 +5,80 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [9.15.0]  - 2020-02-18
+## [10.0.0] - 2020-02-26
+
+### Added
+
+- Created `life-export` / `life-export.exe` and added it to the [release](https://github.com/lifeomic/cli/releases) archive bundles.  This command allows a user to extract their LIFE data in one step after authenticating with their credentials.
+
+## [9.15.0] - 2020-02-18
 
 ### Added
 
 - Added storage of ID token from `lo auth` command.
 
-## [9.14.3]  - 2020-02-12
+## [9.14.3] - 2020-02-12
 
 ### Added
 
 - Added `fhir me` command for getting one's own FHIR Patient records.
 
-## [9.14.2]  - 2020-02-12
+## [9.14.2] - 2020-02-12
 
 ### Fixed
 
 - Fixed the alias for the `rgel-file` option to be `f` in `lo genomics create-rna-quantification-set` to keep it from conflicting with other options.
 
-## [9.14.1]  - 2020-02-05
+## [9.14.1] - 2020-02-05
 
 ### Added
 
 - Fixed a big in the `lo genomics list...` commands in which using the `-l` option was throwing an error
 - Updated help information in the `lo genomics list...` commands for `-l` and `-n` to be more descriptive on limits
 
-## [9.14.0]  - 2020-02-05
+## [9.14.0] - 2020-02-05
 
 ### Added
 
 - Added the `lo genomics create-readgroup-set` command.
 
-## [9.13.1]  - 2020-01-27
+## [9.13.1] - 2020-01-27
 
 ### Fixed
 
 - Fixed an issue with `lo files mv` and trying to rename files in nested folders.
 
-## [9.13.0]  - 2020-01-21
+## [9.13.0] - 2020-01-21
 
 ### Added
 
 - Added ability to use auth tokens in the `PHC_ACCESS_TOKEN` and `PHC_REFRESH_TOKEN` environment variables.
 
-## [9.12.0]  - 2019-12-09
+## [9.12.0] - 2019-12-09
 
 ### Added
 
 - Added missing options to various `lo genomics create-` commands.
 
-## [9.11.0]  - 2019-12-04
+## [9.11.0] - 2019-12-04
 
 ### Added
 
 - Added `--strip-path` and `--remote-path` to `files upload` command.
 
-## [9.10.0]  - 2019-12-04
+## [9.10.0] - 2019-12-04
 
 ### Added
 
 - Added the `--send-failed-to` option to the `tasks create-ashion-import`, `tasks create-foundation-xml-import`, and `tasks create-nantomics-vcf-import` commands.
 
-## [9.9.0]  - 2019-11-14
+## [9.9.0] - 2019-11-14
 
 ### Added
 
 - Added the `--update-sample` option to the `lo genomics create-genomic-set` command.
 
-## [9.8.0]  - 2019-11-06
+## [9.8.0] - 2019-11-06
 
 ### Added
 
@@ -84,7 +90,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated the `query` commands to hit the new `/v1/analytics/data-lake/query` endpoint.
 
-## [9.7.0]  - 2019-10-30
+## [9.7.0] - 2019-10-30
 
 ### Added
 
@@ -93,7 +99,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `lo data-lake get-query` Fetch a single query execution
   - `lo data-lake list-queries` List the query executions in the project
 
-## [9.6.0]  - 2019-10-16
+## [9.6.0] - 2019-10-16
 
 ### Added
 
@@ -115,14 +121,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `lo workflows list-workflows` Returns all workflows belonging to a project
     - `lo workflows delete-workflows` Removes the workflow from the project
 
-## [9.5.0]  - 2019-10-03
+## [9.5.0] - 2019-10-03
 
 ### Added
 
 - Added the following optional argument to the tasks `create-ashion-import`
     - `--re-ingest-file` Allows an Ashion file to be re-ingested
 
-## [9.4.0]  - 2019-09-26
+## [9.4.0] - 2019-09-26
 
 ### Added
 
@@ -132,14 +138,14 @@ and `create-nantomics-vcf-import`
     - `--body-site-system` the system from which the body site code is derived
     - `--body-site-display` a display value for the body site code
 
-## [9.3.0]  - 2019-09-25
+## [9.3.0] - 2019-09-25
 
 ### Added
 
 - Added the `lo genomics list-tests` command to lists genomic tests for a subject
 - Addded the `lo genomics delete-test` command to delete a test for a subject
 
-## [9.2.0]  - 2019-09-09
+## [9.2.0] - 2019-09-09
 
 ### Added
 
@@ -151,44 +157,44 @@ and `create-nantomics-vcf-import`
   - `--missing-fhir-sequence` returns sets that have no associate FHIR Sequence resource
   - `--only-ids` causes the return to be only a an array of ids, intended to help with scripting tasks
 
-## [9.1.0]  - 2019-09-06
+## [9.1.0] - 2019-09-06
 
 ### Added
 
 - Added the `lo tasks create-ashion-import` command to ingest Ashion test files
 
-## [9.0.0]  - 2019-09-05
+## [9.0.0] - 2019-09-05
 
 ### Updated
 
 - Updated the `create-foundation-task` and `create-nantomics-task` commands to make the argument `test-type` required instead of optional
 - Updated the `genomics` list commands to allow filtering by `sequenceId` or `patientId`
 
-## [8.3.1]  - 2019-08-13
+## [8.3.1] - 2019-08-13
 
 ### Fixed
 
 - `lo files upload` fixed bug with uploading empty files.
 
-## [8.3.0]  - 2019-08-13
+## [8.3.0] - 2019-08-13
 
 ### Added
 
 - `lo insights schedule-job` command to schedule Insights rebuild jobs.
 
-## [8.2.1]  - 2019-08-10
+## [8.2.1] - 2019-08-10
 
 ### Fixed
 
 - `lo` yaml output will now go deeper rather than cutting off at 3 levels deep
 
-## [8.2.0]  - 2019-07-24
+## [8.2.0] - 2019-07-24
 
 ### Added
 
 - `--re-ingest-file` flag to `lo tasks create-foundation-xml-import` and `lo tasks create-nantomics-vcf-import`. This flag will allow re-ingesting of a file even if a sequence already exists for it.  The current files for the sequence will be overwritten.  ([#101](https://github.com/lifeomic/cli/pull/101))
 
-## [8.1.0]  - 2019-07-12
+## [8.1.0] - 2019-07-12
 
 ### Added
 
@@ -678,6 +684,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[10.0.0]: https://github.com/lifeomic/cli/compare/v9.15.0...v10.0.0
 [9.15.0]: https://github.com/lifeomic/cli/compare/v9.14.3...v9.15.0
 [9.14.3]: https://github.com/lifeomic/cli/compare/v9.14.2...v9.14.3
 [9.14.2]: https://github.com/lifeomic/cli/compare/v9.14.1...v9.14.2
