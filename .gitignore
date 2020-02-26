@@ -16,6 +16,7 @@ pids
 .idea
 
 build/
+life-data/
 work/
 target/
 .git/
