@@ -7,11 +7,24 @@ const fs = require('fs');
 const mkdirp = require('mkdirp');
 const os = require('os');
 
+const CMD = process.argv[0];
 const DATA_DIR = 'life-data';
+const FILENAME = 'life-export';
 const LIFE_PROJECT = 'f82a69fb-3f0c-4405-9b7f-8df05aaec159';
 const LO = os.platform() === 'win32' ? 'lo.exe' : './lo';
 
 (async () => {
+  console.log(chalk.green('Launched arguments:'), chalk.bold(process.argv));
+  console.log(chalk.green('Launched directory:'), chalk.bold(process.cwd()));
+
+  // On Mac, when `life-export` is double clicked, it is launched in the home diretory of the user.
+  // Attempt to locate the life-export executable and make that the working directory.
+  if (CMD.endsWith(FILENAME)) {
+    const workingDir = CMD.substring(0, CMD.length - FILENAME.length);
+    console.log(chalk.green('Changing directory to:'), chalk.bold(workingDir));
+    process.chdir(workingDir);
+  }
+
   await mkdirp(DATA_DIR);
   console.log(chalk.green('LIFE data will be exported into directory named:'), chalk.bold(DATA_DIR));
 
