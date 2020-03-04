@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [10.0.2] - 2020-03-04
 
-### Added
+### Fixed
 
-- Fixed install symlink of `lo`.
+- Force `fsevents` dependency bump to avoid node-pregyp error noise on install
+- Fix bin links so `lo` is available in path after install
 
 ## [10.0.1] - 2020-02-27
 
