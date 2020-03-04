@@ -8,7 +8,9 @@
   "engines": {
     "node": ">= 12.0.0"
   },
-  "bin": "./lo.js",
+  "bin": {
+    "lo": "./lo.js"
+  },
   "scripts": {
     "prelint": "yarn --network-timeout 1000000",
     "lint": "eslint .",
