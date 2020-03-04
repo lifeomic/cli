@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [10.0.2] - 2020-03-04
+
+### Added
+
+- Fixed install symlink of `lo`.
+
 ## [10.0.1] - 2020-02-27
 
 ### Added
@@ -690,6 +696,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[10.0.2]: https://github.com/lifeomic/cli/compare/v10.0.1...v10.0.2
 [10.0.1]: https://github.com/lifeomic/cli/compare/v10.0.0...v10.0.1
 [10.0.0]: https://github.com/lifeomic/cli/compare/v9.15.0...v10.0.0
 [9.15.0]: https://github.com/lifeomic/cli/compare/v9.14.3...v9.15.0
