@@ -45,7 +45,8 @@ test.serial.cb('The "ga4gh-genomicsets-create" should create a genomic set', t =
       outputVcfName: 'foo.vcf.gz',
       passFilter: false,
       updateSample: false,
-      testId: undefined
+      testId: undefined,
+      sequenceId: undefined
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
