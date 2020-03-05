@@ -55,7 +55,10 @@ test.serial.cb('The "ga4gh-readgroupsets-create" should create a readgroup set',
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
       testId: undefined,
-      sequenceId: undefined
+      sequenceId: undefined,
+      bodySite: undefined,
+      bodySiteDisplay: undefined,
+      bodySiteSystem: undefined
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);

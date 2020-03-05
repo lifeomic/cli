@@ -46,7 +46,10 @@ test.serial.cb('The "ga4gh-genomicsets-create" should create a genomic set', t =
       passFilter: false,
       updateSample: false,
       testId: undefined,
-      sequenceId: undefined
+      sequenceId: undefined,
+      bodySite: undefined,
+      bodySiteDisplay: undefined,
+      bodySiteSystem: undefined
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
