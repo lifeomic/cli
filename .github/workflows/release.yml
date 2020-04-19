@@ -1,0 +1,90 @@
+name: Release CLI
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Exit if not on master branch
+      if: endsWith(github.ref, 'master') == false
+      run: exit 0
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 12
+        registry-url: https://registry.npmjs.org/
+    - name: Build and Test
+      run: |
+        yarn test
+        yarn build
+        npm publish --access public
+      env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Upload linux x64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./target/lo-linux-x64.zip
+        asset_name: lo-linux-x64.zip
+        asset_content_type: application/zip
+    - name: Upload mac x64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./target/lo-macos-x64.zip
+        asset_name: lo-macos-x64.zip
+        asset_content_type: application/zip
+    - name: Upload win x64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./target/lo-windows-x64.zip
+        asset_name: lo-windows-x64.zip
+        asset_content_type: application/zip
+    - name: Upload export linux x64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./target/life-export-linux-x64.zip
+        asset_name: life-export-linux-x64.zip
+        asset_content_type: application/zip
+    - name: Upload export mac x64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./target/life-export-macos-x64.zip
+        asset_name: life-export-macos-x64.zip
+        asset_content_type: application/zip
+    - name: Upload export win x64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./target/life-export-windows-x64.zip
+        asset_name: life-export-windows-x64.zip
+        asset_content_type: application/zip
