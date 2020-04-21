@@ -10,6 +10,7 @@ const querystring = require('querystring');
 
 const getStub = sinon.stub();
 const postStub = sinon.stub();
+const patchStub = sinon.stub();
 const delStub = sinon.stub();
 const printSpy = sinon.spy();
 const downloadSpy = sinon.spy();
@@ -37,6 +38,10 @@ const mocks = {
     list: function (options, url) {
       return listStub(options, url);
     },
+    patch: (options, url, opts) => {
+      patchStub(options, url, opts);
+      callback();
+    },
     post: postStub,
     del: delStub,
     download: function (options, url, file, name) {
@@ -49,10 +54,17 @@ const mocks = {
     },
     getFileVerificationStream: async function (filePath, fileSize) {
       getFileVerificationStreamStub(filePath, fileSize);
-      return {
-        data: 'data',
-        contentMD5: 'contentMD5'
-      };
+      if (fileSize) {
+        return {
+          data: 'data',
+          contentMD5: 'contentMD5'
+        };
+      } else {
+        return {
+          data: 'data',
+          contentMD5: null
+        };
+      }
     }
   },
   '../../print': (data, opts) => {
@@ -69,6 +81,7 @@ const list = proxyquire('../../../lib/cmds/files_cmds/list', mocks);
 const download = proxyquire('../../../lib/cmds/files_cmds/download', mocks);
 const upload = proxyquire('../../../lib/cmds/files_cmds/upload', mocks);
 const ls = proxyquire('../../../lib/cmds/files_cmds/ls', mocks);
+const mv = proxyquire('../../../lib/cmds/files_cmds/mv', mocks);
 
 test.beforeEach(t => {
   t.context.sandbox = sinon.createSandbox();
@@ -78,6 +91,7 @@ test.afterEach.always(t => {
   listStub.reset();
   getStub.reset();
   postStub.reset();
+  patchStub.reset();
   delStub.reset();
   printSpy.resetHistory();
   uploadSpy.resetHistory();
@@ -236,6 +250,57 @@ test.serial.cb('The "files-download" command should download a set of files from
     .parse('download projectId/prefix /dir -r');
 });
 
+test.serial.cb('The "files-mv" command should move a set of files from a project', t => {
+  patchStub.returns({});
+  listStub.onFirstCall().returns({
+    data: {
+      items: [
+        {
+          id: '1',
+          name: 'prefix/sub/foo.txt'
+        }
+      ]
+    }
+  });
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/v1/files?datasetId=projectId&pageSize=1000&name=prefix%2Fsub');
+
+    t.is(patchStub.callCount, 1);
+    t.is(patchStub.getCall(0).args[1], '/v1/files/1');
+    t.deepEqual(patchStub.getCall(0).args[2], {
+      name: '/dir/foo.txt'
+    });
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(mv)
+    .parse('mv projectId/prefix/sub /dir/ -r');
+});
+
+test.serial.cb('The "files-mv" command should move a file in a project', t => {
+  patchStub.returns({});
+
+  callback = () => {
+    t.is(patchStub.callCount, 1);
+    t.is(patchStub.getCall(0).args[1], '/v1/files/1234');
+    t.deepEqual(patchStub.getCall(0).args[2], {
+      name: '/dir/bar.txt'
+    });
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(mv)
+    .parse('mv 1234 /dir/bar.txt');
+});
+
 test.serial.cb('The "files-upload" command should upload a file', t => {
   const res = { data: { uploadUrl: 'https://host/upload' } };
   postStub.onFirstCall().returns(res);
@@ -262,6 +327,57 @@ test.serial.cb('The "files-upload" command should upload a file', t => {
 
   yargs.command(upload)
     .parse(`upload ${__dirname}/data/file1.txt dataset`);
+});
+
+test.serial.cb('The "files-upload" command should upload an empty file', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(getFileVerificationStreamStub.callCount, 1);
+    t.is(getFileVerificationStreamStub.getCall(0).args[0], `${__dirname}/emptyTest/empty.txt`);
+    t.is(getFileVerificationStreamStub.getCall(0).args[1], 0);
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/files');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `${__dirname}/emptyTest/empty.txt`,
+      datasetId: 'dataset',
+      overwrite: false
+    });
+    t.is(uploadSpy.getCall(0).args[0], 'https://host/upload');
+    t.is(uploadSpy.getCall(0).args[1], 0);
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/emptyTest/empty.txt dataset`);
+});
+
+test.serial.cb('The "files-upload" command should ignore errors if requested', t => {
+  postStub.onFirstCall().throws({});
+  callback = () => {
+    t.is(getFileVerificationStreamStub.callCount, 1);
+    t.is(getFileVerificationStreamStub.getCall(0).args[0], `${__dirname}/emptyTest/empty.txt`);
+    t.is(getFileVerificationStreamStub.getCall(0).args[1], 0);
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/files');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `${__dirname}/emptyTest/empty.txt`,
+      datasetId: 'dataset',
+      overwrite: false
+    });
+    t.is(uploadSpy.callCount, 0);
+    t.end();
+  };
+
+  t.context.sandbox.stub(console, 'error').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload --ignore ${__dirname}/emptyTest/empty.txt dataset`);
 });
 
 test.serial.cb('The "files-upload" command should upload a file on windows', t => {
@@ -464,6 +580,118 @@ test.serial.cb('The "files-upload" command should upload a file with client supp
 
   yargs.command(upload)
     .parse(`upload ${__dirname}/data/file1.txt dataset --id 1234`);
+});
+
+test.serial.cb('The "files-upload" command should upload a directory of files to a remote path', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  postStub.onSecondCall().returns(res);
+
+  callback = () => {
+    if (postStub.callCount !== 2) {
+      return;
+    }
+    // NOTE - __dirname will have a leading / and the getRemoteFileName method avoids duplicating /
+    t.is(postStub.callCount, 2);
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `/foobar1${__dirname}/data/file1.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+    t.deepEqual(postStub.getCall(1).args[2], {
+      id: undefined,
+      name: `/foobar1${__dirname}/data/file2.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data dataset --remote-path /foobar1`);
+});
+
+test.serial.cb('The "files-upload" command should upload a directory of files to a remote path stripping local path', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  postStub.onSecondCall().returns(res);
+
+  callback = () => {
+    if (postStub.callCount !== 2) {
+      return;
+    }
+    t.is(postStub.callCount, 2);
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `/foobar1/file1.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+    t.deepEqual(postStub.getCall(1).args[2], {
+      id: undefined,
+      name: `/foobar1/file2.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data dataset --strip-path --remote-path /foobar1`);
+});
+
+test.serial.cb('The "files-upload" command should upload a directory of files stripping local path', t => {
+  const res = { data: { uploadUrl: 'https://host/upload' } };
+  postStub.onFirstCall().returns(res);
+  postStub.onSecondCall().returns(res);
+
+  callback = () => {
+    if (postStub.callCount !== 2) {
+      return;
+    }
+    t.is(postStub.callCount, 2);
+    t.deepEqual(postStub.getCall(0).args[2], {
+      id: undefined,
+      name: `/file1.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+    t.deepEqual(postStub.getCall(1).args[2], {
+      id: undefined,
+      name: `/file2.txt`,
+      datasetId: 'dataset',
+      overwrite: false,
+      contentMD5: 'contentMD5'
+    });
+
+    t.true(uploadSpy.calledWith('https://host/upload', 7));
+    t.true(getFileVerificationStreamStub.calledWith(`${__dirname}/data/file1.txt`, 7));
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(upload)
+    .parse(`upload ${__dirname}/data dataset --strip-path `);
 });
 
 test.serial.cb('The "files-upload" command should delete files after (verified) upload', t => {

@@ -29,6 +29,7 @@ const list = proxyquire('../../../lib/cmds/tasks_cmds/list', mocks);
 const create = proxyquire('../../../lib/cmds/tasks_cmds/create', mocks);
 const createFoundationTask = proxyquire('../../../lib/cmds/tasks_cmds/create-foundation-task', mocks);
 const createNantomicsTask = proxyquire('../../../lib/cmds/tasks_cmds/create-nantomics-task', mocks);
+const createAshionTask = proxyquire('../../../lib/cmds/tasks_cmds/create-ashion-task', mocks);
 
 test.afterEach.always(t => {
   getStub.resetHistory();
@@ -100,7 +101,12 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
       testType: 'test1',
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
-      indexType: 'all'
+      indexType: 'all',
+      reIngestFile: false,
+      bodySite: 'Colon',
+      bodySiteSystem: 'http://a.fancy.system.com',
+      bodySiteDisplay: 'body site notation',
+      sendFailedTo: 'failed@user.com'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -108,7 +114,75 @@ test.serial.cb('The "create-foundation-xml-import" command should create a found
   };
 
   yargs.command(createFoundationTask)
-    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 -r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --index-type all');
+    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
+      '-r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 ' +
+      '--indexed-date "1999-01-01 12:00" --index-type all --body-site "Colon" --body-site-system "http://a.fancy.system.com" ' +
+      '--body-site-display "body site notation" --send-failed-to failed@user.com');
+});
+
+test.serial.cb('The "create-foundation-xml-import" accepts re-ingest-file as an optional boolean flag', t => {
+  const res = { data: {} };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/tasks/system/foundation-xml-import');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      xmlFileId: 'c8ef7300-1373-4e51-8eb9-ff333600f6a5',
+      datasetId: 'db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3',
+      reportFileId: '1234',
+      subjectId: '2a6dc73e-ed30-4387-94c1-0cd661da56d9',
+      sequenceName: 'test3',
+      testType: 'test1',
+      performerId: 'performer1',
+      indexedDate: '1999-01-01 12:00',
+      indexType: 'all',
+      reIngestFile: true,
+      bodySite: 'Colon',
+      bodySiteSystem: 'http://a.fancy.system.com',
+      bodySiteDisplay: 'body site notation',
+      sendFailedTo: undefined
+    });
+    t.is(printSpy.callCount, 1);
+    t.is(printSpy.getCall(0).args[0], res.data);
+    t.end();
+  };
+
+  yargs.command(createFoundationTask)
+    .parse('create-foundation-xml-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -x c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
+      '-r 1234 -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -n test3 --test-type test1 --performer-id performer1 ' +
+      '--indexed-date "1999-01-01 12:00" --index-type all --re-ingest-file --body-site "Colon" ' +
+      '--body-site-system "http://a.fancy.system.com"  --body-site-display "body site notation"');
+});
+
+test.serial.cb('The "create-ashion-import" command should create a ashion ingest task', t => {
+  const res = { data: {} };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/tasks/system/ashion-import');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      tarFileId: 'c8ef7300-1373-4e51-8eb9-ff333600f6a5',
+      datasetId: 'db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3',
+      subjectId: '2a6dc73e-ed30-4387-94c1-0cd661da56d9',
+      performerId: 'performer1',
+      indexedDate: '1999-01-01 12:00',
+      outputFilePrefix: 'prefix',
+      bodySite: 'Colon',
+      bodySiteSystem: 'http://a.fancy.system.com',
+      bodySiteDisplay: 'body site notation',
+      reIngestFile: true,
+      sendFailedTo: 'failed@user.com'
+    });
+    t.is(printSpy.callCount, 1);
+    t.is(printSpy.getCall(0).args[0], res.data);
+    t.end();
+  };
+
+  yargs.command(createAshionTask)
+    .parse('create-ashion-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -f c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
+      '-s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 --performer-id performer1 --indexed-date "1999-01-01 12:00" ' +
+      '--output-prefix prefix --body-site "Colon" --body-site-system "http://a.fancy.system.com"  ' +
+      '--body-site-display "body site notation" --re-ingest-file --send-failed-to failed@user.com');
 });
 
 test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantomics ingest task', t => {
@@ -127,7 +201,12 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
       testType: 'test1',
       performerId: 'performer1',
       indexedDate: '1999-01-01 12:00',
-      uploadType: 'variant'
+      uploadType: 'variant',
+      reIngestFile: false,
+      bodySite: 'Colon',
+      bodySiteSystem: 'http://a.fancy.system.com',
+      bodySiteDisplay: 'body site notation',
+      sendFailedTo: 'failed@user.com'
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
@@ -135,7 +214,45 @@ test.serial.cb('The "create-nantomics-vcf-import" command should create a Nantom
   };
 
   yargs.command(createNantomicsTask)
-    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 -p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant');
+    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
+      '-p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 ' +
+      '--performer-id performer1 --indexed-date "1999-01-01 12:00" --upload-type variant --body-site "Colon" ' +
+      '--body-site-system "http://a.fancy.system.com"  --body-site-display "body site notation" --send-failed-to failed@user.com');
+});
+
+test.serial.cb('The "create-nantomics-vcf-import" command accepts re-ingest-file as an optional boolean flag', t => {
+  const res = { data: {} };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/tasks/system/nantomics-vcf-import');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      nantomicsVcfFileId: 'c8ef7300-1373-4e51-8eb9-ff333600f6a5',
+      datasetId: 'db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3',
+      outputFilePrefix: 'converted',
+      subjectId: '2a6dc73e-ed30-4387-94c1-0cd661da56d9',
+      sequenceType: 'germline',
+      sequenceName: 'test4',
+      testType: 'test1',
+      performerId: 'performer1',
+      indexedDate: '1999-01-01 12:00',
+      uploadType: 'variant',
+      reIngestFile: true,
+      bodySite: 'Colon',
+      bodySiteSystem: 'http://a.fancy.system.com',
+      bodySiteDisplay: 'body site notation',
+      sendFailedTo: undefined
+    });
+    t.is(printSpy.callCount, 1);
+    t.is(printSpy.getCall(0).args[0], res.data);
+    t.end();
+  };
+
+  yargs.command(createNantomicsTask)
+    .parse('create-nantomics-vcf-import db3e09e9-1ecd-4976-aa5e-70ac7ada0cc3 -v c8ef7300-1373-4e51-8eb9-ff333600f6a5 ' +
+      '-p converted -s 2a6dc73e-ed30-4387-94c1-0cd661da56d9 -e germline -n test4  --test-type test1 --performer-id performer1 ' +
+      '--indexed-date "1999-01-01 12:00" --upload-type variant  --re-ingest-file --body-site "Colon" ' +
+      '--body-site-system "http://a.fancy.system.com" --body-site-display "body site notation"');
 });
 
 test.serial.cb('The "tasks-cancel" command should cancel a task', t => {

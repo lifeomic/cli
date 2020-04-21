@@ -6,9 +6,6 @@ interactive terminal or in a scripted environment.
 
 ![CLI Demo](https://raw.githubusercontent.com/lifeomic/cli/master/cli-demo.svg?sanitize=true)
 
-
-## Table of Contents
-
 1. [Project Status](#project-status)
 1. [Getting Started](#getting-started)
     1. [Dependencies](#dependencies)
@@ -17,49 +14,32 @@ interactive terminal or in a scripted environment.
     1. [Authentication](#authentication)
         1. [API Keys](#api-keys)
         1. [SSO](#sso)
-    1. [Usage](#usage)
-1. [Release Process](#release-process)
-    1. [Versioning](#versioning)
+1. [Usage](#usage)
 1. [Contributing](#contributing)
+    1. [Getting the Source](#getting-the-source)
+    1. [Running Tests](#running-tests)
+    1. [Release Process](#release-process)
+    1. [Versioning](#versioning)
 1. [License](#license)
 1. [Authors](#authors)
 1. [Acknowledgements](#acknowledgements)
 
+## Project Status
 
-# Project Status
-
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://travis-ci.org/lifeomic/cli.svg?branch=master)](https://travis-ci.org/lifeomic/cli)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lifeomic/cli)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+![Downloads](https://img.shields.io/npm/dw/@lifeomic/cli?style=for-the-badge)
+![Version](https://img.shields.io/npm/v/@lifeomic/cli?style=for-the-badge)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](https://github.com/lifeomic/cli)
 
 **[Back to top](#table-of-contents)**
 
+## Getting Started
 
-# Getting Started
+### Dependencies
 
-## Dependencies
+* [node](https://nodejs.org) version >= 12.0.0
 
-* [node](https://nodejs.org) version >= 7.6.0
-
-## Getting the Source
-
-This project is [hosted on GitHub](https://github.com/lifeomic/cli). You can clone this project directly using this command:
-
-```
-git clone git@github.com:lifeomic/cli.git
-```
-
-## Running Tests
-
-Run tests with `npm` or `yarn`:
-
-```bash
-npm test
-
-yarn test
-```
-
-## Installation
+### Installation
 
 Install via `npm` or `yarn`:
 
@@ -72,12 +52,12 @@ yarn global add @lifeomic/cli
 or you can download and install the binary from the [latest
 release](https://github.com/lifeomic/cli/releases).
 
-## Configuration
+### Configuration
 
 Run `lo setup` to configure the default environment and account you wish to use.
 You can later override the default account using the `-a` option for commands.
 
-## Authentication
+### Authentication
 
 Use `lo auth` to obtain access credentials when using username / password
 authentication.  A browser will be opened and you can enter your credentials in
@@ -93,7 +73,11 @@ credentials for authentication. Note that for this option, you do not need to
 run `lo auth` as username and password credentials are not used for this
 credentials grant.
 
-### API Keys
+You can also provide an API key or access and refresh tokens in
+the `PHC_ACCESS_TOKEN` and `PHC_REFRESH_TOKEN` environment variables. With these
+set, you can bypass using `lo auth`.
+
+#### API Keys
 
 If you wish to use an API key, then you need to create an API key
 [here](https://apps.us.lifeomic.com/phc/account) or from `lo api-keys-create`.
@@ -101,7 +85,7 @@ Be sure to capture the value of the API key when it is created as you will not
 be able to retrieve the value after the first attempt. Run `lo setup` and choose
 'Y' to use an API key and provide the API key value.
 
-### SSO
+#### SSO
 
 If you wish to use SSO, then you need to create a custom authentication client
 [here](https://apps.us.lifeomic.com/phc/account/accounts/clients) and configure
@@ -166,40 +150,51 @@ Get help for a specific command:
 
 **[Back to top](#table-of-contents)**
 
+## Contributing
 
-# Release Process
+We encourage public contributions! Please review [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of conduct and development process.
+
+### Getting the Source
+
+This project is [hosted on GitHub](https://github.com/lifeomic/cli). You can clone this project directly using this command:
+
+```bash
+git clone git@github.com:lifeomic/cli.git
+```
+
+### Running Tests
+
+Run tests with `npm` or `yarn`:
+
+```bash
+npm test
+
+yarn test
+```
+
+### Release Process
 
 [Releases](https://github.com/lifeomic/cli/releases) are generally created with each merged PR. Packages for each release are published to [npm](https://www.npmjs.com/package/@lifeomic/cli). See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
-## Versioning
+### Versioning
 
 This project uses [Semantic Versioning](http://semver.org/).
 
 **[Back to top](#table-of-contents)**
 
-
-# Contributing
-
-We encourage public contributions! Please review [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for details on our code of conduct and development process.
-
-**[Back to top](#table-of-contents)**
-
-
-# License
+## License
 
 This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
 
 **[Back to top](#table-of-contents)**
 
-
-# Authors
+## Authors
 
 See the list of [contributors](https://github.com/lifeomic/cli/contributors) who participate in this project.
 
 **[Back to top](#table-of-contents)**
 
-
-# Acknowledgements
+## Acknowledgements
 
 This project is built with the following:
 

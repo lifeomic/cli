@@ -1,0 +1,16 @@
+{
+  "fieldMaps": [
+    {
+      "columnName": "id",
+      "jpath": "id"
+    },
+    {
+      "value": "Patient",
+      "jpath": "resourceType"
+    },
+    {
+      "columnName": "lastName",
+      "jpath": "name[0].family"
+    }
+  ]
+}
