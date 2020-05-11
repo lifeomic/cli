@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [11.0.0] - 2020-05-11
+
+### Changed
+
+- Updated the workflows commands sets to use the new workflows api, this includes removing `workflows` from the command and updating the arguments.  Refer to help on the individual commands for more details
+- Updated the `create-*` ingest commands to validate that the optional date provided is in an ISO standard format.
+
+### Removed
+
+- The `workflow-template` and `workflow-parameter` command sets were removed.  This functionality is now covered by the updated workflows commands
+
 ## [10.3.0] - 2020-04-20
 
 ### Changed
@@ -715,6 +726,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[11.0.0]: https://github.com/lifeomic/cli/compare/v10.3.0...v11.0.0
 [10.3.0]: https://github.com/lifeomic/cli/compare/v10.2.0...v10.3.0
 [10.2.0]: https://github.com/lifeomic/cli/compare/v10.1.0...v10.2.0
 [10.1.0]: https://github.com/lifeomic/cli/compare/v10.0.2...v10.1.0
