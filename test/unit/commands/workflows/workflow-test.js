@@ -28,11 +28,10 @@ const mocks = {
   '../../read': async () => readStub()
 };
 
-const build = proxyquire('../../../../lib/cmds/workflows_cmds/build-workflow', mocks);
-const create = proxyquire('../../../../lib/cmds/workflows_cmds/create-workflow', mocks);
-const del = proxyquire('../../../../lib/cmds/workflows_cmds/delete-workflow', mocks);
-const get = proxyquire('../../../../lib/cmds/workflows_cmds/get-workflow', mocks);
-const list = proxyquire('../../../../lib/cmds/workflows_cmds/list-workflows', mocks);
+const create = proxyquire('../../../../lib/cmds/workflows_cmds/create', mocks);
+const del = proxyquire('../../../../lib/cmds/workflows_cmds/delete', mocks);
+const get = proxyquire('../../../../lib/cmds/workflows_cmds/get', mocks);
+const list = proxyquire('../../../../lib/cmds/workflows_cmds/list', mocks);
 
 test.always.afterEach(t => {
   getStub.resetHistory();
@@ -43,93 +42,71 @@ test.always.afterEach(t => {
   callback = null;
 });
 
-test.serial.cb('The "build-workflow" command should create a workflow', t => {
+test.serial.cb('The "create" command should create a workflow when using input file ids', t => {
   const res = { data: {} };
   postStub.onFirstCall().returns(res);
   const data = {
     datasetId: 'dataset',
     name: 'template_name',
-    template: {
-      id: 'templateId',
-      type: 'RESOURCE'
-    },
-    parameter: {
-      id: 'paramterId',
-      type: 'RESOURCE'
-    }
+    workflowSourceFileId: 'workflow-id',
+    workflowInputsFileId: 'inputs-file-id',
+    workflowDependenciesFileIds: ['dependency-file-1', 'dependency-file-2']
   };
 
   callback = () => {
     t.is(postStub.callCount, 1);
-    t.is(postStub.getCall(0).args[1], '/workflows');
-    t.deepEqual(postStub.getCall(0).args[2], data);
-    t.end();
-  };
-
-  yargs.command(build)
-    .parse('build-workflow dataset -n template_name -t templateId -p paramterId');
-});
-
-test.serial.cb('The "create-workflow" command should create a workflow', t => {
-  const res = { data: {} };
-  postStub.onFirstCall().returns(res);
-  const data = { name: 'my workflow' };
-  readStub.onFirstCall().returns(data);
-
-  callback = () => {
-    t.is(postStub.callCount, 1);
-    t.is(postStub.getCall(0).args[1], '/workflows');
+    t.is(postStub.getCall(0).args[1], '/workflows/ga4gh/wes/runs');
     t.deepEqual(postStub.getCall(0).args[2], data);
     t.end();
   };
 
   yargs.command(create)
-    .parse('create-workflow');
+    .parse('create dataset -n template_name -w workflow-id -f inputs-file-id -d dependency-file-1,dependency-file-2');
 });
 
-test.serial.cb('The "delete-workflow" should delete a workflow', t => {
+test.serial.cb('The "delete" should delete a workflow', t => {
   const res = { data: {} };
   delStub.onFirstCall().returns(res);
   callback = () => {
     t.is(delStub.callCount, 1);
-    t.is(delStub.getCall(0).args[1], '/workflows/workflowId');
+    t.is(delStub.getCall(0).args[1], '/workflows/ga4gh/wes/runs/workflowId');
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
     t.end();
   };
 
   yargs.command(del)
-    .parse('delete-workflow workflowId');
+    .parse('delete workflowId');
 });
 
-test.serial.cb('The "get-workflow" should get a workflow', t => {
+test.serial.cb('The "get" should get a workflow', t => {
   const res = { data: {} };
   getStub.onFirstCall().returns(res);
   callback = () => {
     t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], '/workflows/workflowId');
+    t.is(getStub.getCall(0).args[1], '/workflows/ga4gh/wes/runs/workflowId');
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
     t.end();
   };
 
   yargs.command(get)
-    .parse('get-workflow workflowId');
+    .parse('get workflowId');
 });
 
-test.serial.cb('The "list-workflow" command should list workflows for an account', t => {
+test.serial.cb('The "list" command should list workflows for an account', t => {
   const res = { data: { items: [] } };
   listStub.onFirstCall().returns(res);
   postStub.onFirstCall().returns(res);
 
   callback = () => {
     t.is(listStub.callCount, 1);
-    t.is(listStub.getCall(0).args[1], '/workflows?datasetId=dataset');
+    t.is(listStub.getCall(0).args[1], '/workflows/ga4gh/wes/runs?datasetId=dataset');
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res);
     t.end();
   };
 
   yargs.command(list)
-    .parse('list-workflows dataset');
+    .parse('list dataset');
 });
