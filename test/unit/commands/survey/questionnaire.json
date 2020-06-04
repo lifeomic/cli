@@ -1,0 +1,28 @@
+{
+    "data": {
+        "item": [
+            {
+                "linkId": "ba0953cc-f0fd-4f3d-bfbd-9320e0c080a2",
+                "text": "Page 1",
+                "type": "group",
+                "item": [
+                    {
+                        "type": "quantity",
+                        "text": "Systolic blood pressure",
+                        "linkId": "f076e708-add9-4c1a-ba9a-9782b05c2bad"
+                    },
+                    {
+                        "type": "quantity",
+                        "text": "Diastolic blood pressure",
+                        "linkId": "cd88370d-44c8-491f-a71c-fcb53f02a451"
+                    },
+                    {
+                        "linkId": "17b9a36d-cb0c-44c5-83d1-c1f8597548a8",
+                        "type": "choice",
+                        "text": "What country do you live in?"
+                    }
+                ]
+            }
+        ]
+    }
+}
