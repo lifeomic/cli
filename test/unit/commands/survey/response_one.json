@@ -1,0 +1,60 @@
+{
+    "data": {
+        "items": [
+            {
+                "subject": {
+                    "reference": "73d77961-a8b7-48e0-b76f-66e53485038b"
+                },
+                "authored": "2020-06-04T14:56:14.402Z",
+                "item": [
+                    {
+                        "linkId": "ba0953cc-f0fd-4f3d-bfbd-9320e0c080a2",
+                        "item": [
+                            {
+                                "linkId": "f076e708-add9-4c1a-ba9a-9782b05c2bad",
+                                "answer": [
+                                    {
+                                        "valueQuantity": {
+                                            "unit": "millimeter of mercury",
+                                            "system": "http://unitsofmeasure.org",
+                                            "code": "mm[Hg]",
+                                            "value": 120
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "linkId": "cd88370d-44c8-491f-a71c-fcb53f02a451",
+                                "answer": [
+                                    {
+                                        "valueQuantity": {
+                                            "unit": "millimeter of mercury",
+                                            "system": "http://unitsofmeasure.org",
+                                            "code": "mm[Hg]",
+                                            "value": 80
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "linkId": "17b9a36d-cb0c-44c5-83d1-c1f8597548a8",
+                                "answer": [
+                                    {
+                                        "valueCoding": {
+                                            "display": "United States of America",
+                                            "code": "US"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
+        "links": {
+            "self": "fillin",
+            "next": "testurl"
+        }
+    }
+}
