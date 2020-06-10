@@ -1,0 +1,31 @@
+{
+  "data": {
+    "items": [
+      {
+        "resourceType": "Questionnaire",
+        "status": "active",
+        "meta": {
+          "tag": [
+            {
+              "system": "http://lifeomic.com/fhir/dataset",
+              "code": "1"
+            }
+          ]
+        },
+        "title": "Test Survey 1",
+        "description": "Test Survey 1",
+        "item": [],
+        "date": "2020-06-04T14:55:45.367Z",
+        "subjectType": [
+          "Patient"
+        ],
+        "version": "1.0",
+        "id": "1"
+      }
+    ],
+    "links": {
+      "self": "testurl",
+      "next": "nexturl"
+    }
+  }
+}
