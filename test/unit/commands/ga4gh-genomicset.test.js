@@ -41,7 +41,7 @@ test.serial.cb('The "ga4gh-genomicsets-create" should create a genomic set', t =
       sequenceType: 'germline',
       testType: 'test1',
       performerId: 'performer1',
-      indexedDate: '1999-01-01 12:00',
+      indexedDate: '1999-01-01T00:00:00.000Z',
       outputVcfName: 'foo.vcf.gz',
       passFilter: false,
       updateSample: false,
@@ -57,5 +57,5 @@ test.serial.cb('The "ga4gh-genomicsets-create" should create a genomic set', t =
   };
 
   yargs.command(program)
-    .parse('create-genomic-set dataset -n name -v variantFile -b bamFile -p patient -r  GRCh37 -t germline --test-type test1 --performer-id performer1 --indexed-date "1999-01-01 12:00" --output-vcf-name foo.vcf.gz');
+    .parse('create-genomic-set dataset -n name -v variantFile -b bamFile -p patient -r  GRCh37 -t germline --test-type test1 --performer-id performer1 --indexed-date "1999-01-01" --output-vcf-name foo.vcf.gz');
 });
