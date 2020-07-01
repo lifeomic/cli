@@ -24,7 +24,7 @@ jobs:
         npm install
         npm publish --access public
       env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.LIFEOMIC_NPM_TOKEN}}
     - name: Create Release
       id: create_release
       uses: actions/create-release@latest
