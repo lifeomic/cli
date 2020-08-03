@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [11.4.0] - 2020-07-06
+### Added
+- Added a `lo ocr` command set with the following sub commands:
+  - Configuration:
+    - `lo ocr create-config` Create OCR configuration for a project
+    - `lo ocr delete-config` Delete an OCR configuration
+    - `lo ocr get-config` Fetch configuration information for a project
+  - OCR documents:
+    - `lo ocr create-document` Create an OCR-document (starts OCR pipeline)
+    - `lo ocr delete-document` Delete an OCR document
+    - `lo ocr get-document` Fetch OCR document
+    - `lo ocr list-documents` List OCR documents in a project
+    
+## [11.3.0] - 2020-06-25
+
+### Added
+
+- Added a `lo tasks create-nantomics-bulk-import` command.
+
+## [11.2.0] - 2020-06-22
+
+### Added
+
+- Upgraded project dependencies.
+
 ## [11.1.0] - 2020-06-05
 
 ### Added
@@ -732,6 +757,9 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[11.4.0]: https://github.com/lifeomic/cli/compare/v11.3.0...v11.4.0
+[11.3.0]: https://github.com/lifeomic/cli/compare/v11.2.0...v11.3.0
+[11.2.0]: https://github.com/lifeomic/cli/compare/v11.1.0...v11.2.0
 [11.1.0]: https://github.com/lifeomic/cli/compare/v11.0.0...v11.1.0
 [11.0.0]: https://github.com/lifeomic/cli/compare/v10.3.0...v11.0.0
 [10.3.0]: https://github.com/lifeomic/cli/compare/v10.2.0...v10.3.0
