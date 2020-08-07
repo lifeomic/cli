@@ -25,6 +25,7 @@ const mocks = {
 
 const get = proxyquire('../../../lib/cmds/tasks_cmds/get', mocks);
 const cancel = proxyquire('../../../lib/cmds/tasks_cmds/cancel', mocks);
+const retry = proxyquire('../../../lib/cmds/tasks_cmds/retry', mocks);
 const list = proxyquire('../../../lib/cmds/tasks_cmds/list', mocks);
 const create = proxyquire('../../../lib/cmds/tasks_cmds/create', mocks);
 const createFoundationTask = proxyquire('../../../lib/cmds/tasks_cmds/create-foundation-task', mocks);
@@ -298,4 +299,18 @@ test.serial.cb('The "tasks-cancel" command should cancel a task', t => {
 
   yargs.command(cancel)
     .parse('cancel taskId');
+});
+
+test.serial.cb('The "tasks-retry" command should retry a task', t => {
+  const res = { data: {} };
+  postStub.onFirstCall().returns(res);
+
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/tasks/taskId:clone');
+    t.end();
+  };
+
+  yargs.command(retry)
+    .parse('retry taskId');
 });
