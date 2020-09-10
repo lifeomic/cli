@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [11.7.0] - 2020-09-10
+
+### Added
+
+- Added an optional argument `--output-project-folder` to the 
+`lo workflows create <datasetId>` command that allows for specifying the 
+folder within PHC that the workflow should push all output files.
+
+### Fixed
+
+- Corrected the argument `workflow-dependencies-file-ids` in
+the `lo workflows create <datasetId>` to be optional instead of required
+
 ## [11.6.0] - 2020-08-07
 
 ### Added
@@ -770,6 +783,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[11.7.0]: https://github.com/lifeomic/cli/compare/v11.6.0...v11.7.0
 [11.6.0]: https://github.com/lifeomic/cli/compare/v11.5.0...v11.6.0
 [11.5.0]: https://github.com/lifeomic/cli/compare/v11.4.0...v11.5.0
 [11.4.0]: https://github.com/lifeomic/cli/compare/v11.3.0...v11.4.0
