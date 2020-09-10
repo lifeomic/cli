@@ -50,7 +50,8 @@ test.serial.cb('The "create" command should create a workflow when using input f
     name: 'template_name',
     workflowSourceFileId: 'workflow-id',
     workflowInputsFileId: 'inputs-file-id',
-    workflowDependenciesFileIds: ['dependency-file-1', 'dependency-file-2']
+    workflowDependenciesFileIds: ['dependency-file-1', 'dependency-file-2'],
+    outputProjectFolder: 'my/cool/path'
   };
 
   callback = () => {
@@ -61,7 +62,7 @@ test.serial.cb('The "create" command should create a workflow when using input f
   };
 
   yargs.command(create)
-    .parse('create dataset -n template_name -w workflow-id -f inputs-file-id -d dependency-file-1,dependency-file-2');
+    .parse('create dataset -n template_name -p my/cool/path -w workflow-id -f inputs-file-id -d dependency-file-1,dependency-file-2');
 });
 
 test.serial.cb('The "delete" should delete a workflow', t => {
