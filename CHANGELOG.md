@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [11.9.0] - 2020-10-02
+
+### Changed
+
+- Replaced the `pass-filter` option in the `genomics create-genomic-set` command with `pass-only`.
+
 ## [11.8.1] - 2020-09-22
 
 ### Fixed
@@ -795,6 +801,8 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[11.9.0]: https://github.com/lifeomic/cli/compare/v11.8.1...v11.9.0
+[11.8.1]: https://github.com/lifeomic/cli/compare/v11.8.0...v11.8.1
 [11.8.0]: https://github.com/lifeomic/cli/compare/v11.7.0...v11.8.0
 [11.7.0]: https://github.com/lifeomic/cli/compare/v11.6.0...v11.7.0
 [11.6.0]: https://github.com/lifeomic/cli/compare/v11.5.0...v11.6.0
