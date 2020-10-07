@@ -25,9 +25,6 @@ const mocks = {
   '../../read': async () => readStub()
 };
 
-const list = proxyquire('../../../../lib/cmds/ocr_cmds/list-documents', mocks);
-const get = proxyquire('../../../../lib/cmds/ocr_cmds/get-document', mocks);
-const del = proxyquire('../../../../lib/cmds/ocr_cmds/delete-document', mocks);
 const create = proxyquire('../../../../lib/cmds/ocr_cmds/create-document', mocks);
 
 test.afterEach.always(t => {
@@ -39,42 +36,11 @@ test.afterEach.always(t => {
   callback = null;
 });
 
-test.serial.cb('The "ocr list-document" command should list documents', t => {
-  const res = { data: { items: [] } };
-  getStub.onFirstCall().returns(res);
-  callback = () => {
-    t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], '/v1/ocr/documents?project=project-id&subject=subject-id&fileId=&documentReference=&pageSize=25&nextPageToken=');
-    t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], { items: [] });
-    t.end();
-  };
-
-  yargs.command(list)
-    .parse('list-documents project-id -s subject-id');
-});
-
-test.serial.cb('The "ocr get-document" command should get an ocr document', t => {
-  const res = { data: {} };
-  getStub.onFirstCall().returns(res);
-  callback = () => {
-    t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], '/v1/ocr/documents/document-id?project=project-id');
-    t.is(printSpy.callCount, 1);
-    t.is(printSpy.getCall(0).args[0], res.data);
-    t.end();
-  };
-
-  yargs.command(get)
-    .parse('get-document project-id document-id');
-});
-
 test.serial.cb('The "ocr create-document" command should create an ocr document', t => {
   const res = { data: {} };
   postStub.onFirstCall().returns(res);
   const data = {
     project: 'project-id',
-    subject: 'subject-id',
     fileId: 'file-id'
   };
   callback = () => {
@@ -87,18 +53,26 @@ test.serial.cb('The "ocr create-document" command should create an ocr document'
   };
 
   yargs.command(create)
-    .parse('create-document project-id subject-id file-id');
+    .parse('create-document project-id file-id');
 });
 
-test.serial.cb('The "ocr delete-document" command should remove ocr document', t => {
+test.serial.cb('The "ocr create-document" command should create an ocr document with subjectId', t => {
+  const res = { data: {} };
+  postStub.onFirstCall().returns(res);
+  const data = {
+    project: 'project-id',
+    fileId: 'file-id',
+    subject: 'subject-id'
+  };
   callback = () => {
-    t.is(delStub.callCount, 1);
-    t.is(delStub.getCall(0).args[1], '/v1/ocr/documents/document-id?project=project-id');
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/ocr/documents');
+    t.deepEqual(postStub.getCall(0).args[2], data);
     t.is(printSpy.callCount, 1);
-    t.deepEqual(printSpy.getCall(0).args[0], 'Deleted ocr document: document-id');
+    t.is(printSpy.getCall(0).args[0], res.data);
     t.end();
   };
 
-  yargs.command(del)
-    .parse('delete-document project-id document-id');
+  yargs.command(create)
+    .parse('create-document project-id file-id -s subject-id');
 });
