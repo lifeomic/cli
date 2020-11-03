@@ -46,6 +46,21 @@ test.serial.cb('The "list-tests" command should list tests for a subject', t => 
     .parse('list-tests project1 subject1');
 });
 
+test.serial.cb('The "list-tests" command should list tests for a project', t => {
+  const res = { data: { items: [] } };
+  getStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(getStub.callCount, 1);
+    t.is(getStub.getCall(0).args[1], '/v1/genomics/projects/project1/tests?pageSize=&nextPageToken=');
+    t.is(printSpy.callCount, 1);
+    t.deepEqual(printSpy.getCall(0).args[0], { items: [] });
+    t.end();
+  };
+
+  yargs.command(list)
+    .parse('list-tests project1');
+});
+
 test.serial.cb('The "delete-test" command should delete a test for a subject', t => {
   delStub.onFirstCall().returns({});
   callback = () => {
