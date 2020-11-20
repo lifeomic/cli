@@ -51,7 +51,7 @@ test.serial.cb('The "list-tests" command should list tests for a project', t => 
   getStub.onFirstCall().returns(res);
   callback = () => {
     t.is(getStub.callCount, 1);
-    t.is(getStub.getCall(0).args[1], '/v1/genomics/projects/project1/tests?pageSize=&nextPageToken=');
+    t.is(getStub.getCall(0).args[1], '/v1/genomics/projects/project1/tests?pageSize=25&nextPageToken=');
     t.is(printSpy.callCount, 1);
     t.deepEqual(printSpy.getCall(0).args[0], { items: [] });
     t.end();
