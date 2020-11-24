@@ -1,6 +1,6 @@
 {
   "name": "@lifeomic/cli",
-  "version": "11.4.0",
+  "version": "12.1.1",
   "description": "CLI for interacting with the LifeOmic PHC API.",
   "main": "lo.js",
   "author": "LifeOmic <development@lifeomic.com>",
@@ -12,6 +12,8 @@
     "lo": "./lo.js"
   },
   "scripts": {
+    "presetup": "yarn",
+    "setup": "node ./setup-dev-cli.js",
     "prelint": "yarn --network-timeout 1000000",
     "lint": "eslint .",
     "pretest": "yarn lint",

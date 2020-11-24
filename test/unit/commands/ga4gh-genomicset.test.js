@@ -43,7 +43,7 @@ test.serial.cb('The "ga4gh-genomicsets-create" should create a genomic set', t =
       performerId: 'performer1',
       indexedDate: '1999-01-01T00:00:00.000Z',
       outputVcfName: 'foo.vcf.gz',
-      passFilter: false,
+      passOnly: false,
       updateSample: false,
       testId: undefined,
       sequenceId: undefined,

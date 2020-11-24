@@ -5,6 +5,71 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [12.1.1] - 2020-11-20
+
+### Fixed
+
+- Fixed the `genomics list-tests` command to list tests by project using the `--limit` option.
+
+
+## [12.1.0] - 2020-11-03
+
+### Changed
+
+- Updated the `genomics list-tests` command to list tests by project by leaving off the `[subjectId]` parameter.
+
+## [12.0.0] - 2020-10-08
+
+### Changed
+
+- Updated `lo ocr` sub commands:
+  - Removed `delete-document`, `get-document` and `list-documents`. These operations can be performed using `fhir` and `fhir-search` commands.
+  - Updated `create-config` to read configuration from JSON file
+
+## [11.9.0] - 2020-10-02
+
+### Changed
+
+- Replaced the `pass-filter` option in the `genomics create-genomic-set` command with `pass-only`.
+
+## [11.8.1] - 2020-09-22
+
+### Fixed
+
+- Fixed issue with 11.8.0 release.
+
+## [11.8.0] - 2020-09-21
+
+### Added
+
+- Added a new `lo genomics update-test` command to update a genomic test.
+
+## [11.7.0] - 2020-09-10
+
+### Added
+
+- Added an optional argument `--output-project-folder` to the
+`lo workflows create <datasetId>` command that allows for specifying the
+folder within PHC that the workflow should push all output files.
+
+### Fixed
+
+- Corrected the argument `workflow-dependencies-file-ids` in
+the `lo workflows create <datasetId>` to be optional instead of required
+
+## [11.6.0] - 2020-08-07
+
+### Added
+
+- Added a `lo tasks retry <taskId>` command.
+
+## [11.5.0] - 2020-08-03
+
+### Added
+
+- Added a `lo genomics get-test` command.
+- Addded ablity to read `lo fhir sql` statement from stdin.
+
 ## [11.4.0] - 2020-07-06
 ### Added
 - Added a `lo ocr` command set with the following sub commands:
@@ -17,7 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `lo ocr delete-document` Delete an OCR document
     - `lo ocr get-document` Fetch OCR document
     - `lo ocr list-documents` List OCR documents in a project
-    
+
 ## [11.3.0] - 2020-06-25
 
 ### Added
@@ -757,6 +822,15 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[12.1.1]: https://github.com/lifeomic/cli/compare/v12.1.0...v12.1.1
+[12.1.0]: https://github.com/lifeomic/cli/compare/v12.0.0...v12.1.0
+[12.0.0]: https://github.com/lifeomic/cli/compare/v11.9.0...v12.0.0
+[11.9.0]: https://github.com/lifeomic/cli/compare/v11.8.1...v11.9.0
+[11.8.1]: https://github.com/lifeomic/cli/compare/v11.8.0...v11.8.1
+[11.8.0]: https://github.com/lifeomic/cli/compare/v11.7.0...v11.8.0
+[11.7.0]: https://github.com/lifeomic/cli/compare/v11.6.0...v11.7.0
+[11.6.0]: https://github.com/lifeomic/cli/compare/v11.5.0...v11.6.0
+[11.5.0]: https://github.com/lifeomic/cli/compare/v11.4.0...v11.5.0
 [11.4.0]: https://github.com/lifeomic/cli/compare/v11.3.0...v11.4.0
 [11.3.0]: https://github.com/lifeomic/cli/compare/v11.2.0...v11.3.0
 [11.2.0]: https://github.com/lifeomic/cli/compare/v11.1.0...v11.2.0
