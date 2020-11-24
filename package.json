@@ -47,8 +47,7 @@
     "stream-csv-as-json": "^1.0.1",
     "stream-json": "^1.2.1",
     "uuid": "^3.3.2",
-    "yargs": "^12.0.5",
-    "yarn": "^1.22.4"
+    "yargs": "^12.0.5"
   },
   "devDependencies": {
     "@lifeomic/eslint-plugin-node": "^1.3.0",
