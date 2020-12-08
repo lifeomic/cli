@@ -33,7 +33,7 @@ const del = proxyquire('../../../../lib/cmds/workflows_cmds/delete', mocks);
 const get = proxyquire('../../../../lib/cmds/workflows_cmds/get', mocks);
 const list = proxyquire('../../../../lib/cmds/workflows_cmds/list', mocks);
 const run = proxyquire('../../../../lib/cmds/workflows_cmds/run', mocks);
-const parse = proxyquire('../../../../lib/cmds/workflows_cmds/parse', mocks);
+const describe = proxyquire('../../../../lib/cmds/workflows_cmds/describe', mocks);
 
 test.always.afterEach(t => {
   getStub.resetHistory();
@@ -136,7 +136,7 @@ test.serial.cb('The "run" command should run a workflow when using input tool id
     .parse('run dataset -n run_name -p my/cool/path -t tool-id -f inputs-file-id');
 });
 
-test.serial.cb('The "parse" command should list inputs the workflow expects for a tool', t => {
+test.serial.cb('The "describe" command should list inputs the workflow expects for a tool', t => {
   const res = { data: { tarFile: 'File', source: 'string', reference: 'string' } };
   postStub.onFirstCall().returns(res);
 
@@ -154,6 +154,6 @@ test.serial.cb('The "parse" command should list inputs the workflow expects for 
     t.end();
   };
 
-  yargs.command(parse)
-    .parse('parse datasetId -t toolId');
+  yargs.command(describe)
+    .parse('describe datasetId -t toolId');
 });
