@@ -32,6 +32,8 @@ const create = proxyquire('../../../../lib/cmds/workflows_cmds/create', mocks);
 const del = proxyquire('../../../../lib/cmds/workflows_cmds/delete', mocks);
 const get = proxyquire('../../../../lib/cmds/workflows_cmds/get', mocks);
 const list = proxyquire('../../../../lib/cmds/workflows_cmds/list', mocks);
+const run = proxyquire('../../../../lib/cmds/workflows_cmds/run', mocks);
+const parse = proxyquire('../../../../lib/cmds/workflows_cmds/parse', mocks);
 
 test.always.afterEach(t => {
   getStub.resetHistory();
@@ -110,4 +112,48 @@ test.serial.cb('The "list" command should list workflows for an account', t => {
 
   yargs.command(list)
     .parse('list dataset');
+});
+
+test.serial.cb('The "run" command should run a workflow when using input tool ids', t => {
+  const res = { data: {} };
+  postStub.onFirstCall().returns(res);
+  const data = {
+    datasetId: 'dataset',
+    name: 'run_name',
+    workflowSourceFileId: 'tool-id',
+    workflowInputsFileId: 'inputs-file-id',
+    outputProjectFolder: 'my/cool/path'
+  };
+
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/workflows/ga4gh/wes/runs');
+    t.deepEqual(postStub.getCall(0).args[2], data);
+    t.end();
+  };
+
+  yargs.command(run)
+    .parse('run dataset -n run_name -p my/cool/path -t tool-id -f inputs-file-id');
+});
+
+test.serial.cb('The "parse" command should list inputs the workflow expects for a tool', t => {
+  const res = { data: { tarFile: 'File', source: 'string', reference: 'string' } };
+  postStub.onFirstCall().returns(res);
+
+  const data = {
+    datasetId: 'datasetId',
+    workflowSourceFileId: 'toolId'
+  };
+
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/workflows/ga4gh/wes/runs/parse');
+    t.deepEqual(postStub.getCall(0).args[2], data);
+    t.is(printSpy.callCount, 1);
+    t.is(printSpy.getCall(0).args[0], res.data);
+    t.end();
+  };
+
+  yargs.command(parse)
+    .parse('parse datasetId -t toolId');
 });
