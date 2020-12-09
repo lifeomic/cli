@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [12.2.0] - 2020-12-09
+
+### Added
+- Added a `lo tools` command set with the following sub commands:
+  - `lo tools create` Creates a tool in the tool registry
+  - `lo tools add-version` Adds a version to an existing tool
+  - `lo tools delete` Deletes a tool or a specific version of a tool
+  - `lo tools download` Downloads the tool file
+  - `lo tools get` Returns meta data on a tool
+  - `lo tools list` Using optional fitlers, returns a list of tools
+- Added two sub commands to `lo workflows`:
+  - `lo workflows describe` Returns the expected inputs of a workflow and the data type of the input
+  - `lo workflows run` Runs a workflow using a tool in the tool registry
+
 ## [12.1.1] - 2020-11-20
 
 ### Fixed
@@ -822,6 +836,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[12.2.0]: https://github.com/lifeomic/cli/compare/v12.1.1...v12.2.0
 [12.1.1]: https://github.com/lifeomic/cli/compare/v12.1.0...v12.1.1
 [12.1.0]: https://github.com/lifeomic/cli/compare/v12.0.0...v12.1.0
 [12.0.0]: https://github.com/lifeomic/cli/compare/v11.9.0...v12.0.0
