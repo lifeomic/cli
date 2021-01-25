@@ -57,10 +57,6 @@ release](https://github.com/lifeomic/cli/releases).
 Run `lo setup` to configure the default environment and account you wish to use.
 You can later override the default account using the `-a` option for commands.
 
-#### Dev account access
-
-Run `yarn setup` to also include and configure a lifeomic-dev environment.
-
 ### Authentication
 
 Use `lo auth` to obtain access credentials when using username / password
