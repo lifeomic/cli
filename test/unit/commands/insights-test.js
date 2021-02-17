@@ -1,11 +1,14 @@
 'use strict';
 
+const uuid = require('uuid');
 const yargs = require('yargs');
 const sinon = require('sinon');
 const test = require('ava');
 const proxyquire = require('proxyquire');
 
+const getStub = sinon.stub();
 const postStub = sinon.stub();
+const listStub = sinon.stub();
 const printSpy = sinon.spy();
 const readStub = sinon.stub();
 let callback;
@@ -30,6 +33,35 @@ const schedule = proxyquire('../../../lib/cmds/insights_cmds/schedule-job', {
     callback();
   },
   '../../read': async () => readStub()
+});
+
+const listJobsCmd = proxyquire('../../../lib/cmds/insights_cmds/list-jobs', {
+  '../../api': {
+    list: listStub
+  },
+  '../../print': (data, opts) => {
+    printSpy(data, opts);
+    callback();
+  },
+  '../../read': async () => readStub()
+});
+
+const getJobCmd = proxyquire('../../../lib/cmds/insights_cmds/get-job', {
+  '../../api': {
+    get: getStub
+  },
+  '../../print': (data, opts) => {
+    printSpy(data, opts);
+    callback();
+  },
+  '../../read': async () => readStub()
+});
+
+test.afterEach.always(t => {
+  postStub.resetHistory();
+  printSpy.resetHistory();
+  readStub.resetHistory();
+  callback = null;
 });
 
 test.afterEach.always(t => {
@@ -111,4 +143,37 @@ test.serial.cb('The "schedule-job" command allows a job to be scheduled', t => {
 
   yargs.command(schedule)
     .parse('schedule-job -t gene -a aggregate -p projectId -s set1 set2 set3');
+});
+
+test.serial.cb('The "list-jobs" command should accept page-size and next-page-token', t => {
+  const pageSize = 30;
+  const nextPageToken = uuid();
+
+  listStub.onFirstCall().returns({});
+  const expectedPath = `/v1/analytics/jobs?pageSize=${pageSize}&nextPageToken=${nextPageToken}`;
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], expectedPath);
+    t.is(printSpy.callCount, 1);
+    t.end();
+  };
+
+  yargs.command(listJobsCmd).parse(`list-jobs -n ${pageSize} -t ${nextPageToken}`);
+});
+
+test.serial.cb('The "get-job" command should add job-id to path', t => {
+  const jobId = uuid();
+
+  getStub.onFirstCall().returns({});
+  const expectedPath = `/v1/analytics/jobs/${jobId}`;
+
+  callback = () => {
+    t.is(getStub.callCount, 1);
+    t.is(getStub.getCall(0).args[1], expectedPath);
+    t.is(printSpy.callCount, 1);
+    t.end();
+  };
+
+  yargs.command(getJobCmd).parse(`get-job ${jobId}`);
 });
