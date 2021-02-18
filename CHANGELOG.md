@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [12.4.0] - 2021-02-17
+
+### Added
+- Added additional Insights commands to get details of scheduled indexing jobs.
+  - `lo insights list-jobs` Fetches all scheduled Insights indexing jobs in the account
+  - `lo insights get-job` Fetch the details of a single Insights indexing job
+
 ## [12.3.0] - 2021-01-26
 
 ### Added
@@ -841,6 +848,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[12.4.0]: https://github.com/lifeomic/cli/compare/v12.3.10..v12.4.0
 [12.3.0]: https://github.com/lifeomic/cli/compare/v12.2.10..v12.3.0
 [12.2.0]: https://github.com/lifeomic/cli/compare/v12.1.1...v12.2.0
 [12.1.1]: https://github.com/lifeomic/cli/compare/v12.1.0...v12.1.1
