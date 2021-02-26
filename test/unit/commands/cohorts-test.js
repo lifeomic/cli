@@ -87,20 +87,7 @@ test.serial.cb('The "cohorts-get" command should get a cohort', t => {
 test.serial.cb('The "cohorts-create" command should create a cohort', t => {
   const res = { data: {} };
   postStub.onFirstCall().returns(res);
-  const data = [
-    {
-      project: '0a14cd67-00ad-4f58-a197-46f67874d300',
-      queryType: 'JSON',
-      query: {
-        query: {
-          domain: 'filter',
-          target: 'patient'
-        },
-        dataset_id: '0a14cd67-00ad-4f58-a197-46f67874d300'
-      }
-    }
-  ]
-  ;
+  const data = ['06145c42-0625-4dc4-92c7-dbf600e7866a'];
   readStub.onFirstCall().returns(data);
   callback = () => {
     t.is(postStub.callCount, 1);
@@ -109,7 +96,7 @@ test.serial.cb('The "cohorts-create" command should create a cohort', t => {
       name: 'Cohort Name',
       description: 'Cohort Description',
       ownerProject: '1',
-      queries: data
+      subjectIds: data
     });
     t.is(printSpy.callCount, 1);
     t.is(printSpy.getCall(0).args[0], res.data);
