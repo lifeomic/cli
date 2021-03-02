@@ -11,6 +11,7 @@ const postStub = sinon.stub();
 const listStub = sinon.stub();
 const printSpy = sinon.spy();
 const readStub = sinon.stub();
+const deleteStub = sinon.stub();
 let callback;
 
 const queryCmd = proxyquire('../../../lib/cmds/data_lake_cmds/query', {
@@ -64,12 +65,23 @@ const getSchemaCmd = proxyquire('../../../lib/cmds/data_lake_cmds/get-schema', {
   }
 });
 
+const cancelQueryCmd = proxyquire('../../../lib/cmds/data_lake_cmds/cancel-query', {
+  '../../api': {
+    del: deleteStub
+  },
+  '../../print': (data, opts) => {
+    printSpy(data, opts);
+    callback();
+  }
+});
+
 test.afterEach.always(t => {
   getStub.resetHistory();
   postStub.resetHistory();
   listStub.resetHistory();
   printSpy.resetHistory();
   readStub.resetHistory();
+  deleteStub.resetHistory();
   callback = null;
 });
 
@@ -183,4 +195,20 @@ test.serial.cb('The "data-lake-get-schema" command should add dataset id and tab
   };
 
   yargs.command(getSchemaCmd).parse(`get-schema ${datasetId} -t ${tableName}`);
+});
+
+test.serial.cb('The "data-lake-cancel-query" command should add query-id to path', t => {
+  const queryId = uuid();
+
+  deleteStub.onFirstCall().returns({});
+  const expectedPath = `/v1/analytics/data-lake/query/${queryId}`;
+
+  callback = () => {
+    t.is(deleteStub.callCount, 1);
+    t.is(deleteStub.getCall(0).args[1], expectedPath);
+    t.is(printSpy.callCount, 1);
+    t.end();
+  };
+
+  yargs.command(cancelQueryCmd).parse(`cancel-query ${queryId}`);
 });
