@@ -5,14 +5,12 @@ const config = require('../../lib/config');
 
 const CONFIG_FIXTURE = {
   dev: {
-    userPooldId: 'dev-userPoolId',
     clientId: 'dev-clientId',
     apiUrl: 'dev-apiUrl',
     fhirUrl: 'dev-fhirUrl',
     ga4ghUrl: 'dev-ga4ghUrl'
   },
   'prod-us': {
-    userPooldId: 'prod-us-userPoolId',
     clientId: 'prod-us-clientId',
     apiUrl: 'prod-us-apiUrl',
     fhirUrl: 'prod-us-fhirUrl',
