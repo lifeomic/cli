@@ -1,0 +1,107 @@
+{
+  "data": {
+    "records": [
+      {
+        "account": "lifeomic",
+        "project": "1",
+        "documentReference": "1",
+        "status": "OPEN",
+        "originalText": "Text",
+        "suggestions": [
+          {
+            "id": "1",
+            "condition": {
+              "conditionCode": [
+                {
+                  "value": {
+                    "system": "http://hl7.org/fhir/sid/icd-10",
+                    "code": "M25.50",
+                    "display": "Pain in unspecified joint"
+                  }
+                }
+              ],
+              "onsetDate": [
+                {
+                  "value": "2010-01-01T12:00:00.000Z"
+                }
+              ],
+              "abatementDate": [
+                {
+                  "value": "2010-01-02T12:00:00.000Z"
+                }
+              ],
+              "bodySite": [
+                [
+                  {
+                    "value": {
+                      "system": "http://snomed.info/sct",
+                      "code": "362052004",
+                      "display": "Entire arterial rete of elbow joint"
+                    }
+                  }
+                ]
+              ]
+            },
+            "observation": {
+              "observationCode": [],
+              "date": [],
+              "value": []
+            },
+            "procedure": {
+              "procedureCode": [],
+              "date": [],
+              "endDate": [],
+              "bodySite": []
+            },
+            "medicationAdministration": {
+              "medicationCode": [
+                {
+                  "value": {
+                    "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+                    "code": "643722",
+                    "display": "lenalidomide 25 MG Oral Capsule [Revlimid]"
+                  }
+                }
+              ],
+              "date": [
+                {
+                  "value": "2020-01-01T12:00:00.000Z"
+                }
+              ],
+              "endDate": [
+                {
+                  "value": "2021-01-01T12:00:00.000Z"
+                }
+              ],
+              "status": [
+                {
+                  "value": "completed"
+                }
+              ],
+              "dosage": [
+                {
+                  "value": {
+                    "id": "0",
+                    "strength": null,
+                    "dosage": "25 mg",
+                    "duration": null,
+                    "form": "Tablet",
+                    "frequencey": "4 times per day",
+                    "rate": null,
+                    "route": "Oral"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "anchorDate": "2010-01-01T06:00:00.000Z",
+        "wordIds": [
+          "1"
+        ],
+        "version": 2,
+        "suggestionId": "00002-00047-00001"
+      }
+    ]
+  }
+}
