@@ -52,8 +52,8 @@ test.serial.cb('The "ocr get-suggestions" command should get suggestions in FHIR
           text: 'Dosage: 25 mg, Form: Tablet, Frequencey: 4 times per day, Route: Oral'
         },
         effectivePeriod: {
-          start: '2020-01-01T06:00:00.000Z',
-          end: '2021-01-01T06:00:00.000Z'
+          start: '2020-01-01',
+          end: '2021-01-01'
         }
       },
       {
@@ -70,8 +70,8 @@ test.serial.cb('The "ocr get-suggestions" command should get suggestions in FHIR
             system: 'http://snomed.info/sct'
           }
         ],
-        onsetDateTime: '2010-01-01T06:00:00.000Z',
-        abatementDateTime: '2010-01-02T06:00:00.000Z'
+        onsetDateTime: '2010-01-01',
+        abatementDateTime: '2010-01-02'
       }
     ]);
     t.end();
