@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.0.0] - 2021-03-12
+
+### Changed
+
+- Updated creating a cohort to require a subjectId array instead of a dsl query
+
 ## [12.5.0] - 2021-03-02
 
 ### Added
@@ -854,6 +860,7 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[13.0.0]: https://github.com/lifeomic/cli/compare/v12.5.10..v13.0.0
 [12.5.0]: https://github.com/lifeomic/cli/compare/v12.5.10..v12.5.0
 [12.4.0]: https://github.com/lifeomic/cli/compare/v12.3.10..v12.4.0
 [12.3.0]: https://github.com/lifeomic/cli/compare/v12.2.10..v12.3.0
