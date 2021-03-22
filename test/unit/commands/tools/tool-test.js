@@ -123,7 +123,7 @@ test.serial.cb('The "create" command should create a tool with multi-part upload
   const res = { data: { id: toolId, meta_version: version } };
   postStub.onCall(0).returns(res);
 
-  // requset the upload id
+  // request the upload id
   const resUpload = { data: { uploadId: uploadId } };
   postStub.onCall(1).returns(resUpload);
 
@@ -225,4 +225,43 @@ test.serial.cb('The "add-version" command should add a version to a tool', t => 
 
   yargs.command(addVersion)
     .parse('add-version toolId -s 1.5.9 -d true -f "./test/unit/commands/tools/tool-test.js"');
+});
+
+test.serial.cb('The "add-version" command should add a version to a tool with multi-part upload', t => {
+  process.env.TOOL_MULTIPART_MIN_SIZE = 3;
+  const version = '1.5.9';
+  const fileName = 'tool-test.js';
+  const toolId = '00000000-cafe-d00d-0000-000000000000';
+  const uploadId = '00000000-dead-beef-0000-000000000000';
+  const res = { data: { id: toolId, meta_version: version } };
+  postStub.onCall(0).returns(res);
+
+  // request the upload id
+  const resUpload = { data: { uploadId: uploadId } };
+  postStub.onCall(1).returns(resUpload);
+
+  axiosMock.onPut('/a/test/link').reply(200);
+
+  const data = {
+    version: version,
+    isDefault: true
+  };
+
+  const requestIdData = {
+    fileName: fileName,
+    toolId: toolId,
+    version: version
+  };
+
+  callback = () => {
+    t.is(postStub.callCount, 2);
+    t.is(postStub.getCall(0).args[1], `/trs/v2/tools/${toolId}/versions`);
+    t.deepEqual(postStub.getCall(0).args[2], data);
+    t.is(postStub.getCall(1).args[1], '/trs/uploads');
+    t.deepEqual(postStub.getCall(1).args[2], requestIdData);
+    t.end();
+  };
+
+  yargs.command(addVersion)
+    .parse(`add-version ${toolId} -s ${version} -d true -f "./test/unit/commands/tools/tool-test.js"`);
 });
