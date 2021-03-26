@@ -24,7 +24,8 @@ const mocks = {
     printSpy(data, opts);
     callback();
   },
-  '../../sleep': sleepStub
+  '../../sleep': sleepStub,
+  getAccount: () => 'account'
 };
 
 const getSuggestions = proxyquire('../../../../lib/cmds/ocr_cmds/get-suggestions', mocks);
