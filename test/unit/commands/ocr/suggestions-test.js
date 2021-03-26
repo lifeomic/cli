@@ -18,14 +18,14 @@ const mocks = {
     get: getStub
   },
   '../../fhir': {
-    get: fhirGetStub
+    get: fhirGetStub,
+    getAccount: () => 'account'
   },
   '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
   },
-  '../../sleep': sleepStub,
-  getAccount: () => 'account'
+  '../../sleep': sleepStub
 };
 
 const getSuggestions = proxyquire('../../../../lib/cmds/ocr_cmds/get-suggestions', mocks);
