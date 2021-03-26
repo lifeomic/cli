@@ -8,24 +8,32 @@ const proxyquire = require('proxyquire');
 const suggestions = require('./suggestions.json');
 
 const getStub = sinon.stub();
+const fhirGetStub = sinon.stub();
 const printSpy = sinon.spy();
+const sleepStub = sinon.stub().resolves();
 let callback;
 
 const mocks = {
   '../../api': {
     get: getStub
   },
+  '../../fhir': {
+    get: fhirGetStub
+  },
   '../../print': (data, opts) => {
     printSpy(data, opts);
     callback();
-  }
+  },
+  '../../sleep': sleepStub
 };
 
 const getSuggestions = proxyquire('../../../../lib/cmds/ocr_cmds/get-suggestions', mocks);
 
-test.afterEach.always(t => {
-  getStub.resetHistory();
+test.afterEach.always(() => {
+  getStub.reset();
+  fhirGetStub.reset();
   printSpy.resetHistory();
+  sleepStub.reset();
   callback = null;
 });
 
@@ -97,4 +105,47 @@ test.serial.cb('The "ocr get-suggestions" command will print unformatted suggest
 
   yargs.command(getSuggestions)
     .parse('get-suggestions projectId documentId -s');
+});
+
+test.serial.cb('The "ocr get-suggestions" command will wait when specified', t => {
+  const running = {
+    data: {
+      meta: {
+        tag: [
+          {
+            system: 'http://lifeomic.com/ocr/document/status',
+            code: 'NLP-RUNNING'
+          }
+        ]
+      }
+    }
+  };
+  const success = {
+    data: {
+      meta: {
+        tag: [
+          {
+            system: 'http://lifeomic.com/ocr/document/status',
+            code: 'SUCCESS'
+          }
+        ]
+      }
+    }
+  };
+  getStub.onFirstCall().returns(suggestions);
+  fhirGetStub.onFirstCall().returns(running);
+  fhirGetStub.onSecondCall().returns(running);
+  fhirGetStub.onThirdCall().returns(success);
+  callback = () => {
+    t.is(fhirGetStub.callCount, 3);
+    t.is(getStub.callCount, 1);
+    t.is(sleepStub.callCount, 2);
+    t.is(sleepStub.firstCall.args[0], 1000);
+    t.is(sleepStub.secondCall.args[0], 1000);
+    t.is(printSpy.callCount, 1);
+    t.end();
+  };
+
+  yargs.command(getSuggestions)
+    .parse('get-suggestions projectId documentId -w');
 });
