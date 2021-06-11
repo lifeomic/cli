@@ -175,7 +175,10 @@ yarn test
 
 ### Release Process
 
-[Releases](https://github.com/lifeomic/cli/releases) are generally created with each merged PR. Packages for each release are published to [npm](https://www.npmjs.com/package/@lifeomic/cli). See [CHANGELOG.md](CHANGELOG.md) for release notes.
+[Releases](https://github.com/lifeomic/cli/releases) are created by making a PR, incrementing the version in `package.json`, merging the PR,
+and then finally tagging master with a tag like `v4.5.3`.
+
+Packages for each release are published to [npm](https://www.npmjs.com/package/@lifeomic/cli). See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 ### Versioning
 
