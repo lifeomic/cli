@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.4.0] - 2021-07-22
+
+### Added
+- Added `--skipPrompts` flag to `lo setup` command to enable unattended scripting of environment changes
+  - `lo setup -e prod-us --skipPrompts` does not give follow up prompts
+
 ## [13.3.0] - 2021-04-05
 
 ### Added
