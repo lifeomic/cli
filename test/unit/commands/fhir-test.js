@@ -65,7 +65,7 @@ test.serial.cb('The "fhir" command should list fhir resources', t => {
   };
 
   yargs.command(list)
-    .parse('list Patient projectId');
+    .parse('list Patient --project projectId');
 });
 
 test.serial.cb('The "fhir" command should list fhir resources with a query expression', t => {
@@ -83,7 +83,7 @@ test.serial.cb('The "fhir" command should list fhir resources with a query expre
   };
 
   yargs.command(list)
-    .parse('list Patient projectId --query "_tag=http://lifeomic.com/fhir/tag|value"');
+    .parse('list Patient --project projectId --query "_tag=http://lifeomic.com/fhir/tag|value"');
 });
 
 test.serial.cb('Limit should set the page size for the "fhir" command', t => {
@@ -101,7 +101,7 @@ test.serial.cb('Limit should set the page size for the "fhir" command', t => {
   };
 
   yargs.command(list)
-    .parse('list Patient projectId --limit 10');
+    .parse('list Patient --project projectId --limit 10');
 });
 
 test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
