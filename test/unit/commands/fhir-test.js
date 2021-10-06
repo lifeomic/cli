@@ -93,7 +93,7 @@ test.serial.cb('Limit should set the page size for the "fhir" command', t => {
   callback = () => {
     t.is(postStub.callCount, 1);
     t.is(postStub.getCall(0).args[1], 'account/dstu3/Patient/_search');
-    t.is(postStub.getCall(0).args[2], 'pageSize=10');
+    t.is(postStub.getCall(0).args[2], '_tag=http%3A%2F%2Flifeomic.com%2Ffhir%2Fdataset%7CprojectId&pageSize=10');
     t.deepEqual(postStub.getCall(0).args[3], { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
     t.is(printSpy.callCount, 1);
     t.deepEqual(printSpy.getCall(0).args[0], [{ 'resourceType': 'Patient', 'id': 'ABC1234' }]);
@@ -101,7 +101,7 @@ test.serial.cb('Limit should set the page size for the "fhir" command', t => {
   };
 
   yargs.command(list)
-    .parse('list Patient --limit 10');
+    .parse('list Patient --project projectId --limit 10');
 });
 
 test.serial.cb('The "fhir-ingest" command should update a fhir resource', t => {
