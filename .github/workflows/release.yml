@@ -9,6 +9,7 @@ jobs:
   build:
     if: ${{ github.head_ref }} == "master"
     runs-on: ubuntu-latest
+    environment: npm
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
