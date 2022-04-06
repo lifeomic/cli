@@ -11,7 +11,7 @@ jobs:
     environment: npm
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NPM_TOKEN: ${{secrets.LIFEOMIC_NPM_TOKEN}}
+      NPM_TOKEN: ${{ secrets.LIFEOMIC_NPM_TOKEN }}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
@@ -20,6 +20,7 @@ jobs:
         registry-url: https://registry.npmjs.org
     - name: Build and Test
       run: |
+        echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
         yarn install
         yarn test
         yarn build
