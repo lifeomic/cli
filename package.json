@@ -1,6 +1,6 @@
 {
   "name": "@lifeomic/cli",
-  "version": "13.6.0",
+  "version": "0.0.0",
   "description": "CLI for interacting with the LifeOmic PHC API.",
   "main": "lo.js",
   "author": "LifeOmic <development@lifeomic.com>",
@@ -17,8 +17,7 @@
     "lint": "eslint .",
     "pretest": "yarn lint",
     "test": "ava --serial --verbose test/unit",
-    "build": "./build.sh",
-    "semantic-release": "semantic-release"
+    "build": "./build.sh"
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -54,12 +53,13 @@
     "@lifeomic/eslint-plugin-node": "^1.3.0",
     "ava": "^0.25.0",
     "axios-mock-adapter": "^1.19.0",
+    "conventional-changelog-conventionalcommits": "^4.6.3",
     "eslint": "^4.19.1",
     "memory-streams": "^0.1.3",
     "pkg": "^4.4.3",
     "proxyquire": "^2.1.0",
-    "sinon": "^4.5.0",
-    "semantic-release": "^19.0.2"
+    "semantic-release": "^19.0.2",
+    "sinon": "^4.5.0"
   },
   "eslintConfig": {
     "extends": "plugin:@lifeomic/node/recommended"
