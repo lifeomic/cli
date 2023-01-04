@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [13.9.0] - 2023-01-04
+
+### Added
+- Added a `lo genomics ingestions` command set with the following commands
+  - `lo genomics ingestions list` Lists genomic ingestions for a project
+  - `lo genomics ingestions get` Gets a genomic ingestions
+  - `lo genomics ingestions create-foundation` Creates a Foundation ingestion
+  - `lo genomics ingestions create-caris` Creates a Caris ingestion
+  - `lo genomics ingestions create-foundation-bam` Creates a Foundation BAM ingestion
+  - `lo genomics ingestions create-caris-bam` Creates a Caris BAM ingestion
+
+## [13.8.1] - 2022-07-25
+
+### Fixed
+- Added `maxBodyLength` for file uploads
+
+## [13.8.0] - 2022-05-24
+
+### Changed
+- `lo surveys export-responses` now supports an optional `query` parameter
+
+## [13.7.0] - 2022-04-06
+
+### Changed
+- Updated how project is published
+
 ## [13.6.0] - 2021-10-06
 
 ### Changed
@@ -891,6 +917,10 @@ and `create-nantomics-vcf-import`
 
 - Replaced the `defaults` command with a `setup` command
 
+[13.9.0]: https://github.com/lifeomic/cli/compare/v13.8.1..v13.9.0
+[13.8.1]: https://github.com/lifeomic/cli/compare/v13.8.0..v13.8.1
+[13.8.0]: https://github.com/lifeomic/cli/compare/v13.7.0..v13.8.0
+[13.7.0]: https://github.com/lifeomic/cli/compare/v13.6.0..v13.7.0
 [13.6.0]: https://github.com/lifeomic/cli/compare/v13.5.0..v13.6.0
 [13.5.0]: https://github.com/lifeomic/cli/compare/v13.4.0..v13.5.0
 [13.4.0]: https://github.com/lifeomic/cli/compare/v13.3.0..v13.4.0
