@@ -80,7 +80,7 @@ set, you can bypass using `lo auth`.
 #### API Keys
 
 To use an API key for authentication, follow the
-[Setting Up API Keys](https://docs.us.lifeomic.com/user-guides/account-management/api-keys/)
+[Set Up API Keys](https://phc.docs.lifeomic.com/user-guides/account-info/api-keys)
 instructions to create the key. You can also use the command `lo api-keys-create`.
 Be sure to capture the value of the API key when it is created as you will not
 be able to retrieve the value after the first attempt. Run `lo setup` and choose
