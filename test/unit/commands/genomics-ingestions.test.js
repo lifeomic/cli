@@ -27,6 +27,7 @@ const createFoundation = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_
 const createCaris = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/create-caris', mocks);
 const createFoundationBam = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/create-foundation-bam', mocks);
 const createCarisBam = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/create-caris-bam', mocks);
+const createNextGen = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/create-nextgen', mocks);
 
 test.always.afterEach(t => {
   getStub.resetHistory();
@@ -159,4 +160,28 @@ test.serial.cb('The "create-caris-bam" command should create a Caris BAM ingesti
   };
 
   yargs.command(createCarisBam).parse('create-caris-bam projectId bamFileId');
+});
+
+test.serial.cb('The "create-nextgen" command should create a NextGen ingestion', t => {
+  const res = { data: { id: 'ingestionId' } };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/genomic-ingestion/projects/projectId/ingestions');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      ingestionType: 'NextGen',
+      inputFiles: {
+        tar: 'tarFileId'
+      },
+      notificationConfig: {
+        succeededEmail: undefined,
+        failedEmail: undefined
+      }
+    });
+    t.is(printSpy.callCount, 1);
+    t.true(printSpy.calledWith({ id: 'ingestionId' }));
+    t.end();
+  };
+
+  yargs.command(createNextGen).parse('create-nextgen projectId tarFileId');
 });
