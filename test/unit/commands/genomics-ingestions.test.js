@@ -28,6 +28,7 @@ const createCaris = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/
 const createFoundationBam = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/create-foundation-bam', mocks);
 const createCarisBam = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/create-caris-bam', mocks);
 const createNextGen = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/create-nextgen', mocks);
+const getByGermlineCaseId = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/get-by-germline-case-id', mocks);
 
 test.always.afterEach(t => {
   getStub.resetHistory();
@@ -62,6 +63,20 @@ test.serial.cb('The "list" command should return ingestions based on project id'
   };
 
   yargs.command(list).parse('list projectId -n 1 -t token --name foo --failed false --step Submitted');
+});
+
+test.serial.cb('The "get-by-germline-case-id" command should get an ingestion based on project id and germline case id', t => {
+  const res = { data: { id: 'ingestionId' } };
+  getStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(getStub.callCount, 1);
+    t.is(getStub.getCall(0).args[1], '/v1/genomic-ingestion/projects/projectId/ingestions/germline-cases/germlineCaseId');
+    t.is(printSpy.callCount, 1);
+    t.true(printSpy.calledWith({ id: 'ingestionId' }));
+    t.end();
+  };
+
+  yargs.command(getByGermlineCaseId).parse('get-by-germline-case projectId germlineCaseId');
 });
 
 test.serial.cb('The "create-foundation" command should create a Foundation ingestion', t => {
