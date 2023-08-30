@@ -29,6 +29,7 @@ const createFoundationBam = proxyquire('../../../lib/cmds/genomics_cmds/ingestio
 const createCarisBam = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/create-caris-bam', mocks);
 const createNextGen = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/create-nextgen', mocks);
 const getByGermlineCaseId = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/get-by-germline-case-id', mocks);
+const createVcf = proxyquire('../../../lib/cmds/genomics_cmds/ingestions_cmds/create-vcf', mocks);
 
 test.always.afterEach(t => {
   getStub.resetHistory();
@@ -199,4 +200,29 @@ test.serial.cb('The "create-nextgen" command should create a NextGen ingestion',
   };
 
   yargs.command(createNextGen).parse('create-nextgen projectId tarFileId');
+});
+
+test.serial.cb('The "create-vcf" command should create a VCF ingestion', t => {
+  const res = { data: { id: 'ingestionId' } };
+  postStub.onFirstCall().returns(res);
+  callback = () => {
+    t.is(postStub.callCount, 1);
+    t.is(postStub.getCall(0).args[1], '/v1/genomic-ingestion/projects/projectId/ingestions');
+    t.deepEqual(postStub.getCall(0).args[2], {
+      ingestionType: 'Vcf',
+      inputFiles: {
+        vcf: 'vcfFileId',
+        manifest: 'manifestFileId'
+      },
+      notificationConfig: {
+        succeededEmail: 'test@testing.com',
+        failedEmail: 'test@testing.com'
+      }
+    });
+    t.is(printSpy.callCount, 1);
+    t.true(printSpy.calledWith({ id: 'ingestionId' }));
+    t.end();
+  };
+
+  yargs.command(createVcf).parse('create-vcf projectId vcfFileId manifestFileId --succeededEmail test@testing.com --failedEmail test@testing.com');
 });
