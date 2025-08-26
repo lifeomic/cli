@@ -69,6 +69,25 @@ test.serial(`tokenProvider should set the request Authorization header with a to
   t.false(setSpy.called);
 });
 
+test.serial(`tokenProvider should set the request Authorization header with a token from the PHC_ACCESS_TOKEN env var if not configured`, async t => {
+  const token = jwt.sign({
+    sub: '1234',
+    iss: 'cognito',
+    token_use: 'access',
+    exp: 2000
+  }, 'secret');
+  getStub.withArgs('dev.tokens.accessToken').returns(null);
+  // defaults will not be present if `lo setup` has not been run
+  getStub.withArgs('dev.defaults').returns(null);
+  process.env.PHC_ACCESS_TOKEN = token;
+
+  const config = { headers: {} };
+  await tokenProvider(config);
+  t.is(config.headers.Authorization, `Bearer ${token}`);
+  t.false(postStub.called);
+  t.false(setSpy.called);
+});
+
 test.serial(`tokenProvider should set the request Authorization header with a token from config`, async t => {
   const token = jwt.sign({
     sub: '1234',
