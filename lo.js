@@ -5,9 +5,6 @@ const chalk = require('chalk');
 const debug = require('debug')('lo');
 const yargs = require('yargs');
 
-// Needed because the cognito library tries to fetch the user-agent from the browser
-global.navigator = () => null;
-
 function handleError (msg, err) {
   debug(`%j`, msg);
   if (err && err.response) {
