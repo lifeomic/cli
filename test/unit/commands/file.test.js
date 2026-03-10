@@ -250,6 +250,31 @@ test.serial.cb('The "files-download" command should download a set of files from
     .parse('download projectId/prefix /dir -r');
 });
 
+test.serial.cb('The "files-download" command should use full path as prefix for recursive download', t => {
+  listStub.onFirstCall().returns({
+    data: {
+      items: [
+        {
+          id: '1',
+          name: 'genomic-archive/snp-array-vcf-Build38/sample.vcf.gz'
+        }
+      ]
+    }
+  });
+
+  callback = () => {
+    t.is(listStub.callCount, 1);
+    t.is(listStub.getCall(0).args[1], '/v1/files?datasetId=projectId&pageSize=1000&name=genomic-archive%2Fsnp-array-vcf-Build38');
+    t.end();
+  };
+
+  t.context.deleteFileStub = t.context.sandbox.stub(fs, 'unlinkSync').callsFake(callback);
+  t.context.copyFileStub = t.context.sandbox.stub(fs, 'copyFileSync').callsFake(callback);
+
+  yargs.command(download)
+    .parse('download projectId/genomic-archive/snp-array-vcf-Build38/ . -r');
+});
+
 test.serial.cb('The "files-mv" command should move a set of files from a project', t => {
   patchStub.returns({});
   listStub.onFirstCall().returns({
