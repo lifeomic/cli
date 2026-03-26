@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Removed
+
+- **BREAKING:** Removed `lo tasks create-foundation-xml-import`. The Foundation XML task-service pipeline was removed ([FLE-346](https://lifeomic.atlassian.net/browse/FLE-346), [task-service#199](https://github.com/lifeomic/task-service/pull/199)). Use the GA4GH replacement flow.
+
 ## [13.9.0] - 2023-01-04
 
 ### Added
